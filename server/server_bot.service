@@ -1,0 +1,12 @@
+[Unit]
+Description=ChatVPN Server Bot
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /opt/xvpn/server_bot.pyz --server-ip 77.110.123.27
+WorkingDirectory=/opt/xvpn
+Restart=always
+User=nobody
+
+[Install]
+WantedBy=multi-user.target

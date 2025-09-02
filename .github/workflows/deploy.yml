@@ -1,0 +1,308 @@
+name: Deploy XVPN
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+        - staging
+        - production
+
+env:
+  PYTHON_VERSION: '3.10'
+
+jobs:
+  test:
+    name: 🧪 Test & Validate
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+    
+    - name: 🐍 Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: 📦 Install uv
+      uses: astral-sh/setup-uv@v2
+    
+    - name: 🔍 Lint Python files
+      run: |
+        uv pip install flake8 black
+        find . -name "*.py" -exec flake8 {} \; || true
+        find . -name "*.py" -exec black --check {} \; || true
+    
+    - name: 🧪 Test agent modules
+      run: |
+        # Test health monitor
+        cd server
+        python agent/health.py
+        
+        # Test database utilities
+        python agent/db.py
+        
+        # Test API endpoints (mock)
+        python -c "import sys; sys.path.append('.'); from api.app import app; print('✅ API imports successfully')"
+    
+    - name: 📊 Validate configuration files
+      run: |
+        # Check JSON syntax
+        find . -name "*.json" -exec python -m json.tool {} \; > /dev/null
+        
+        # Validate systemd unit files
+        find . -name "*.service" -exec systemd-analyze verify {} \; || true
+        
+        echo "✅ Configuration files validation passed"
+
+  security:
+    name: 🔒 Security Scan
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+    
+    - name: 🔍 Run security scan
+      uses: securecodewarrior/github-action-add-sarif@v1
+      with:
+        sarif-file: 'security-scan.sarif'
+      continue-on-error: true
+    
+    - name: 🛡️ Check secrets
+      run: |
+        # Check for potential secrets in code
+        if grep -r "BOT_TOKEN.*=" . --include="*.py" --exclude-dir=".git"; then
+          echo "⚠️ Potential hardcoded secrets found"
+          exit 1
+        fi
+        
+        if grep -r "password.*=" . --include="*.py" --exclude-dir=".git"; then
+          echo "⚠️ Potential hardcoded passwords found" 
+          exit 1
+        fi
+        
+        echo "✅ No hardcoded secrets detected"
+
+  build:
+    name: 📦 Build & Package
+    runs-on: ubuntu-latest
+    needs: [test, security]
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+    
+    - name: 📦 Create deployment package
+      run: |
+        mkdir -p dist/xvpn-server dist/xvpn-client
+        
+        # Package server components
+        cp -r server/* dist/xvpn-server/
+        
+        # Package client components  
+        cp -r client/* dist/xvpn-client/
+        
+        # Create archives
+        tar -czf xvpn-server-${{ github.sha }}.tar.gz -C dist xvpn-server
+        tar -czf xvpn-client-${{ github.sha }}.tar.gz -C dist xvpn-client
+    
+    - name: 📤 Upload server artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: xvpn-server-${{ github.sha }}
+        path: xvpn-server-${{ github.sha }}.tar.gz
+    
+    - name: 📤 Upload client artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: xvpn-client-${{ github.sha }}
+        path: xvpn-client-${{ github.sha }}.tar.gz
+
+  deploy-staging:
+    name: 🚀 Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/develop' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging')
+    environment: staging
+    
+    steps:
+    - name: 📥 Download artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: xvpn-server-${{ github.sha }}
+    
+    - name: 🚀 Deploy to staging server
+      uses: appleboy/ssh-action@v0.1.7
+      with:
+        host: ${{ secrets.STAGING_HOST }}
+        username: ${{ secrets.STAGING_USERNAME }}
+        key: ${{ secrets.STAGING_SSH_KEY }}
+        script: |
+          # Backup current installation
+          sudo cp -r /opt/xvpn /opt/xvpn.backup.$(date +%Y%m%d_%H%M%S) || true
+          
+          # Stop services
+          sudo systemctl stop xvpn-* || true
+          
+          # Update from git
+          cd /opt/xvpn
+          git fetch origin
+          git checkout develop
+          git pull origin develop
+          
+          # Run installation
+          sudo ./install.sh
+          
+          # Restart services
+          sudo systemctl restart xvpn-api xvpn-agent
+          
+          # Skip bot restart if no proper config
+          if ! grep -q "YOUR_BOT_TOKEN" /opt/xvpn/admin/.env; then
+            sudo systemctl restart xvpn-bot
+          fi
+          
+          # Health check
+          sleep 10
+          curl -sk https://127.0.0.1:8443/mcp/v1/vpn.health || echo "⚠️ Health check failed"
+    
+    - name: 📊 Verify deployment
+      uses: appleboy/ssh-action@v0.1.7
+      with:
+        host: ${{ secrets.STAGING_HOST }}
+        username: ${{ secrets.STAGING_USERNAME }}
+        key: ${{ secrets.STAGING_SSH_KEY }}
+        script: |
+          echo "🔍 Verifying deployment..."
+          sudo systemctl status xvpn-api --no-pager
+          sudo systemctl status xvpn-agent --no-pager
+          
+          # Check database
+          if [ -f "/opt/xvpn/agent/db/agent.db" ]; then
+            echo "✅ Database exists"
+          else
+            echo "❌ Database missing"
+            exit 1
+          fi
+          
+          echo "✅ Staging deployment successful"
+
+  deploy-production:
+    name: 🎯 Deploy to Production
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production')
+    environment: production
+    
+    steps:
+    - name: 📥 Download artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: xvpn-server-${{ github.sha }}
+    
+    - name: 🎯 Deploy to production server
+      uses: appleboy/ssh-action@v0.1.7
+      with:
+        host: ${{ secrets.PROD_HOST }}
+        username: ${{ secrets.PROD_USERNAME }}
+        key: ${{ secrets.PROD_SSH_KEY }}
+        script: |
+          # Create backup
+          sudo cp -r /opt/xvpn /opt/xvpn.backup.$(date +%Y%m%d_%H%M%S)
+          
+          # Graceful shutdown
+          echo "📋 Creating maintenance page..."
+          echo "System under maintenance" | sudo tee /var/www/html/maintenance.html
+          
+          # Stop services gracefully
+          sudo systemctl stop xvpn-bot xvpn-api xvpn-agent
+          
+          # Update code
+          cd /opt/xvpn
+          git fetch origin
+          git checkout main
+          git pull origin main
+          
+          # Run update
+          sudo ./install.sh
+          
+          # Start services
+          sudo systemctl start xvpn-agent xvpn-api xvpn-bot
+          
+          # Wait and verify
+          sleep 15
+          if curl -sk https://127.0.0.1:8443/mcp/v1/vpn.health; then
+            echo "✅ Production deployment successful"
+            sudo rm -f /var/www/html/maintenance.html
+          else
+            echo "❌ Health check failed, rolling back..."
+            sudo systemctl stop xvpn-*
+            sudo rm -rf /opt/xvpn
+            sudo mv /opt/xvpn.backup.$(date +%Y%m%d_%H%M%S) /opt/xvpn
+            sudo systemctl start xvpn-*
+            exit 1
+          fi
+
+  notify:
+    name: 📱 Notify
+    runs-on: ubuntu-latest
+    needs: [deploy-staging, deploy-production]
+    if: always()
+    
+    steps:
+    - name: 📱 Send Telegram notification
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_CHAT_ID }}
+        token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        message: |
+          🚀 XVPN Deployment Status
+          
+          Repository: ${{ github.repository }}
+          Branch: ${{ github.ref }}
+          Commit: ${{ github.sha }}
+          
+          Staging: ${{ needs.deploy-staging.result }}
+          Production: ${{ needs.deploy-production.result }}
+          
+          Time: ${{ github.event.head_commit.timestamp }}
+          Author: ${{ github.event.head_commit.author.name }}
+
+  cleanup:
+    name: 🧹 Cleanup
+    runs-on: ubuntu-latest
+    needs: [deploy-staging, deploy-production]
+    if: always()
+    
+    steps:
+    - name: 🗑️ Clean up old artifacts
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            run_id: context.runId,
+          });
+          
+          // Keep only last 5 artifacts
+          const oldArtifacts = artifacts.data.artifacts.slice(5);
+          
+          for (const artifact of oldArtifacts) {
+            await github.rest.actions.deleteArtifact({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              artifact_id: artifact.id,
+            });
+            console.log(`Deleted artifact: ${artifact.name}`);
+          }

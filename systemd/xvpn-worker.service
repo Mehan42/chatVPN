@@ -1,0 +1,67 @@
+[Unit]
+Description=XVPN Worker Service with uv
+Documentation=https://docs.xvpn.local
+After=network.target
+Requires=network.target
+Requires=redis.service
+
+[Service]
+Type=simple
+User=xvpn
+Group=xvpn
+WorkingDirectory=/opt/xvpn
+ExecStart=/usr/local/bin/uvx run --app server.worker.main:worker
+Restart=always
+RestartSec=3
+StandardOutput=journal
+StandardError=journal
+Environment=PYTHONPATH=/opt/xvpn/src:/opt/xvpn/server
+Environment=PYTHONUNBUFFERED=1
+Environment=LOG_LEVEL=INFO
+Environment=WORKER_CONFIG_FILE=/opt/xvpn/config/worker.json
+Environment=REDIS_URL=redis://localhost:6379/0
+Environment=WORKER_COUNT=2
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/xvpn/data /opt/xvpn/logs /opt/xvpn/pids
+ReadWritePaths=/opt/xvpn/config
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictSUIDSGID=true
+RemoveIPC=true
+PrivateUsers=true
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+MemoryMax=512M
+CPUQuota=50%
+
+# Watchdog for monitoring
+WatchdogSec=30
+WatchdogSignal=SIGTERM
+
+# Security: Restrict filesystem access
+ProtectProc=invisible
+ProtectHostname=true
+RemoveIPC=true
+RestrictSUIDSGID=true
+RestrictRealtime=true
+RestrictNamespaces=true
+
+# Temporary file handling
+PrivateTmp=true
+PrivateDevices=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/opt/xvpn/data /opt/xvpn/logs /opt/xvpn/pids
+ReadWritePaths=/opt/xvpn/config
+
+[Install]
+WantedBy=multi-user.target

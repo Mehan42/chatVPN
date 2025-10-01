@@ -1,0 +1,45 @@
+[Unit]
+Description=XVPN Redis Cache Service
+Documentation=https://redis.io/documentation
+After=network.target
+Requires=network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+User=redis
+Group=redis
+WorkingDirectory=/opt/xvpn
+ExecStart=/usr/bin/docker-compose -f /opt/xvpn/docker-compose.yml up -d redis
+ExecStop=/usr/bin/docker-compose -f /opt/xvpn/docker-compose.yml stop redis
+TimeoutStartSec=0
+Restart=on-failure
+RestartSec=5
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/xvpn/data
+ReadWritePaths=/opt/xvpn/config
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictSUIDSGID=true
+RemoveIPC=true
+PrivateUsers=true
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+MemoryMax=512M
+CPUQuota=25%
+
+# Redis-specific settings
+Environment=REDIS_CONFIG_FILE=/opt/xvpn/config/redis.conf
+Environment=REDIS_DATA_DIR=/opt/xvpn/data/redis
+
+[Install]
+WantedBy=multi-user.target

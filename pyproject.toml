@@ -1,0 +1,369 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "xvpn"
+version = "1.0.0"
+description = "Intelligent VPN with AI Agents"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "XVPN Team", email = "team@xvpn.local"},
+]
+keywords = ["vpn", "ai", "agent", "monitoring", "security"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: System :: Networking",
+    "Topic :: Security",
+    "Topic :: System :: Monitoring",
+]
+
+# Основные зависимости проекта
+dependencies = [
+    "flask>=2.3.0,<3.0.0",
+    "requests>=2.31.0,<3.0.0",
+    "pydantic>=2.0.0,<3.0.0",
+    "python-dotenv>=1.0.0",
+    "cryptography>=41.0.0",
+    "click>=8.1.0",
+    "rich>=13.0.0",
+    "psutil>=5.9.0",
+    "aiohttp>=3.8.0",
+    "asyncio-mqtt>=0.13.0",
+    "uvloop>=0.19.0",
+    "orjson>=3.9.0",
+]
+
+[project.optional-dependencies]
+# Зависимости для серверной части
+server = [
+    "fastapi>=0.100.0",
+    "uvicorn>=0.23.0",
+    "gunicorn>=21.0.0",
+    "sqlalchemy>=2.0.0",
+    "alembic>=1.12.0",
+    "redis>=5.0.0",
+    "celery>=5.3.0",
+    "flower>=2.0.0",
+]
+
+# Зависимости для агентов
+agent = [
+    "openai>=1.0.0",
+    "langchain>=0.0.0",
+    "chromadb>=0.4.0",
+    "tiktoken>=0.5.0",
+    "sentence-transformers>=2.2.0",
+    "faiss-cpu>=1.7.0",
+    "numpy>=1.24.0",
+    "pandas>=2.0.0",
+]
+
+# Зависимости для Telegram бота
+bot = [
+    "python-telegram-bot>=20.0.0",
+    "aiogram>=3.0.0",
+    "pydantic-settings>=2.0.0",
+]
+
+# Зависимости для мониторинга и логирования
+monitoring = [
+    "prometheus-client>=0.17.0",
+    "grafana-api>=1.0.0",
+    "structlog>=23.0.0",
+    "loguru>=0.7.0",
+    "rich-argparse>=1.0.0",
+]
+
+# Зависимости для разработки
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.0.0",
+    "pytest-mock>=3.10.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "flake8>=6.0.0",
+    "mypy>=1.4.0",
+    "pre-commit>=3.3.0",
+    "bandit>=1.7.0",
+    "safety>=2.3.0",
+]
+
+# Зависимости для Docker и CI/CD
+docker = [
+    "docker>=6.1.0",
+    "compose-cli>=2.0.0",
+    "build>=0.10.0",
+]
+
+# Зависимости для тестирования
+test = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.0.0",
+    "pytest-mock>=3.10.0",
+    "httpx>=0.24.0",
+    "factory-boy>=3.2.0",
+    "freezegun>=1.2.0",
+]
+
+# Все зависимости вместе
+all = [
+    "xvpn[server,agent,bot,monitoring,dev,docker,test]",
+]
+
+[project.urls]
+Homepage = "https://github.com/xvpn/xvpn"
+Documentation = "https://docs.xvpn.local"
+Repository = "https://github.com/xvpn/xvpn.git"
+Issues = "https://github.com/xvpn/xvpn/issues"
+Changelog = "https://github.com/xvpn/xvpn/blob/main/CHANGELOG.md"
+
+[project.scripts]
+xvpn-server = "xvpn.server.cli:main"
+xvpn-agent = "xvpn.agent.cli:main"
+xvpn-bot = "xvpn.bot.cli:main"
+xvpn-monitor = "xvpn.monitoring.cli:main"
+
+# Настройки для Hatch (build system)
+[tool.hatch.build.targets.wheel]
+packages = ["src/xvpn", "src/server", "src/client"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/xvpn", "src/server", "src/client"]
+
+# Настройки для UV (пакетный менеджер)
+[tool.uv]
+dev-dependencies = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0", 
+    "pytest-cov>=4.0.0",
+    "pytest-mock>=3.10.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "flake8>=6.0.0",
+    "mypy>=1.4.0",
+    "pre-commit>=3.3.0",
+    "bandit>=1.7.0",
+    "safety>=2.3.0",
+]
+
+# Настройки для тестов
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q --strict-markers --strict-config"
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+    "api: marks tests as API tests",
+    "agent: marks tests as agent tests",
+]
+
+[tool.pytest_asyncio]
+asyncio_mode = "auto"
+
+# Настройки для покрытия кода
+[tool.coverage.run]
+source = ["src", "server", "client"]
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/venv/*",
+    "*/.venv/*",
+    "*/__pycache__/*",
+    "*/build/*",
+    "*/dist/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+
+# Настройки для Black
+[tool.black]
+line-length = 88
+target-version = ['py310']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+# Настройки для isort
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+known_first_party = ["xvpn"]
+
+# Настройки для Flake8
+[tool.flake8]
+max-line-length = 88
+extend-ignore = ["E203", "W503"]
+exclude = [
+    ".git",
+    "__pycache__",
+    "build",
+    "dist",
+    ".venv",
+    ".eggs",
+    "*.egg-info",
+    ".tox",
+]
+
+# Настройки для MyPy
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = [
+    "prometheus_client.*",
+    "uvicorn.*",
+    "celery.*",
+    "redis.*",
+]
+ignore_missing_imports = true
+
+# Настройки для Bandit
+[tool.bandit]
+exclude_dirs = ["tests"]
+skips = ["B101", "B601"]
+
+# Настройки для Safety
+[tool.safety]
+update = true
+json = false
+
+# Настройки для Pre-commit
+[tool.pre-commit]
+repos = [
+    {repo = "https://github.com/pre-commit/pre-commit-hooks", rev = "v4.4.0"},
+    {repo = "https://github.com/psf/black", rev = "23.3.0"},
+    {repo = "https://github.com/pycqa/isort", rev = "5.12.0"},
+    {repo = "https://github.com/pycqa/flake8", rev = "6.0.0"},
+    {repo = "https://github.com/pre-commit/mirrors-mypy", rev = "v1.4.0"},
+    {repo = "https://github.com/pycqa/bandit", rev = "1.7.0"},
+]
+
+# Настройки для Ruff (альтернатива flake8 + isort)
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+    "ARG001", # unused arguments in functions
+]
+ignore = [
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "W191",  # indentation contains tabs
+    "B904",  # Allow raising exceptions without from e, for HTTPException
+]
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
+
+[tool.ruff.isort]
+known-first-party = ["xvpn"]
+
+# Настройки для Sphinx (документация)
+[tool.sphinx]
+source-dir = "docs"
+build-dir = "docs/_build"
+html-dir = "docs/_build/html"
+master-doc = "index"
+extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.viewcode",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.intersphinx",
+]
+
+# Настройки для Git Hooks
+[tool.git-hooks]
+pre-commit = [
+    "black",
+    "isort", 
+    "flake8",
+    "mypy",
+    "bandit",
+    "safety check",
+]
+
+# Настройки для Docker
+[tool.docker]
+image = "python:3.11-slim"
+workdir = "/app"
+copy = [
+    "pyproject.toml",
+    "src/",
+    "server/",
+    "client/",
+]
+run = [
+    "pip install uv",
+    "uv pip install --system -e .",
+]
+
+# Настройки для разработки
+[tool.dev]
+env = ["PYTHONPATH=src:server:client"]
+watch = ["src", "server", "client"]
+reload = "auto"
+
+# Настройки для продакшена
+[tool.prod]
+env = ["PYTHONPATH=/app/src:/app/server:/app/client"]
+workers = 4
+timeout = 30
+graceful-timeout = 10

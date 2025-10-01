@@ -1,0 +1,41 @@
+[Unit]
+Description=XVPN Traefik Load Balancer Service
+Documentation=https://docs.traefik.io
+After=docker.service
+Requires=docker.service
+After=network.target
+Requires=network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+User=root
+Group=docker
+WorkingDirectory=/opt/xvpn
+ExecStart=/usr/bin/docker-compose -f /opt/xvpn/docker-compose.yml up -d traefik
+ExecStop=/usr/bin/docker-compose -f /opt/xvpn/docker-compose.yml stop traefik
+TimeoutStartSec=0
+Restart=on-failure
+RestartSec=5
+
+# Security settings
+NoNewPrivileges=false
+PrivateTmp=false
+ProtectSystem=strict
+ReadWritePaths=/opt/xvpn
+ReadWritePaths=/var/run/docker.sock
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictSUIDSGID=true
+RemoveIPC=true
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+MemoryMax=512M
+CPUQuota=50%
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,48 @@
+[Unit]
+Description=XVPN API Service with uv
+Documentation=https://docs.xvpn.local
+After=network.target
+Requires=network.target
+
+[Service]
+Type=simple
+User=xvpn
+Group=xvpn
+WorkingDirectory=/opt/xvpn
+ExecStart=/usr/local/bin/uvx run --app server.api.main:app
+Restart=always
+RestartSec=3
+StandardOutput=journal
+StandardError=journal
+Environment=PYTHONPATH=/opt/xvpn/src:/opt/xvpn/server
+Environment=FLASK_ENV=production
+Environment=FLASK_DEBUG=false
+Environment=PYTHONUNBUFFERED=1
+Environment=DATABASE_URL=sqlite:///data/xvpn.db
+Environment=REDIS_URL=redis://localhost:6379/0
+Environment=LOG_LEVEL=INFO
+Environment=XVPN_CONFIG_FILE=/opt/xvpn/config/api.json
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/xvpn/data /opt/xvpn/logs /opt/xvpn/pids
+ReadWritePaths=/opt/xvpn/config
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictSUIDSGID=true
+RemoveIPC=true
+PrivateUsers=true
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+MemoryMax=512M
+CPUQuota=50%
+
+[Install]
+WantedBy=multi-user.target

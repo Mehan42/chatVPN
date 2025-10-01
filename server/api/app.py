@@ -24,29 +24,29 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
-# Пути
-DB_PATH = "/opt/xvpn/agent/db/agent.db"
-MANIFEST_PATH = "/opt/xvpn/core/manifest.json"
-CLIENTS_DIR = "/opt/xvpn/core/clients"
-LOGS_DIR = "/opt/xvpn/logs"
+# Пути - используем относительные пути и домашнюю директорию
+import tempfile
+from pathlib import Path
 
-# Создаем директории если не существуют
-os.makedirs(CLIENTS_DIR, exist_ok=True)
-os.makedirs(LOGS_DIR, exist_ok=True)
+# Определяем базовую директорию в домашней папке пользователя или в temp
+BASE_DIR = Path.home() / ".xvpn"
+if not BASE_DIR.exists():
+    BASE_DIR.mkdir(parents=True, exist_ok=True)
 
-def log_api_event(endpoint, action, result, details=""):
-    """Логирование API событий в БД"""
-    try:
-        conn = sqlite3.connect(DB_PATH)
-        cur = conn.cursor()
-        cur.execute(
-            "INSERT INTO logs VALUES (?,?,?,?,?,?)",
-            (int(time.time()), "api", endpoint, action, result, details)
-        )
-        conn.commit()
-        conn.close()
-    except Exception as e:
-        logger.error(f"Failed to log event: {e}")
+DB_PATH = BASE_DIR / "agent.db"
+MANIFEST_PATH = BASE_DIR / "manifest.json"
+CLIENTS_DIR = BASE_DIR / "clients"
+LOGS_DIR = BASE_DIR / "logs"
+
+# Создаем директории если не существуют с правильными правами
+os.makedirs(CLIENTS_DIR, exist_ok=True, mode=0o755)
+os.makedirs(LOGS_DIR, exist_ok=True, mode=0o755)
+
+# Устанавливаем правильные права для файлов
+def setup_file_permissions(file_path):
+    """Установка правильных прав для файла"""
+    if file_path.exists():
+        os.chmod(file_path, 0o644)
 
 def get_default_manifest():
     """Дефолтный манифест для транспортов"""
@@ -66,7 +66,7 @@ def get_default_manifest():
                 }
             },
             {
-                "id": "T1", 
+                "id": "T1",
                 "name": "WireGuard-over-TLS",
                 "type": "wireguard",
                 "priority": 2,
@@ -77,6 +77,34 @@ def get_default_manifest():
             }
         ]
     }
+
+# Создаем базовые файлы, если они не существуют
+if not DB_PATH.exists():
+    setup_file_permissions(DB_PATH)
+if not MANIFEST_PATH.exists():
+    manifest_data = get_default_manifest()
+    with open(MANIFEST_PATH, 'w') as f:
+        json.dump(manifest_data, f, indent=2)
+    setup_file_permissions(MANIFEST_PATH)
+
+# Устанавливаем права для директорий
+os.chmod(CLIENTS_DIR, 0o755)
+os.chmod(LOGS_DIR, 0o755)
+
+def log_api_event(endpoint, action, result, details=""):
+    """Логирование API событий в БД"""
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cur = conn.cursor()
+        cur.execute(
+            "INSERT INTO logs VALUES (?,?,?,?,?,?)",
+            (int(time.time()), "api", endpoint, action, result, details)
+        )
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        logger.error(f"Failed to log event: {e}")
+
 
 @app.route("/")
 def index():
@@ -260,8 +288,11 @@ if __name__ == "__main__":
     logger.info("🚀 Starting XVPN Control API")
     
     # Проверка наличия TLS сертификатов
-    cert_file = "/opt/xvpn/api/tls/selfsigned.crt"
-    key_file = "/opt/xvpn/api/tls/selfsigned.key"
+    TLS_DIR = BASE_DIR / "tls"
+    TLS_DIR.mkdir(parents=True, exist_ok=True, mode=0o755)
+    
+    cert_file = TLS_DIR / "selfsigned.crt"
+    key_file = TLS_DIR / "selfsigned.key"
     
     if os.path.exists(cert_file) and os.path.exists(key_file):
         logger.info("🔐 Starting with HTTPS")

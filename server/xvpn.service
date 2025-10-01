@@ -1,0 +1,14 @@
+[Unit]
+Description=XVPN Main Service
+After=network.target
+Wants=network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/systemctl start xvpn-agent.service xvpn-api.service xvpn-xray.service xvpn-bot.service
+ExecStop=/usr/bin/systemctl stop xvpn-agent.service xvpn-api.service xvpn-xray.service xvpn-bot.service
+User=root
+
+[Install]
+WantedBy=multi-user.target

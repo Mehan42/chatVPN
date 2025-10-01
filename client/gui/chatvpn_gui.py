@@ -7,10 +7,18 @@ from tkinter import messagebox, simpledialog
 import threading
 from PIL import Image
 import pystray
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import chatvpn_backend as be
 import os
-import os
-os.environ["PYSTRAY_BACKEND"] = "xorg"
+# Установка бэкенда pystray в зависимости от платформы
+if sys.platform.startswith('linux'):
+    os.environ["PYSTRAY_BACKEND"] = "xorg"
+elif sys.platform.startswith('win'):
+    os.environ["PYSTRAY_BACKEND"] = "win32"
+elif sys.platform.startswith('darwin'):
+    os.environ["PYSTRAY_BACKEND"] = "quartz"
 
 ICON_GREEN_PATH = os.path.expanduser("~/chatvpn/client/icon_green.png")
 ICON_RED_PATH   = os.path.expanduser("~/chatvpn/client/icon_red.png")

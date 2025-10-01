@@ -1,12 +1,12 @@
 [Unit]
-Description=XVPN Server Bot
+Description=XVPN Telegram Bot Service
 After=network.target
 StartLimitIntervalSec=0
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3 /home/%u/.xvpn/server_bot.pyz --server-ip 77.110.123.27
-WorkingDirectory=/home/%u/.xvpn
+ExecStart=/usr/bin/python3 /home/%u/.xvpn/bot_src/__main__.py --server-ip 77.110.123.27
+WorkingDirectory=/home/%u/.xvpn/bot_src
 Restart=always
 RestartSec=3
 User=%i

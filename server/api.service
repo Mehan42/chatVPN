@@ -1,11 +1,11 @@
 [Unit]
-Description=XVPN Server Bot
+Description=XVPN Control API Service
 After=network.target
 StartLimitIntervalSec=0
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3 /home/%u/.xvpn/server_bot.pyz --server-ip 77.110.123.27
+ExecStart=/usr/bin/python3 /home/%u/.xvpn/api/app.py
 WorkingDirectory=/home/%u/.xvpn
 Restart=always
 RestartSec=3
@@ -13,7 +13,7 @@ User=%i
 Group=%i
 StandardOutput=journal
 StandardError=journal
-SyslogIdentifier=xvpn-bot
+SyslogIdentifier=xvpn-api
 Environment=PYTHONUNBUFFERED=1
 
 [Install]

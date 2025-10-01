@@ -26,10 +26,17 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Константы
-DB_PATH = "/opt/xvpn/agent/db/agent.db"
-KNOWLEDGE_PATH = "/opt/xvpn/agent/knowledge"
-LOG_FILE = "/opt/xvpn/agent/logs/agent.log"
+# Константы - используем относительные пути и домашнюю директорию
+from pathlib import Path
+
+# Определяем базовую директорию в домашней папке пользователя или в temp
+BASE_DIR = Path.home() / ".xvpn"
+if not BASE_DIR.exists():
+    BASE_DIR.mkdir(parents=True, exist_ok=True)
+
+DB_PATH = BASE_DIR / "agent.db"
+KNOWLEDGE_PATH = BASE_DIR / "knowledge"
+LOG_FILE = BASE_DIR / "logs" / "agent.log"
 MANIFEST_URL = "https://127.0.0.1:8443/transports/manifest.json"
 HEALTH_URL = "https://127.0.0.1:8443/mcp/v1/vpn.health"
 
@@ -69,8 +76,13 @@ class XVPNAgent:
         self.knowledge = self._load_knowledge()
         self.fallback_resources = self._load_fallback()
         
-        # Создание лог файла если не существует
-        os.makedirs(os.path.dirname(LOG_FILE), exist_ok=True)
+        # Создание директорий если не существуют с правильными правами
+        os.makedirs(os.path.dirname(LOG_FILE), exist_ok=True, mode=0o755)
+        os.makedirs(KNOWLEDGE_PATH, exist_ok=True, mode=0o755)
+        
+        # Устанавливаем правильные права для директорий
+        os.chmod(os.path.dirname(LOG_FILE), 0o755)
+        os.chmod(KNOWLEDGE_PATH, 0o755)
         
     def _load_knowledge(self) -> Dict:
         """Загрузка базы знаний из protocols.md"""

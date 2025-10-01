@@ -1,15 +1,22 @@
 [Unit]
-Description=Xray VPN Service
+Description=XVPN Xray Service
 After=network.target
+StartLimitIntervalSec=0
 
 [Service]
-ExecStart=/opt/xvpn/xray/xray -config /opt/xvpn/xray/config.json
-WorkingDirectory=/opt/xvpn/xray
+Type=simple
+ExecStart=/usr/bin/xray -config /home/%u/.xvpn/xray/config.json
+WorkingDirectory=/home/%u/.xvpn/xray
 Restart=always
-User=nobody
+RestartSec=3
+User=%i
+Group=%i
 LimitNOFILE=51200
 CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=xvpn-xray
 
 [Install]
 WantedBy=multi-user.target

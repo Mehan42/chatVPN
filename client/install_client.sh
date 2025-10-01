@@ -1,61 +1,67 @@
-#!/usr/bin/env bash
-# Абсолютный путь: ~/chatvpn/client/install_client.sh
-# Установка Xray + Python GUI (tkinter+pystray) и ярлыка ChatVPN
-
+cat > ~/chatvpn/client/install_client.sh << 'EOF'
+#!/bin/bash
 set -euo pipefail
 
+echo "=== ChatVPN Client Installer ==="
+
+# Проверяем, что запускается не от root
 if [ "$EUID" -eq 0 ]; then
-  OWNER="${SUDO_USER:-root}"
-  OWNER_HOME="$(getent passwd "$OWNER" | cut -d: -f6)"
-else
-  OWNER="$(id -un)"
-  OWNER_HOME="$HOME"
+   echo "❌ Не запускайте от root. Выполните как обычный
+пользователь."
+   exit 1
 fi
 
-INSTALL_DIR="/opt/chatvpn"
-BIN_DIR="$INSTALL_DIR/bin"
-CFG_DIR="$INSTALL_DIR/config"
-RUN_DIR="$INSTALL_DIR/run"
-APP_DESKTOP="$OWNER_HOME/.local/share/applications/ChatVPN.desktop"
+echo "[1/6] Обновление системы..."
+sudo apt update -y
 
-echo "[1/6] deps..."
-sudo apt update
-sudo apt install -y curl unzip python3 python3-tk python3-pil python3-pil.imagetk python3-venv
+echo "[2/6] Установка зависимостей..."
+sudo apt install -y python3 python3-pip curl jq python3-tk
 
-echo "[2/6] python deps..."
-# ставим pystray для текущего пользователя
-pip3 install --user --upgrade pip
-pip3 install --user pystray
+echo "[3/6] Установка uv (Python package installer)..."
+if ! command -v uv &> /dev/null; then
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    export PATH="$HOME/.cargo/bin:$PATH"
+fi
 
-echo "[3/6] dirs..."
-sudo mkdir -p "$BIN_DIR" "$CFG_DIR" "$RUN_DIR"
-sudo touch /var/log/chatvpn_client.log
-sudo chown -R "$OWNER":"$OWNER" "$INSTALL_DIR" /var/log/chatvpn_client.log
-mkdir -p "$OWNER_HOME/.local/share/applications"
+echo "[4/6] Создание директорий..."
+mkdir -p ~/chatvpn/client/{clients,transports,logs,gui}
 
-echo "[4/6] Xray..."
-curl -L -o /tmp/xray.zip https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip
-sudo unzip -o /tmp/xray.zip -d "$BIN_DIR"
-sudo chown -R "$OWNER":"$OWNER" "$BIN_DIR"
-chmod +x "$BIN_DIR/xray"
+echo "[5/6] Установка Python зависимостей..."
+pip3 install requests flask pydantic
 
-echo "[5/6] backend+gui..."
-sudo cp -f "$OWNER_HOME/chatvpn/client/chatvpn_backend.py" "$INSTALL_DIR/chatvpn_backend.py"
-sudo cp -f "$OWNER_HOME/chatvpn/client/chatvpn_gui.py"     "$INSTALL_DIR/chatvpn_gui.py"
-sudo chown "$OWNER":"$OWNER" "$INSTALL_DIR/chatvpn_backend.py" "$INSTALL_DIR/chatvpn_gui.py"
+echo "[6/6] Настройка автозапуска..."
+mkdir -p ~/.config/systemd/user
+cat > ~/.config/systemd/user/xvpn-client.service << 'INNEREOF'
+[Unit]
+Description=XVPN Client Service
+After=network-online.target
+Wants=network-online.target
 
-echo "[6/6] desktop shortcut..."
-cat > "$APP_DESKTOP" <<EOF
-[Desktop Entry]
-Type=Application
-Name=ChatVPN
-Comment=Мини-клиент для Xray (VLESS+Reality)
-Exec=python3 /opt/chatvpn/chatvpn_gui.py
-Terminal=false
-Categories=Network;
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 %h/chatvpn/client/state_machine.py
+Restart=always
+RestartSec=10
+WorkingDirectory=%h/chatvpn/client
+Environment=PYTHONPATH=%h/chatvpn/client
+StandardOutput=append:%h/chatvpn/client/logs/client_stdout.log
+StandardError=append:%h/chatvpn/client/logs/client_stderr.log
+
+[Install]
+WantedBy=default.target
+INNEREOF
+
+echo "=== Установка завершена ==="
+echo "📁 Директория клиента: ~/chatvpn/client"
+echo "🔧 GUI запуск: python3 ~/chatvpn/client/chatvpn_gui.py"
+echo "🔄 Для автозапуска: systemctl --user enable xvpn-client"
+
+echo ""
+echo "💡 Использование:"
+echo "1. Получите client.json от администратора"
+echo "2. Положите client.json в ~/chatvpn/client/clients/"
+echo "3. Запустите GUI: python3 ~/chatvpn/client/chatvpn_gui.py"
+echo "4. Или запустите автоматически: systemctl --user start
+xvpn-client"
 EOF
-chmod +x "$APP_DESKTOP"
 
-echo "Готово ✅"
-echo "Запуск из меню приложений: ChatVPN"
-echo "Логи клиента: /var/log/chatvpn_client.log"

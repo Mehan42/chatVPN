@@ -137,19 +137,26 @@ def build_client_config(server_ip, uuid_str, pub_key, short_id, sni_host, flow="
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data-dir", default="/opt/xvpn/data")
+    parser.add_argument("--data-dir", default=None, help="Директория данных (по умолчанию: ~/.xvpn/bot)")
     parser.add_argument("--server-ip", required=True, help="Публичный IP сервера (например 77.110.123.27)")
     parser.add_argument("--sni-host", default="www.cloudflare.com", help="SNI для Reality")
     args = parser.parse_args()
 
-    data_dir = args.data_dir
+    # Используем домашнюю директорию по умолчанию
+    if args.data_dir is None:
+        from pathlib import Path
+        data_dir = Path.home() / ".xvpn" / "bot"
+        data_dir.mkdir(parents=True, exist_ok=True)
+    else:
+        data_dir = args.data_dir
+    
     ensure_dirs(data_dir)
 
     env = load_env(os.path.join(data_dir, "server.env"))
     token = env.get("TOKEN", "")
     default_chat = env.get("CHAT_ID", "")
     if not token or not default_chat:
-        print("ERROR: TOKEN/CHAT_ID не заданы в /opt/xvpn/data/server.env или окружении", file=sys.stderr)
+        print(f"ERROR: TOKEN/CHAT_ID не заданы в {os.path.join(data_dir, 'server.env')} или окружении", file=sys.stderr)
         sys.exit(1)
 
     profiles_path = os.path.join(data_dir, "profiles.json")
@@ -215,7 +222,7 @@ def main():
                         send_message(token, chat_id, "нет зарегистрированных клиентов. Используйте /register_client")
                         continue
                     if not pub_key or not short_id:
-                        send_message(token, chat_id, "reality параметры не готовы. Проверьте /opt/xvpn/data/reality.json")
+                        send_message(token, chat_id, f"reality параметры не готовы. Проверьте {os.path.join(data_dir, 'reality.json')}")
                         continue
                     cfg = build_client_config(args.server_ip, profiles[cid]["uuid"], pub_key, short_id, args.sni_host)
                     payload = json.dumps(cfg, ensure_ascii=False, indent=2).encode()

@@ -14,7 +14,7 @@ import logging
 import json
 import time
 import requests
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
+from telegram.ext import Updater, CommandHandler, MessageHandler, ConversationHandler, filters
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 
 # Настройка логирования
@@ -62,7 +62,7 @@ class XVPNTelegramBot:
                 CommandHandler("report", self.report_start)
             ],
             states={
-                WAITING_UUID: [MessageHandler(Filters.text & ~Filters.command, self.handle_uuid)]
+                WAITING_UUID: [MessageHandler(filters.TEXT & ~filters.COMMAND, self.handle_uuid)]
             },
             fallbacks=[CommandHandler("cancel", self.cancel)]
         )

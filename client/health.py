@@ -171,24 +171,24 @@ class HealthMonitor:
                 return True
             except socket.error:
                 return False
-            
-            def _is_ipv4(self, ip: str) -> bool:
-                """Проверка, что IP является IPv4"""
-                try:
-                    socket.inet_aton(ip)
-                    return True
-                except socket.error:
-                    return False
-            
-            def _is_ipv6(self, ip: str) -> bool:
-                """Проверка, что IP является IPv6"""
-                try:
-                    socket.inet_pton(socket.AF_INET6, ip)
-                    return True
-                except socket.error:
-                    return False
-            
-            def check_ip_leak(self) -> bool:
+    
+    def _is_ipv4(self, ip: str) -> bool:
+        """Проверка, что IP является IPv4"""
+        try:
+            socket.inet_aton(ip)
+            return True
+        except socket.error:
+            return False
+    
+    def _is_ipv6(self, ip: str) -> bool:
+        """Проверка, что IP является IPv6"""
+        try:
+            socket.inet_pton(socket.AF_INET6, ip)
+            return True
+        except socket.error:
+            return False
+    
+    def check_ip_leak(self) -> bool:
                 """Проверка утечки IP (сравнение локального и внешнего IP)"""
                 self.log("Checking for IP leak...")
                 

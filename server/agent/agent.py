@@ -18,7 +18,7 @@ import requests
 from enum import Enum
 from pathlib import Path
 from typing import Dict, List, Optional
-from rag_system import AdvancedRAGSystem
+from enhanced_rag_system import create_enhanced_rag_system
 
 # Настройка логирования
 logging.basicConfig(
@@ -79,13 +79,10 @@ class XVPNAgent:
         
         # Инициализация улучшенной RAG системы
         try:
-            self.rag_system = AdvancedRAGSystem(
-                knowledge_dir=KNOWLEDGE_PATH,
-                vector_db_path=str(BASE_DIR / "rag_vector.db")
-            )
-            logger.info("✅ RAG system initialized successfully")
+            self.rag_system = create_enhanced_rag_system("xvpn_agent")
+            logger.info("✅ Enhanced RAG system initialized successfully")
         except Exception as e:
-            logger.error(f"⚠️ Failed to initialize RAG system: {e}")
+            logger.error(f"⚠️ Failed to initialize Enhanced RAG system: {e}")
             self.rag_system = None
         
         # Создание директорий если не существуют с правильными правами
@@ -267,47 +264,34 @@ class XVPNAgent:
             return False
     
     def run_playbook(self, situation: str):
-        """Выполнение playbook для конкретной ситуации с использованием RAG"""
+        """Выполнение playbook для конкретной ситуации с использованием Enhanced RAG"""
         if self.rag_system:
             try:
-                # Используем RAG систему для поиска релевантных действий
-                context = {
-                    "current_state": self.state.value,
-                    "error_type": situation,
-                    "transport_type": self.current_transport.type if self.current_transport else "unknown"
-                }
+                # Используем Enhanced RAG систему для поиска релевантных действий
+                context = self.rag_system.get_context_for_query(situation)
                 
-                rag_result = self.rag_system.generate_response(
-                    f"что делать при {situation}",
-                    context
-                )
-                
-                if rag_result["confidence"] > 0.3:
-                    logger.info(f"🧠 RAG建议 для {situation}: {rag_result['confidence']:.2f} confidence")
+                if context and context.get('relevant_chunks'):
+                    logger.info(f"🧠 Enhanced RAG context retrieved for situation: {situation}")
                     
                     # Записываем в лог
                     self.log_event("RAG", "retrieval", "success",
-                                 f"situation={situation}, confidence={rag_result['confidence']:.2f}")
+                                 f"situation={situation}, chunks={len(context.get('relevant_chunks', []))}")
                     
-                    # Выполняем найденные действия
-                    for i, source in enumerate(rag_result["sources"][:3]):
-                        logger.info(f"RAG Action {i+1}: {source}")
-                        self.log_event("RAG", f"action_{i+1}", source["type"], f"relevance={source['relevance']:.2f}")
+                    # Выполняем действия на основе контекста
+                    for i, chunk in enumerate(context.get('relevant_chunks', [])[:3], 1):
+                        logger.info(f"RAG Action {i}: {chunk['content'][:100]}...")
+                        self.log_event("RAG", f"action_{i}", "retrieved",
+                                     f"source={chunk['source']}, relevance={chunk['relevance_score']:.2f}")
                         time.sleep(1)
                     
-                    # Обучаем систему на взаимодействии
-                    self.rag_system.learn_from_interaction(
-                        f"что делать при {situation}",
-                        [s["id"] for s in rag_result["sources"]],
-                        rag_result["confidence"] > 0.5
-                    )
+                    # Добавляем контекст в базу знаний для обучения
+                    knowledge_content = f"Situation: {situation}\nContext: {context.get('context_summary', '')}"
+                    self.rag_system.add_knowledge_source("playbook_execution", knowledge_content, ["playbook", "recovery"])
                     
                     return
-                else:
-                    logger.warning(f"RAG confidence too low ({rag_result['confidence']:.2f}), falling back to traditional playbook")
                     
             except Exception as e:
-                logger.error(f"RAG playbook execution failed: {e}")
+                logger.error(f"Enhanced RAG playbook execution failed: {e}")
         
         # Традиционный playbook как fallback
         if situation in self.knowledge:
@@ -392,49 +376,126 @@ class XVPNAgent:
             self.state = AgentState.IDLE  # Перезапуск цикла
     
     def get_rag_report(self) -> Dict:
-        """Получение отчета о производительности RAG системы"""
+        """Получение отчета о производительности Enhanced RAG системы"""
         if not self.rag_system:
-            return {"error": "RAG system not available"}
+            return {"error": "Enhanced RAG system not available"}
         
         try:
-            return self.rag_system.get_performance_report()
+            stats = self.rag_system.get_knowledge_base_stats()
+            return {
+                "total_chunks": stats.get("total_chunks", 0),
+                "total_sources": stats.get("total_sources", 0),
+                "avg_response_time": stats.get("avg_response_time", 0),
+                "total_queries": stats.get("total_queries", 0),
+                "agent_uuid": self.rag_system.agent_uuid,
+                "system_status": "active"
+            }
         except Exception as e:
-            logger.error(f"Failed to get RAG report: {e}")
+            logger.error(f"Failed to get Enhanced RAG report: {e}")
             return {"error": str(e)}
     
     def get_rag_suggestions(self) -> List[str]:
-        """Получение адаптивных предложений от RAG системы"""
+        """Получение адаптивных предложений от Enhanced RAG системы"""
         if not self.rag_system:
             return []
         
         try:
+            # Формируем контекст на основе текущего состояния
             context = {
                 "current_state": self.state.value,
                 "transport_type": self.current_transport.type if self.current_transport else "unknown"
             }
-            return self.rag_system.get_adaptive_suggestions(context)
+            
+            # Запрашиваем знания по текущей ситуации
+            query = f"что делать при {self.state.value}"
+            relevant_chunks = self.rag_system.query_knowledge(query, max_results=5)
+            
+            suggestions = []
+            for chunk in relevant_chunks:
+                suggestions.append(chunk['content'][:100] + "...")
+            
+            return suggestions
         except Exception as e:
-            logger.error(f"Failed to get RAG suggestions: {e}")
+            logger.error(f"Failed to get Enhanced RAG suggestions: {e}")
             return []
+    
+    def initialize_rag_knowledge_base(self):
+        """Инициализация базы знаний агента"""
+        if not self.rag_system:
+            logger.warning("Enhanced RAG system not available")
+            return
+        
+        try:
+            # Добавляем базовые знания о VPN
+            vpn_knowledge = """
+            XVPN - современная VPN система с использованием протокола Xray
+            Основные функции:
+            - Шифрование трафика AES-256
+            - Обход блокировок
+            - Анонимность и приватность
+            - Поддержка IPv4 и IPv6
+            - Автоматическое переключение транспорта
+            - State machine для управления состоянием
+            """
+            
+            self.rag_system.add_knowledge_source("vpn_basics", vpn_knowledge, ["vpn", "basics", "xray"])
+            
+            # Добавляем знания о протоколах
+            protocols_knowledge = """
+            VPN протоколы:
+            - OpenVPN: безопасный и гибкий протокол
+            - WireGuard: современный высокопроизводительный протокол
+            - IKEv2: быстрый и стабильный протокол
+            - SSTP: протокол для обхода блокировок
+            - L2TP/IPsec: комбинация протоколов для безопасности
+            """
+            
+            self.rag_system.add_knowledge_source("vpn_protocols", protocols_knowledge, ["protocols", "security"])
+            
+            # Добавляем знания о восстановлении
+            recovery_knowledge = """
+            Восстановление VPN соединения:
+            1. Проверка состояния соединения
+            2. Анализ здоровья системы
+            3. Переключение на альтернативный транспорт
+            4. Повторная аутентификация
+            5. Логирование ошибки для анализа
+            """
+            
+            self.rag_system.add_knowledge_source("recovery_procedures", recovery_knowledge, ["recovery", "procedures"])
+            
+            logger.info("✅ Enhanced RAG knowledge base initialized successfully")
+            
+        except Exception as e:
+            logger.error(f"Failed to initialize Enhanced RAG knowledge base: {e}")
     
     def run(self):
         """Главный цикл агента"""
         logger.info("🤖 Starting XVPN Agent")
         self.log_event("AGENT", "startup", "success", f"PID={os.getpid()}")
         
+        # Инициализация базы знаний Enhanced RAG
+        if self.rag_system:
+            try:
+                self.initialize_rag_knowledge_base()
+                logger.info("🧠 Enhanced RAG knowledge base initialized")
+            except Exception as e:
+                logger.error(f"Failed to initialize Enhanced RAG knowledge base: {e}")
+        
         try:
             cycle_count = 0
             while True:
-                # Каждые 10 циклов выводим отчет о RAG системе
+                # Каждые 10 циклов выводим отчет о Enhanced RAG системе
                 if cycle_count % 10 == 0 and self.rag_system:
                     try:
                         rag_report = self.get_rag_report()
                         if "error" not in rag_report:
-                            logger.info(f"🧠 RAG Report - Queries: {rag_report.get('total_queries', 0)}, "
-                                       f"Success Rate: {rag_report.get('success_rate', 0):.2%}, "
-                                       f"Confidence: {rag_report.get('average_confidence', 0):.2f}")
+                            logger.info(f"🧠 Enhanced RAG Report - Chunks: {rag_report.get('total_chunks', 0)}, "
+                                       f"Sources: {rag_report.get('total_sources', 0)}, "
+                                       f"Queries: {rag_report.get('total_queries', 0)}, "
+                                       f"Avg Response Time: {rag_report.get('avg_response_time', 0):.3f}s")
                     except Exception as e:
-                        logger.error(f"Failed to generate RAG report: {e}")
+                        logger.error(f"Failed to generate Enhanced RAG report: {e}")
                 
                 self.state_machine_cycle()
                 time.sleep(POLL_INTERVAL)

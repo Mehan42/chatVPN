@@ -1,0 +1,93 @@
+{
+  "test_date": "2025-10-02T23:50:03.848403",
+  "total_tests": 21,
+  "passed_tests": 16,
+  "failed_tests": 5,
+  "success_rate": 76.19047619047619,
+  "results": [
+    [
+      "State Machine",
+      true
+    ],
+    [
+      "Health Monitoring",
+      true
+    ],
+    [
+      "IPv6 Manager",
+      false
+    ],
+    [
+      "Proxy Manager",
+      false
+    ],
+    [
+      "Transport Manager",
+      true
+    ],
+    [
+      "ChatVPN Backend",
+      true
+    ],
+    [
+      "API Components",
+      false
+    ],
+    [
+      "Agent Components",
+      true
+    ],
+    [
+      "Security Components",
+      false
+    ],
+    [
+      "Docker Compose",
+      true
+    ],
+    [
+      "Traefik Configuration",
+      true
+    ],
+    [
+      "Systemd Services",
+      true
+    ],
+    [
+      "Scripts",
+      true
+    ],
+    [
+      "Installer Directory",
+      true
+    ],
+    [
+      "Installer Files",
+      true
+    ],
+    [
+      "Install Script Permissions",
+      true
+    ],
+    [
+      "Documentation",
+      true
+    ],
+    [
+      "Implementation Report",
+      true
+    ],
+    [
+      "Dependencies Error",
+      false
+    ],
+    [
+      "Client Configuration",
+      true
+    ],
+    [
+      "Server Configuration",
+      true
+    ]
+  ]
+}

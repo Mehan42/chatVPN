@@ -1,0 +1,28 @@
+{
+  "installer_version": "1.0.0",
+  "created_at": "2025-10-02T23:38:46.821042",
+  "files_created": [
+    "/home/uss/chatvpn/installer/install_xvpn.sh",
+    "/home/uss/chatvpn/installer/uninstall_xvpn.sh",
+    "/home/uss/chatvpn/installer/xvpn_installer_20251002_233846.zip",
+    "/home/uss/chatvpn/installer/install_xvpn.bat",
+    "/home/uss/chatvpn/installer/update_xvpn.sh"
+  ],
+  "features": [
+    "\u0410\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u0435\u0441\u043a\u0430\u044f \u0443\u0441\u0442\u0430\u043d\u043e\u0432\u043a\u0430 \u0437\u0430\u0432\u0438\u0441\u0438\u043c\u043e\u0441\u0442\u0435\u0439",
+    "\u041d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0430 systemd \u0441\u0435\u0440\u0432\u0438\u0441\u043e\u0432",
+    "Docker \u0438\u043d\u0442\u0435\u0433\u0440\u0430\u0446\u0438\u044f",
+    "IPv6 \u043f\u043e\u0434\u0434\u0435\u0440\u0436\u043a\u0430",
+    "\u0421\u0438\u0441\u0442\u0435\u043c\u0430 \u0431\u0435\u0437\u043e\u043f\u0430\u0441\u043d\u043e\u0441\u0442\u0438",
+    "REST API \u0434\u043b\u044f \u0430\u0434\u043c\u0438\u043d\u0438\u0441\u0442\u0440\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f",
+    "\u0413\u0440\u0430\u0444\u0438\u0447\u0435\u0441\u043a\u0438\u0439 \u0438\u043d\u0442\u0435\u0440\u0444\u0435\u0439\u0441",
+    "\u041c\u043e\u043d\u0438\u0442\u043e\u0440\u0438\u043d\u0433 \u0437\u0434\u043e\u0440\u043e\u0432\u044c\u044f"
+  ],
+  "supported_systems": [
+    "Ubuntu 20.04+",
+    "Debian 10+",
+    "CentOS 7+",
+    "RHEL 7+",
+    "Windows 10+ (\u0431\u0430\u0437\u043e\u0432\u0430\u044f \u043f\u043e\u0434\u0434\u0435\u0440\u0436\u043a\u0430)"
+  ]
+}

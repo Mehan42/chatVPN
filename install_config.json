@@ -1,0 +1,49 @@
+{
+  "app_name": "XVPN",
+  "version": "1.0.0",
+  "description": "Secure VPN Client with AI Integration",
+  "author": "XVPN Team",
+  "url": "https://xvpn.local",
+  "icon": null,
+  "license": "MIT",
+  "platforms": {
+    "linux": {
+      "binary_name": "xvpn",
+      "service_name": "xvpn",
+      "desktop_entry": true,
+      "systemd": true
+    },
+    "windows": {
+      "binary_name": "xvpn.exe",
+      "service_name": "XVPN Service",
+      "install_dir": "C:\\Program Files\\XVPN",
+      "create_shortcut": true
+    },
+    "darwin": {
+      "binary_name": "XVPN",
+      "service_name": "com.xvpn.client",
+      "app_bundle": true,
+      "launchd": true
+    }
+  },
+  "build_settings": {
+    "include_docker": true,
+    "include_systemd": true,
+    "include_gui": true,
+    "include_api": true,
+    "include_agent": true,
+    "include_bot": true
+  },
+  "dependencies": {
+    "python": ">=3.8",
+    "docker": ">=20.0",
+    "docker-compose": ">=1.29",
+    "systemd": ">=245",
+    "uv": ">=0.1.0"
+  },
+  "install_paths": {
+    "linux": "/opt/xvpn",
+    "windows": "C:\\Program Files\\XVPN",
+    "darwin": "/Applications/XVPN"
+  }
+}

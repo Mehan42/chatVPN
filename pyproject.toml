@@ -41,6 +41,8 @@ dependencies = [
     "asyncio-mqtt>=0.13.0",
     "uvloop>=0.19.0",
     "orjson>=3.9.0",
+    "chromadb",
+    "sentence-transformers",
 ]
 
 [project.optional-dependencies]

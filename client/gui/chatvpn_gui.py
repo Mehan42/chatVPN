@@ -47,8 +47,11 @@ class App(tk.Tk):
         self.status_lbl = tk.Label(self, text="Статус: OFF", font=("Sans", 12))
         self.status_lbl.pack(pady=8)
 
-        self.ip_lbl = tk.Label(self, text="IP: -", font=("Sans", 11))
-        self.ip_lbl.pack(pady=4)
+        self.ip_lbl = tk.Label(self, text="IPv4: -", font=("Sans", 11))
+        self.ip_lbl.pack(pady=2)
+
+        self.ipv6_lbl = tk.Label(self, text="IPv6: -", font=("Sans", 11))
+        self.ipv6_lbl.pack(pady=2)
 
         self.speed_lbl = tk.Label(self, text="Скорость: 0 ↓ / 0 ↑ КБ/с", font=("Sans", 11))
         self.speed_lbl.pack(pady=4)
@@ -106,8 +109,30 @@ class App(tk.Tk):
         running = be.is_running()
         self.status_lbl.config(text="Статус: ON" if running else "Статус: OFF")
         self.set_tray_icon(running)
-        ip = be.get_ip() if running else "-"
-        self.ip_lbl.config(text=f"IP: {ip}")
+        
+        # Получаем информацию о сети
+        try:
+            from health import get_network_info
+            network_info = get_network_info()
+            
+            # IPv4 информация
+            ipv4 = network_info.get("external_ips", {}).get("ipv4", "-")
+            self.ip_lbl.config(text=f"IPv4: {ipv4}")
+            
+            # IPv6 информация
+            ipv6 = network_info.get("external_ips", {}).get("ipv6", "-")
+            if ipv6 != "-":
+                self.ipv6_lbl.config(text=f"IPv6: {ipv6}")
+                self.ipv6_lbl.config(fg="green")  # Зеленый цвет для активного IPv6
+            else:
+                self.ipv6_lbl.config(text="IPv6: Не поддерживается")
+                self.ipv6_lbl.config(fg="gray")  # Серый цвет для неактивного IPv6
+                
+        except Exception as e:
+            self.ip_lbl.config(text="IPv4: Ошибка")
+            self.ipv6_lbl.config(text="IPv6: Ошибка")
+        
+        # Скорость
         rx, tx = be.get_speed()
         self.speed_lbl.config(text=f"Скорость: {rx} ↓ / {tx} ↑ КБ/с")
 

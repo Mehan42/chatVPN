@@ -18,6 +18,7 @@ import requests
 from enum import Enum
 from pathlib import Path
 from typing import Dict, List, Optional
+from rag_system import AdvancedRAGSystem
 
 # Настройка логирования
 logging.basicConfig(
@@ -75,6 +76,17 @@ class XVPNAgent:
         self.transports: List[Transport] = []
         self.knowledge = self._load_knowledge()
         self.fallback_resources = self._load_fallback()
+        
+        # Инициализация улучшенной RAG системы
+        try:
+            self.rag_system = AdvancedRAGSystem(
+                knowledge_dir=KNOWLEDGE_PATH,
+                vector_db_path=str(BASE_DIR / "rag_vector.db")
+            )
+            logger.info("✅ RAG system initialized successfully")
+        except Exception as e:
+            logger.error(f"⚠️ Failed to initialize RAG system: {e}")
+            self.rag_system = None
         
         # Создание директорий если не существуют с правильными правами
         os.makedirs(os.path.dirname(LOG_FILE), exist_ok=True, mode=0o755)
@@ -255,7 +267,49 @@ class XVPNAgent:
             return False
     
     def run_playbook(self, situation: str):
-        """Выполнение playbook для конкретной ситуации"""
+        """Выполнение playbook для конкретной ситуации с использованием RAG"""
+        if self.rag_system:
+            try:
+                # Используем RAG систему для поиска релевантных действий
+                context = {
+                    "current_state": self.state.value,
+                    "error_type": situation,
+                    "transport_type": self.current_transport.type if self.current_transport else "unknown"
+                }
+                
+                rag_result = self.rag_system.generate_response(
+                    f"что делать при {situation}",
+                    context
+                )
+                
+                if rag_result["confidence"] > 0.3:
+                    logger.info(f"🧠 RAG建议 для {situation}: {rag_result['confidence']:.2f} confidence")
+                    
+                    # Записываем в лог
+                    self.log_event("RAG", "retrieval", "success",
+                                 f"situation={situation}, confidence={rag_result['confidence']:.2f}")
+                    
+                    # Выполняем найденные действия
+                    for i, source in enumerate(rag_result["sources"][:3]):
+                        logger.info(f"RAG Action {i+1}: {source}")
+                        self.log_event("RAG", f"action_{i+1}", source["type"], f"relevance={source['relevance']:.2f}")
+                        time.sleep(1)
+                    
+                    # Обучаем систему на взаимодействии
+                    self.rag_system.learn_from_interaction(
+                        f"что делать при {situation}",
+                        [s["id"] for s in rag_result["sources"]],
+                        rag_result["confidence"] > 0.5
+                    )
+                    
+                    return
+                else:
+                    logger.warning(f"RAG confidence too low ({rag_result['confidence']:.2f}), falling back to traditional playbook")
+                    
+            except Exception as e:
+                logger.error(f"RAG playbook execution failed: {e}")
+        
+        # Традиционный playbook как fallback
         if situation in self.knowledge:
             steps = self.knowledge[situation]
             self.log_event("PLAYBOOK", "execute", situation, f"{len(steps)} steps")
@@ -337,15 +391,55 @@ class XVPNAgent:
             time.sleep(300)  # Ждем 5 минут перед повторной попыткой
             self.state = AgentState.IDLE  # Перезапуск цикла
     
+    def get_rag_report(self) -> Dict:
+        """Получение отчета о производительности RAG системы"""
+        if not self.rag_system:
+            return {"error": "RAG system not available"}
+        
+        try:
+            return self.rag_system.get_performance_report()
+        except Exception as e:
+            logger.error(f"Failed to get RAG report: {e}")
+            return {"error": str(e)}
+    
+    def get_rag_suggestions(self) -> List[str]:
+        """Получение адаптивных предложений от RAG системы"""
+        if not self.rag_system:
+            return []
+        
+        try:
+            context = {
+                "current_state": self.state.value,
+                "transport_type": self.current_transport.type if self.current_transport else "unknown"
+            }
+            return self.rag_system.get_adaptive_suggestions(context)
+        except Exception as e:
+            logger.error(f"Failed to get RAG suggestions: {e}")
+            return []
+    
     def run(self):
         """Главный цикл агента"""
         logger.info("🤖 Starting XVPN Agent")
         self.log_event("AGENT", "startup", "success", f"PID={os.getpid()}")
         
         try:
+            cycle_count = 0
             while True:
+                # Каждые 10 циклов выводим отчет о RAG системе
+                if cycle_count % 10 == 0 and self.rag_system:
+                    try:
+                        rag_report = self.get_rag_report()
+                        if "error" not in rag_report:
+                            logger.info(f"🧠 RAG Report - Queries: {rag_report.get('total_queries', 0)}, "
+                                       f"Success Rate: {rag_report.get('success_rate', 0):.2%}, "
+                                       f"Confidence: {rag_report.get('average_confidence', 0):.2f}")
+                    except Exception as e:
+                        logger.error(f"Failed to generate RAG report: {e}")
+                
                 self.state_machine_cycle()
                 time.sleep(POLL_INTERVAL)
+                cycle_count += 1
+                
         except KeyboardInterrupt:
             logger.info("🛑 Agent stopped by user")
             self.log_event("AGENT", "shutdown", "manual")

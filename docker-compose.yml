@@ -20,12 +20,15 @@ services:
       - "--providers.docker.exposedbydefault=false"
       # Определяем точки входа
       - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443" 
+      - "--entrypoints.websecure.address=:443"
       - "--entrypoints.xvpn.address=:8443"
-      # Включаем автоматические SSL сертификаты
+      # Включаем автоматические SSL сертификаты Let's Encrypt
       - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
-      - "--certificatesresolvers.myresolver.acme.email=letsencrypt@xvpn.local"
+      - "--certificatesresolvers.myresolver.acme.email=admin@uss.hopto.org"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      # Включаем TLS опции из внешнего файла
+      - "--providers.file.filename=/etc/traefik/tls.yml"
+      - "--providers.file.watch=true"
     ports:
       # HTTP порт
       - "80:80"
@@ -42,6 +45,7 @@ services:
       - "./traefik/letsencrypt:/letsencrypt"
       # Конфигурационные файлы Traefik
       - "./traefik/traefik.yml:/etc/traefik/traefik.yml:ro"
+      - "./traefik/tls.yml:/etc/traefik/tls.yml:ro"
     networks:
       - xvpn-network
     restart: unless-stopped
@@ -86,16 +90,20 @@ services:
     labels:
       # Traefik конфигурация для API
       - "traefik.enable=true"
-      - "traefik.http.routers.api.rule=Host(`api.xvpn.local`) || PathPrefix(`/api`)"
+      - "traefik.http.routers.api.rule=Host(`api.uss.hopto.org`) || PathPrefix(`/api`)"
       - "traefik.http.routers.api.entrypoints=websecure"
       - "traefik.http.routers.api.tls.certresolver=myresolver"
       - "traefik.http.services.api.loadbalancer.server.port=8443"
       - "traefik.http.middlewares.api-stripprefix.stripprefix.prefixes=/api"
       - "traefik.http.routers.api.middlewares=api-stripprefix"
       # Health check
-      - "traefik.http.routers.api.rule=Host(`api.xvpn.local`) || PathPrefix(`/api`) || PathPrefix(`/mcp`)"
+      - "traefik.http.routers.api.rule=Host(`api.uss.hopto.org`) || PathPrefix(`/api`) || PathPrefix(`/mcp`)"
       # Метрики для мониторинга
       - "traefik.http.routers.api.priority=10"
+      # Дополнительные заголовки безопасности
+      - "traefik.http.middlewares.api-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.api-headers.headers.sslredirect=true"
+      - "traefik.http.routers.api.middlewares=api-stripprefix,api-headers"
 
   # === XVPN Agent Service ===
   xvpn-agent:
@@ -166,12 +174,16 @@ services:
     labels:
       # Traefik конфигурация для бота
       - "traefik.enable=true"
-      - "traefik.http.routers.bot.rule=Host(`bot.xvpn.local`)"
+      - "traefik.http.routers.bot.rule=Host(`bot.uss.hopto.org`)"
       - "traefik.http.routers.bot.entrypoints=websecure"
       - "traefik.http.routers.bot.tls.certresolver=myresolver"
       - "traefik.http.services.bot.loadbalancer.server.port=8443"
       # Health check
       - "traefik.http.routers.bot.priority=30"
+      # Дополнительные заголовки безопасности
+      - "traefik.http.middlewares.bot-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.bot-headers.headers.sslredirect=true"
+      - "traefik.http.routers.bot.middlewares=bot-headers"
 
   # === XVPN Worker Service (для фоновых задач) ===
   xvpn-worker:
@@ -252,12 +264,16 @@ services:
     labels:
       # Traefik конфигурация для VPN ядра
       - "traefik.enable=true"
-      - "traefik.http.routers.vpn.rule=Host(`vpn.xvpn.local`)"
+      - "traefik.http.routers.vpn.rule=Host(`vpn.uss.hopto.org`)"
       - "traefik.http.routers.vpn.entrypoints=websecure"
       - "traefik.http.routers.vpn.tls.certresolver=myresolver"
       - "traefik.http.services.vpn.loadbalancer.server.port=443"
       # Health check
       - "traefik.http.routers.vpn.priority=5"
+      # Дополнительные заголовки безопасности
+      - "traefik.http.middlewares.vpn-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.vpn-headers.headers.sslredirect=true"
+      - "traefik.http.routers.vpn.middlewares=vpn-headers"
 
   # === Monitoring and Logging ===
   grafana:
@@ -274,10 +290,14 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.grafana.rule=Host(`grafana.xvpn.local`)"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.uss.hopto.org`)"
       - "traefik.http.routers.grafana.entrypoints=websecure"
       - "traefik.http.routers.grafana.tls.certresolver=myresolver"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+      # Дополнительные заголовки безопасности
+      - "traefik.http.middlewares.grafana-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.grafana-headers.headers.sslredirect=true"
+      - "traefik.http.routers.grafana.middlewares=grafana-headers"
 
   prometheus:
     image: prom/prometheus:latest

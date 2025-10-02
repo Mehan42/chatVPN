@@ -11,6 +11,7 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import chatvpn_backend as be
+import health
 import os
 # Установка бэкенда pystray в зависимости от платформы
 if sys.platform.startswith('linux'):
@@ -49,6 +50,19 @@ class App(tk.Tk):
 
         self.ip_lbl = tk.Label(self, text="IP: -", font=("Sans", 11))
         self.ip_lbl.pack(pady=4)
+
+        # Индикатор безопасности (светофор)
+        self.security_frame = tk.Frame(self)
+        self.security_frame.pack(pady=4)
+        
+        self.security_lbl = tk.Label(self.security_frame, text="Безопасность:", font=("Sans", 11))
+        self.security_lbl.pack(side=tk.LEFT)
+        
+        self.security_indicator = tk.Label(self.security_frame, text="●", font=("Sans", 20), fg="gray")
+        self.security_indicator.pack(side=tk.LEFT, padx=5)
+        
+        self.security_score_lbl = tk.Label(self.security_frame, text="Оценка: -", font=("Sans", 11))
+        self.security_score_lbl.pack(side=tk.LEFT)
 
         self.speed_lbl = tk.Label(self, text="Скорость: 0 ↓ / 0 ↑ КБ/с", font=("Sans", 11))
         self.speed_lbl.pack(pady=4)
@@ -102,6 +116,33 @@ class App(tk.Tk):
             be.save_client_uuid(uuid)
             messagebox.showinfo("ChatVPN", f"UUID изменён на:\n{uuid}")
 
+    def update_security_indicator(self):
+        """Обновление индикатора безопасности на основе оценки маскировки"""
+        try:
+            mask_score = health.get_mask_score()
+            
+            # Определяем цвет и статус на основе оценки
+            if mask_score >= 4:
+                color = "green"
+                status_text = "Отлично"
+            elif mask_score >= 3:
+                color = "yellow"
+                status_text = "Хорошо"
+            elif mask_score >= 1:
+                color = "orange"
+                status_text = "Внимание"
+            else:
+                color = "red"
+                status_text = "Критично"
+            
+            self.security_indicator.config(fg=color)
+            self.security_score_lbl.config(text=f"Оценка: {mask_score}/5 ({status_text})")
+            
+        except Exception as e:
+            print(f"Error updating security indicator: {e}")
+            self.security_indicator.config(fg="gray")
+            self.security_score_lbl.config(text="Оценка: -")
+    
     def refresh_status(self):
         running = be.is_running()
         self.status_lbl.config(text="Статус: ON" if running else "Статус: OFF")
@@ -110,10 +151,13 @@ class App(tk.Tk):
         self.ip_lbl.config(text=f"IP: {ip}")
         rx, tx = be.get_speed()
         self.speed_lbl.config(text=f"Скорость: {rx} ↓ / {tx} ↑ КБ/с")
+        
+        # Обновляем индикатор безопасности
+        self.update_security_indicator()
 
     def refresh_status_loop(self):
         self.refresh_status()
-        self.after(2000, self.refresh_status_loop)
+        self.after(5000, self.refresh_status_loop)  # Обновляем каждые 5 секунд для безопасности
 
 if __name__ == "__main__":
     app = App()

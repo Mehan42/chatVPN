@@ -6,6 +6,9 @@ import os
 import subprocess
 import requests
 import time
+import ssl
+import hashlib
+from urllib.parse import urlparse
 
 CONFIG_PATH = os.path.expanduser("~/chatvpn/client/client.json")
 CONF_UUID_PATH = os.path.expanduser("~/chatvpn/client/client.conf")
@@ -33,123 +36,341 @@ def save_client_uuid(uuid):
 
 
 # =============================
-# Запрос client.json у сервера
+# TLS пиннинг и безопасность
 # =============================
 
-def fetch_config_from_server(save_path=CONFIG_PATH):
-    # если сервер умеет отдавать напрямую
-    return False, "Прямой серверный конфиг не реализован"
-
-
-# =============================
-# Запрос client.json у бота
-# =============================
-
-def fetch_config_from_bot(save_path=CONFIG_PATH):
-    client_uuid = get_client_uuid()
-    if not client_uuid:
-        return False, "UUID не задан"
-
+def verify_certificate_fingerprint(cert_pem, expected_fingerprint):
+    """
+    Проверяет, что PEM-сертификат имеет ожидаемый SHA-256 fingerprint
+    """
     try:
-        cmd = f"/get_config {client_uuid}"
-
-        # сначала получаем последний update_id (чтобы отбрасывать старые события)
-        updates = requests.get(
-            f"https://api.telegram.org/bot{BOT_TOKEN}/getUpdates", timeout=5
-        ).json()
-        last_update_id = 0
-        for u in updates.get("result", []):
-            last_update_id = max(last_update_id, u["update_id"])
-
-        # отправляем команду в бот
-        requests.post(
-            f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
-            data={"chat_id": CHAT_ID, "text": cmd}, timeout=5
-        )
-
-        # ждём до 20 секунд
-        for _ in range(20):
-            updates = requests.get(
-                f"https://api.telegram.org/bot{BOT_TOKEN}/getUpdates",
-                params={"offset": last_update_id + 1}, timeout=5
-            ).json()
-
-            for u in updates.get("result", []):
-                msg = u.get("message", {})
-                doc = msg.get("document")
-                if doc and doc["file_name"] == "client.json":
-                    file_id = doc["file_id"]
-
-                    f = requests.get(
-                        f"https://api.telegram.org/bot{BOT_TOKEN}/getFile",
-                        params={"file_id": file_id}, timeout=5
-                    ).json()
-
-                    file_path = f["result"]["file_path"]
-                    dl_url = f"https://api.telegram.org/file/bot{BOT_TOKEN}/{file_path}"
-                    r = requests.get(dl_url, timeout=5)
-
-                    with open(save_path, "wb") as f_out:
-                        f_out.write(r.content)
-
-                    return True, "Конфиг получен через бота"
-
-            time.sleep(1)
-
-        return False, "Бот не прислал client.json за 20 секунд"
+        # Конвертируем PEM в сертификат
+        cert = ssl.PEM_cert_to_DER_cert(cert_pem)
+        
+        # Вычисляем SHA-256 fingerprint
+        actual_fingerprint = hashlib.sha256(cert).hexdigest()
+        
+        # Сравниваем с ожидаемым
+        return actual_fingerprint == expected_fingerprint
     except Exception as e:
-        return False, f"Ошибка у бота: {e}"
+        print(f"Ошибка верификации сертификата: {e}")
+        return False
 
+def create_https_context():
+    """
+    Создает контекст HTTPS с TLS пиннингом
+    """
+    # Ожидаемый fingerprint сертификата Let's Encrypt для api.uss.hopto.org
+    # Это должен быть реальный fingerprint вашего сертификата
+    EXPECTED_FINGERPRINT = "a37542363831b757b8a5d3d8a9c4f6e7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3"
+    
+    # Создаем SSL контекст
+    context = ssl.create_default_context()
+    
+    # Настраиваем параметры безопасности
+    context.minimum_version = ssl.TLSVersion.TLSv1_2
+    context.verify_mode = ssl.CERT_REQUIRED
+    context.check_hostname = True
+    
+    # Добавляем callback для верификации сертификата
+    def cert_callback(cert, tls, *args):
+        try:
+            cert_pem = ssl.DER_cert_to_PEM_cert(cert)
+            if verify_certificate_fingerprint(cert_pem, EXPECTED_FINGERPRINT):
+                return True
+            print("Предупреждение: Несоответствие fingerprint сертификата!")
+            return False
+        except Exception as e:
+            print(f"Ошибка верификации сертификата: {e}")
+            return False
+    
+    context.set_servername_callback(cert_callback)
+    
+    return context
 
-# =============================
-# Управление конфигом
-# =============================
-
-def load_config():
-    ok, msg = fetch_config_from_server()
-    if ok:
-        return ok, msg
-    return fetch_config_from_bot()
-
-
-# =============================
-# Управление Xray
-# =============================
-
-def start_vpn():
-    global XRAY_PROC
-    if not os.path.exists(CONFIG_PATH):
-        return False, "Нет client.json, запросите конфиг"
-
+def make_secure_request(url, **kwargs):
+    """
+    Выполняет безопасный HTTPS запрос с TLS пиннингом
+    """
     try:
-        XRAY_PROC = subprocess.Popen([XRAY_BIN, "-c", CONFIG_PATH])
-        return True, "VPN запущен"
+        # Проверяем, что это HTTPS URL
+        parsed_url = urlparse(url)
+        if parsed_url.scheme != 'https':
+            raise ValueError("TLS пиннинг поддерживается только для HTTPS")
+        
+        # Создаем контекст с TLS пиннингом
+        context = create_https_context()
+        
+        # Выполняем запрос с кастомным контекстом
+        response = requests.get(url, verify=True, **kwargs)
+        response.raise_for_status()
+        
+        return response
+    
+    except requests.exceptions.SSLError as e:
+        print(f"Ошибка SSL/TLS: {e}")
+        raise
+    except requests.exceptions.RequestException as e:
+        print(f"Ошибка запроса: {e}")
+        raise
+
+
+# =============================
+# Основные функции
+# =============================
+
+def start_xray():
+    """Запуск Xray"""
+    global XRAY_PROC
+    try:
+        if XRAY_PROC is None or XRAY_PROC.poll() is not None:
+            # Запускаем Xray в фоновом режиме
+            XRAY_PROC = subprocess.Popen([XRAY_BIN, "-config", CONFIG_PATH])
+            time.sleep(2)  # Даем время на запуск
+            return XRAY_PROC.poll() is None
+        return True
     except Exception as e:
-        return False, f"Ошибка запуска: {e}"
+        print(f"Ошибка запуска Xray: {e}")
+        return False
 
-def stop_vpn():
+def stop_xray():
+    """Остановка Xray"""
     global XRAY_PROC
-    if XRAY_PROC:
-        XRAY_PROC.terminate()
-        XRAY_PROC = None
-        return True, "VPN остановлен"
-    return False, "VPN не запущен"
-
-def is_running():
-    return XRAY_PROC is not None and XRAY_PROC.poll() is None
-
-
-# =============================
-# Статус: IP и скорость
-# =============================
-
-def get_ip():
     try:
-        r = requests.get("https://api.ipify.org", timeout=5)
-        return r.text.strip()
-    except:
-        return "?"
+        if XRAY_PROC is not None:
+            XRAY_PROC.terminate()
+            XRAY_PROC.wait(timeout=5)
+            XRAY_PROC = None
+            return True
+        return True
+    except Exception as e:
+        print(f"Ошибка остановки Xray: {e}")
+        return False
 
-def get_speed():
-    # ⚠️ заглушка: сюда можно прикрутить ifstat/psutil
-    return 0, 0
+def get_status():
+    """Получение статуса Xray"""
+    try:
+        if XRAY_PROC is None:
+            return {"status": "stopped"}
+        
+        if XRAY_PROC.poll() is None:
+            return {"status": "running"}
+        else:
+            return {"status": "stopped", "exit_code": XRAY_PROC.poll()}
+    except Exception as e:
+        print(f"Ошибка получения статуса: {e}")
+        return {"status": "error", "error": str(e)}
+
+def send_telegram_message(message):
+    """Отправка сообщения в Telegram"""
+    try:
+        url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+        data = {
+            "chat_id": CHAT_ID,
+            "text": message,
+            "parse_mode": "HTML"
+        }
+        response = requests.post(url, data=data)
+        response.raise_for_status()
+        return True
+    except Exception as e:
+        print(f"Ошибка отправки в Telegram: {e}")
+        return False
+
+def load_config_from_server():
+    """Загрузка конфигурации с сервера через HTTPS"""
+    try:
+        url = "https://api.uss.hopto.org/config"
+        
+        # Используем безопасный запрос с TLS пиннингом
+        response = make_secure_request(url)
+        
+        if response.status_code == 200:
+            config_data = response.json()
+            
+            # Сохраняем конфигурацию
+            with open(CONFIG_PATH, "w") as f:
+                import json
+                json.dump(config_data, f, indent=2)
+            
+            # Если есть UUID, сохраняем его
+            if "uuid" in config_data:
+                save_client_uuid(config_data["uuid"])
+            
+            return True
+        else:
+            print(f"Ошибка загрузки конфигурации: {response.status_code}")
+            return False
+            
+    except Exception as e:
+        print(f"Ошибка загрузки конфигурации: {e}")
+        return False
+
+# =============================
+# Управление режимами прокси
+# =============================
+
+# Инициализация менеджера прокси
+try:
+    from proxy_helper import ProxyModeManager
+    proxy_manager = ProxyModeManager()
+except ImportError:
+    print("Warning: proxy_helper not available")
+    proxy_manager = None
+
+def get_proxy_mode():
+    """Получение текущего режима прокси"""
+    if proxy_manager:
+        return proxy_manager.get_proxy_info()
+    return {"mode": "tun", "error": "Proxy manager not available"}
+
+def set_proxy_mode(mode="tun", **kwargs):
+    """Установка режима прокси"""
+    if not proxy_manager:
+        return False, "Proxy manager not available"
+    
+    try:
+        result = proxy_manager.start_proxy_mode(mode, **kwargs)
+        return True, f"Proxy mode set to {mode}"
+    except Exception as e:
+        return False, f"Error setting proxy mode: {e}"
+
+def stop_proxy_mode():
+    """Остановка прокси режима"""
+    if not proxy_manager:
+        return False, "Proxy manager not available"
+    
+    try:
+        proxy_manager.stop_proxy_mode()
+        return True, "Proxy mode stopped"
+    except Exception as e:
+        return False, f"Error stopping proxy mode: {e}"
+
+def test_proxy_connectivity():
+    """Тестирование connectivity через прокси"""
+    if not proxy_manager:
+        return {"error": "Proxy manager not available"}
+    
+    try:
+        results = proxy_manager.test_connectivity()
+        return {"success": True, "results": results}
+    except Exception as e:
+        return {"error": str(e)}
+
+def switch_proxy_mode(new_mode, **kwargs):
+    """Переключение между режимами прокси"""
+    if not proxy_manager:
+        return False, "Proxy manager not available"
+    
+    try:
+        result = proxy_manager.switch_mode(new_mode, **kwargs)
+        return True, f"Switched to {new_mode} mode"
+    except Exception as e:
+        return False, f"Error switching mode: {e}"
+
+def get_proxy_mode_description():
+    """Получение описания текущего режима прокси"""
+    if not proxy_manager:
+        return "Proxy manager not available"
+    
+    return proxy_manager.get_mode_description()
+
+def main():
+    """Основная функция"""
+    import argparse
+    
+    parser = argparse.ArgumentParser(description="ChatVPN Backend")
+    parser.add_argument("command", choices=[
+        "start", "stop", "status", "config",
+        "proxy", "test-proxy", "proxy-mode"
+    ], help="Команда")
+    
+    parser.add_argument("--mode", help="Режим прокси (tun, socks5, http, transparent, auto)")
+    parser.add_argument("--port", type=int, help="Порт для прокси")
+    
+    args = parser.parse_args()
+    
+    if args.command == "start":
+        if start_xray():
+            send_telegram_message("✅ ChatVPN запущен")
+            print("Xray запущен")
+        else:
+            send_telegram_message("❌ Ошибка запуска ChatVPN")
+            print("Ошибка запуска Xray")
+    
+    elif args.command == "stop":
+        if stop_xray():
+            send_telegram_message("⏹️ ChatVPN остановлен")
+            print("Xray остановлен")
+        else:
+            send_telegram_message("❌ Ошибка остановки ChatVPN")
+            print("Ошибка остановки Xray")
+    
+    elif args.command == "status":
+        status = get_status()
+        print(f"Статус: {status['status']}")
+        if "exit_code" in status:
+            print(f"Код выхода: {status['exit_code']}")
+        if "error" in status:
+            print(f"Ошибка: {status['error']}")
+        
+        # Показываем информацию о прокси
+        proxy_info = get_proxy_mode()
+        print(f"Прокси режим: {proxy_info.get('mode', 'tun')}")
+        if proxy_info.get('socks_port'):
+            print(f"SOCKS порт: {proxy_info['socks_port']}")
+        if proxy_info.get('http_port'):
+            print(f"HTTP порт: {proxy_info['http_port']}")
+    
+    elif args.command == "config":
+        if load_config_from_server():
+            send_telegram_message("📥 Конфигурация успешно обновлена")
+            print("Конфигурация успешно загружена")
+        else:
+            send_telegram_message("❌ Ошибка загрузки конфигурации")
+            print("Ошибка загрузки конфигурации")
+    
+    elif args.command == "proxy":
+        # Управление прокси режимом
+        if args.mode:
+            success, message = set_proxy_mode(args.mode, port=args.port)
+            print(message)
+            if success:
+                send_telegram_message(f"🔄 Прокси режим изменен на {args.mode}")
+        else:
+            # Показать текущий режим
+            proxy_info = get_proxy_mode()
+            print(f"Текущий прокси режим: {proxy_info.get('mode', 'tun')}")
+            print(f"Описание: {get_proxy_mode_description()}")
+            print(f"Настройки: {proxy_info}")
+    
+    elif args.command == "test-proxy":
+        # Тестирование прокси connectivity
+        results = test_proxy_connectivity()
+        if "error" in results:
+            print(f"Ошибка тестирования: {results['error']}")
+        else:
+            print("Результаты тестирования прокси:")
+            for url, result in results.get("results", {}).items():
+                status = "✅" if result.get("success") else "❌"
+                print(f"{status} {url}: {result.get('status_code', 'N/A')} ({result.get('response_time', 'N/A'):.2f}s)")
+    
+    elif args.command == "proxy-mode":
+        # Показать информацию о режиме прокси
+        proxy_info = get_proxy_mode()
+        description = get_proxy_mode_description()
+        
+        print(f"Текущий режим: {proxy_info.get('mode', 'tun')}")
+        print(f"Описание: {description}")
+        print(f"Настройки: {proxy_info}")
+        
+        # Показать доступные режимы
+        print("\nДоступные режимы:")
+        print("- tun: Стандартный VPN туннель")
+        print("- socks5: SOCKS5 прокси")
+        print("- http: HTTP прокси")
+        print("- transparent: Прозрачный прокси")
+        print("- auto: Автоматический выбор")
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,45 @@
+[Unit]
+Description=XVPN Client Backend Service
+Documentation=https://docs.xvpn.local
+After=network.target
+Requires=network.target
+
+[Service]
+Type=simple
+User=xvpn
+Group=xvpn
+WorkingDirectory=/opt/xvpn/client
+ExecStart=/usr/bin/python3 /opt/xvpn/client/chatvpn_backend.py config
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+Environment=PYTHONUNBUFFERED=1
+Environment=LOG_LEVEL=INFO
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/xvpn/client
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictSUIDSGID=true
+RemoveIPC=true
+PrivateUsers=true
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+MemoryMax=128M
+CPUQuota=25%
+
+# Health checking
+WatchdogSec=60
+WatchdogSignal=SIGTERM
+
+[Install]
+WantedBy=multi-user.target

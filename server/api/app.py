@@ -16,6 +16,7 @@ import time
 import uuid
 import sqlite3
 import logging
+import ssl
 from pathlib import Path
 
 # Настройка логирования
@@ -135,20 +136,113 @@ def manifest():
 
 @app.route("/clients/<client_uuid>.json")
 def client_config(client_uuid):
-    """Получение конфигурации клиента по UUID"""
+    """Получение конфигурации клиента по UUID с автоматическим переключением транспортов"""
     try:
+        # Проверяем существование клиента
         client_path = os.path.join(CLIENTS_DIR, f"{client_uuid}.json")
-        if os.path.exists(client_path):
+        client_exists = os.path.exists(client_path)
+        
+        # Загружаем манифест транспортов
+        manifest_path = Path.home() / "chatvpn" / "client" / "transports" / "manifest.json"
+        if not manifest_path.exists():
+            log_api_event("client", "fetch", "manifest_not_found", client_uuid)
+            return jsonify({"error": "transport manifest not found"}), 404
+        
+        with open(manifest_path, 'r', encoding='utf-8') as f:
+            manifest_data = json.load(f)
+        
+        # Получаем список доступных транспортов
+        transports = manifest_data.get("transports", [])
+        
+        # Фильтруем активные транспорты
+        active_transports = []
+        for transport in transports:
+            # Проверяем доступность транспорта
+            is_available = check_transport_availability(transport)
+            if is_available:
+                active_transports.append(transport)
+        
+        # Сортируем по приоритету
+        active_transports.sort(key=lambda x: x.get("priority", 999))
+        
+        if not active_transports:
+            log_api_event("client", "fetch", "no_available_transports", client_uuid)
+            return jsonify({"error": "no available transports"}), 503
+        
+        # Формируем конфигурацию клиента
+        client_config = {
+            "uuid": client_uuid,
+            "generated_at": int(time.time()),
+            "client_exists": client_exists,
+            "available_transports": len(active_transports),
+            "selected_transport": active_transports[0],  #首选
+            "fallback_transports": active_transports[1:3] if len(active_transports) > 1 else [],
+            "auto_fallback_enabled": True,
+            "health_check": {
+                "enabled": True,
+                "interval": 30,
+                "timeout": 5,
+                "max_failures": 3
+            },
+            "metadata": {
+                "manifest_version": manifest_data.get("version", "1.0"),
+                "last_updated": manifest_data.get("last_updated", ""),
+                "load_balancing": manifest_data.get("load_balancing", {}),
+                "fallback_policy": manifest_data.get("fallback_policy", {})
+            }
+        }
+        
+        # Если клиент существует, дополняем его данные
+        if client_exists:
             with open(client_path) as f:
-                client_data = json.load(f)
-            log_api_event("client", "fetch", "success", client_uuid)
-            return jsonify(client_data)
-        else:
-            log_api_event("client", "fetch", "not_found", client_uuid)
-            return jsonify({"error": "client not found"}), 404
+                existing_data = json.load(f)
+            client_config.update(existing_data)
+        
+        log_api_event("client", "fetch", "success", client_uuid)
+        return jsonify(client_config)
+        
     except Exception as e:
+        logger.error(f"Error in client_config: {e}")
         log_api_event("client", "fetch", "error", f"{client_uuid}: {str(e)}")
         return jsonify({"error": "internal server error"}), 500
+
+def check_transport_availability(transport):
+    """Проверка доступности транспорта"""
+    try:
+        config = transport.get("config", {})
+        host = config.get("server")
+        port = config.get("port")
+        
+        if not host or not port:
+            return False
+        
+        import socket
+        
+        # Проверка базовой доступности
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(5)
+        result = sock.connect_ex((host, port))
+        sock.close()
+        
+        # Для TLS проверяем доступность через HTTPS
+        if config.get("tls", {}).get("enabled", False):
+            try:
+                import ssl
+                context = ssl.create_default_context()
+                context.check_hostname = False
+                context.verify_mode = ssl.CERT_NONE
+                
+                with socket.create_connection((host, port), timeout=5) as sock:
+                    with context.wrap_socket(sock, server_hostname=host) as ssock:
+                        return True
+            except:
+                return False
+        
+        return result == 0
+        
+    except Exception as e:
+        logger.debug(f"Transport availability check failed: {e}")
+        return False
 
 @app.route("/mcp/v1/vpn.health")
 def vpn_health():
@@ -284,24 +378,124 @@ def new_client():
         log_api_event("newclient", "error", str(e))
         return jsonify({"error": "client creation failed"}), 500
 
+def create_https_context():
+    """Создание HTTPS контекста с продвинутой безопасностью"""
+    context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+    
+    # Настройка безопасности
+    context.minimum_version = ssl.TLSVersion.TLSv1_2
+    context.verify_mode = ssl.CERT_REQUIRED
+    context.check_hostname = True
+    
+    # Списки безопасных шифров
+    context.set_ciphers('ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:'
+                       'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:'
+                       'ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:'
+                       'AES128-GCM-SHA256:AES256-GCM-SHA384')
+    
+    # Загрузка сертификатов Let's Encrypt (если доступны)
+    cert_file = "/etc/letsencrypt/live/api.uss.hopto.org/fullchain.pem"
+    key_file = "/etc/letsencrypt/live/api.uss.hopto.org/privkey.pem"
+    
+    fallback_cert_file = BASE_DIR / "tls" / "selfsigned.crt"
+    fallback_key_file = BASE_DIR / "tls" / "selfsigned.key"
+    
+    if os.path.exists(cert_file) and os.path.exists(key_file):
+        logger.info("🔐 Using Let's Encrypt certificates")
+        context.load_cert_chain(cert_file, key_file)
+    elif os.path.exists(fallback_cert_file) and os.path.exists(fallback_key_file):
+        logger.info("🔐 Using fallback self-signed certificates")
+        context.load_cert_chain(fallback_cert_file, fallback_key_file)
+    else:
+        logger.warning("⚠️ No certificates found, creating self-signed")
+        # Создаем самоподписанный сертификат как запасной вариант
+        os.makedirs(BASE_DIR / "tls", exist_ok=True, mode=0o755)
+        
+        # Генерируем самоподписанный сертификат
+        from cryptography import x509
+        from cryptography.x509.oid import NameOID
+        from cryptography.hazmat.primitives import hashes, serialization
+        from cryptography.hazmat.primitives.asymmetric import rsa
+        from datetime import datetime, timedelta
+        
+        # Создаем приватный ключ
+        private_key = rsa.generate_private_key(
+            public_exponent=65537,
+            key_size=2048,
+        )
+        
+        # Создаем самоподписанный сертификат
+        subject = issuer = x509.Name([
+            x509.NameAttribute(NameOID.COUNTRY_NAME, "RU"),
+            x509.NameAttribute(NameOID.STATE_OR_PROVINCE_NAME, "Novosibirsk"),
+            x509.NameAttribute(NameOID.LOCALITY_NAME, "Novosibirsk"),
+            x509.NameAttribute(NameOID.ORGANIZATION_NAME, "XVPN"),
+            x509.NameAttribute(NameOID.COMMON_NAME, "api.uss.hopto.org"),
+        ])
+        
+        cert = x509.CertificateBuilder().subject_name(
+            subject
+        ).issuer_name(
+            issuer
+        ).public_key(
+            private_key.public_key()
+        ).serial_number(
+            x509.random_serial_number()
+        ).not_valid_before(
+            datetime.utcnow()
+        ).not_valid_after(
+            datetime.utcnow() + timedelta(days=365)
+        ).add_extension(
+            x509.SubjectAlternativeName([x509.DNSName("api.uss.hopto.org")]),
+            critical=False,
+        ).sign(private_key, hashes.SHA256())
+        
+        # Сохраняем сертификат и ключ
+        with open(fallback_cert_file, "wb") as f:
+            f.write(cert.public_bytes(serialization.Encoding.PEM))
+        with open(fallback_key_file, "wb") as f:
+            f.write(private_key.private_bytes(
+                encoding=serialization.Encoding.PEM,
+                format=serialization.PrivateFormat.PKCS8,
+                encryption_algorithm=serialization.NoEncryption(),
+            ))
+        
+        # Устанавливаем правильные права
+        os.chmod(fallback_cert_file, 0o644)
+        os.chmod(fallback_key_file, 0o600)
+        
+        context.load_cert_chain(fallback_cert_file, fallback_key_file)
+    
+    return context
+
+@app.before_request
+def enforce_https():
+    """Принудительное использование HTTPS"""
+    if not request.is_secure and not app.debug:
+        return jsonify({"error": "HTTPS required"}), 403
+
+@app.after_request
+def add_security_headers(response):
+    """Добавление заголовков безопасности"""
+    response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains; preload'
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+    response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'"
+    return response
+
 if __name__ == "__main__":
     logger.info("🚀 Starting XVPN Control API")
     
-    # Проверка наличия TLS сертификатов
-    TLS_DIR = BASE_DIR / "tls"
-    TLS_DIR.mkdir(parents=True, exist_ok=True, mode=0o755)
+    # Создаем HTTPS контекст
+    https_context = create_https_context()
     
-    cert_file = TLS_DIR / "selfsigned.crt"
-    key_file = TLS_DIR / "selfsigned.key"
-    
-    if os.path.exists(cert_file) and os.path.exists(key_file):
-        logger.info("🔐 Starting with HTTPS")
-        app.run(
-            host="0.0.0.0",
-            port=8443,
-            ssl_context=(cert_file, key_file),
-            debug=False
-        )
-    else:
-        logger.warning("⚠️ Starting with HTTP (no TLS certificates)")
-        app.run(host="0.0.0.0", port=8443, debug=False)
+    logger.info("🔐 Starting with HTTPS")
+    app.run(
+        host="0.0.0.0",
+        port=8443,
+        ssl_context=https_context,
+        debug=False,
+        threaded=True
+    )

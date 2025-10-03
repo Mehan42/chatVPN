@@ -1,9 +1,10 @@
 [Unit]
 Description=XVPN Agent Service with uv
 Documentation=https://docs.xvpn.local
-After=network.target
+After=network.target network-online.target
 Requires=network.target
 Requires=xvpn-api.service
+Requires=xvpn-redis.service
 
 [Service]
 Type=simple
@@ -12,24 +13,21 @@ Group=xvpn
 WorkingDirectory=/opt/xvpn
 ExecStart=/usr/local/bin/uvx run --app server.agent.main:agent
 Restart=always
-RestartSec=3
+RestartSec=5
+RestartMaxRetries=5
+StartLimitInterval=15min
+StartLimitBurst=5
 StandardOutput=journal
 StandardError=journal
-Environment=PYTHONPATH=/opt/xvpn/src:/opt/xvpn/server/agent
-Environment=PYTHONUNBUFFERED=1
-Environment=LOG_LEVEL=INFO
-Environment=DATABASE_URL=sqlite:///data/agent.db
-Environment=MANIFEST_URL=http://localhost:8443/transports/manifest.json
-Environment=HEALTH_URL=http://localhost:8443/mcp/v1/vpn.health
-Environment=AGENT_CONFIG_FILE=/opt/xvpn/config/agent.json
+TimeoutStopSec=30
+TimeoutStartSec=30
 
 # Security settings
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=true
-ReadWritePaths=/opt/xvpn/data /opt/xvpn/logs /opt/xvpn/pids
-ReadWritePaths=/opt/xvpn/config
+ReadWritePaths=/opt/xvpn/data /opt/xvpn/logs /opt/xvpn/pids /opt/xvpn/config
 ProtectKernelTunables=true
 ProtectKernelModules=true
 ProtectControlGroups=true
@@ -37,16 +35,40 @@ RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
 RestrictSUIDSGID=true
 RemoveIPC=true
 PrivateUsers=true
+ProtectKernelLogs=true
+ProtectHostname=true
+RestrictRealtime=true
+RestrictNamespaces=true
 
 # Resource limits
 LimitNOFILE=65536
 LimitNPROC=4096
 MemoryMax=256M
 CPUQuota=25%
+TasksMax=512
 
-# Health checking
+# Environment
+Environment=PYTHONPATH=/opt/xvpn/src:/opt/xvpn/server/agent
+Environment=PYTHONUNBUFFERED=1
+Environment=LOG_LEVEL=INFO
+Environment=DATABASE_URL=sqlite:///data/agent.db
+Environment=MANIFEST_URL=http://localhost:8443/transports/manifest.json
+Environment=HEALTH_URL=http://localhost:8443/mcp/v1/vpn.health
+Environment=AGENT_CONFIG_FILE=/opt/xvpn/config/agent.json
+Environment=AGENT_HEALTH_CHECK_INTERVAL=30
+Environment=AGENT_RETRY_DELAY=5
+
+# Health checking and monitoring
 WatchdogSec=30
 WatchdogSignal=SIGTERM
+
+# Logging configuration
+SyslogIdentifier=xvpn-agent
+SyslogLevel=info
+
+# Dependencies and ordering
+BindsTo=xvpn-api.service xvpn-redis.service
+After=xvpn-api.service xvpn-redis.service
 
 [Install]
 WantedBy=multi-user.target

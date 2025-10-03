@@ -13,6 +13,7 @@ import requests
 from pathlib import Path
 from typing import Dict, List, Optional, Any
 from discover import discover_transports
+from chatvpn_backend import reload_xray_config
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
@@ -108,7 +109,7 @@ class TransportManager:
                 time.sleep(5)
     
     def _check_transports_health(self):
-        """Проверка здоровья всех транспортов"""
+        """Проверка здоровья всех транспортов с автоматическим переключением"""
         try:
             # Получаем текущую конфигурацию
             config = self.fetch_client_config()
@@ -129,16 +130,40 @@ class TransportManager:
                     logger.warning(f"Current transport {self.current_transport['id']} failed (count: {self.failure_count})")
                     
                     # Если достигли лимита сбоев, переключаемся на запасной
-                    if self.failure_count >= self.max_failures and self.fallback_transports:
+                    if self.failure_count >= self.max_failures:
                         self._switch_to_fallback()
                     else:
-                        logger.info("Waiting for transport recovery...")
+                        logger.info(f"Waiting for transport recovery... (failures: {self.failure_count}/{self.max_failures})")
                 else:
                     self.failure_count = 0
                     logger.debug(f"Transport {self.current_transport['id']} is healthy")
             
+            # Периодически обновляем список доступных транспортов
+            current_time = time.time()
+            if current_time - self.last_health_check > 300:  # Каждые 5 минут
+                self._update_available_transports()
+                self.last_health_check = current_time
+            
         except Exception as e:
             logger.error(f"Error checking transports health: {e}")
+    
+    def _update_available_transports(self):
+        """Обновление списка доступных транспортов"""
+        try:
+            # Обнаруживаем доступные транспортсы
+            available_transports = self._discover_available_transports()
+            
+            if available_transports:
+                # Если текущий транспорт не в списке доступных, переключаемся
+                if not self.current_transport or not any(
+                    t.get('id') == self.current_transport.get('id')
+                    for t in available_transports
+                ):
+                    logger.info("Current transport not available, switching to best available")
+                    self._switch_to_fallback()
+                    
+        except Exception as e:
+            logger.error(f"Error updating available transports: {e}")
     
     def _check_transport_health(self, transport: Dict) -> bool:
         """Проверка здоровья конкретного транспорта"""
@@ -148,82 +173,169 @@ class TransportManager:
             port = config.get('port')
             
             if not host or not port:
+                logger.warning(f"Transport {transport.get('id')} missing host or port")
                 return False
             
-            # Базовая проверка доступности
+            logger.debug(f"Checking health for {transport.get('id')} on {host}:{port}")
+            
+            # Проверка доступности с учетом IPv4/IPv6
+            if self._check_connectivity(host, port):
+                logger.debug(f"Transport {transport.get('id')} is healthy")
+                return True
+            else:
+                logger.debug(f"Transport {transport.get('id')} is unhealthy")
+                return False
+                
+        except Exception as e:
+            logger.debug(f"Transport health check failed for {transport.get('id')}: {e}")
+            return False
+    
+    def _check_connectivity(self, host: str, port: int, timeout: int = 5) -> bool:
+        """Проверка подключения к хосту с поддержкой IPv4/IPv6"""
+        try:
+            # Проверка IPv4
             import socket
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.settimeout(5)
-            result = sock.connect_ex((host, port))
-            sock.close()
+            try:
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sock.settimeout(timeout)
+                result = sock.connect_ex((host, port))
+                sock.close()
+                if result == 0:
+                    logger.debug(f"IPv4 connectivity to {host}:{port} successful")
+                    return True
+            except:
+                logger.debug(f"IPv4 connectivity to {host}:{port} failed")
             
-            if result != 0:
-                return False
+            # Проверка IPv6
+            try:
+                sock = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
+                sock.settimeout(timeout)
+                result = sock.connect_ex((host, port))
+                sock.close()
+                if result == 0:
+                    logger.debug(f"IPv6 connectivity to {host}:{port} successful")
+                    return True
+            except:
+                logger.debug(f"IPv6 connectivity to {host}:{port} failed")
             
             # Для TLS проверяем через HTTPS
-            if config.get('tls', {}).get('enabled', False):
-                try:
+            try:
+                config = self.current_transport.get('config', {}) if self.current_transport else {}
+                if config.get('tls', {}).get('enabled', False):
                     import ssl
                     context = ssl.create_default_context()
                     context.check_hostname = False
                     context.verify_mode = ssl.CERT_NONE
                     
-                    with socket.create_connection((host, port), timeout=5) as sock:
-                        with context.wrap_socket(sock, server_hostname=host) as ssock:
-                            return True
-                except:
-                    return False
+                    # Пробуем IPv4
+                    try:
+                        with socket.create_connection((host, port), timeout) as sock:
+                            with context.wrap_socket(sock, server_hostname=host) as ssock:
+                                logger.debug(f"TLS connectivity to {host}:{port} successful")
+                                return True
+                    except:
+                        pass
+                    
+                    # Пробуем IPv6
+                    try:
+                        with socket.create_connection((host, port), timeout) as sock:
+                            with context.wrap_socket(sock, server_hostname=host) as ssock:
+                                logger.debug(f"IPv6 TLS connectivity to {host}:{port} successful")
+                                return True
+                    except:
+                        pass
             
-            return True
+            except Exception as e:
+                logger.debug(f"TLS connectivity check failed: {e}")
+            
+            return False
             
         except Exception as e:
-            logger.debug(f"Transport health check failed: {e}")
+            logger.debug(f"Connectivity check failed: {e}")
             return False
     
     def _switch_to_fallback(self):
-        """Переключение на запасной транспорт"""
-        if not self.fallback_transports:
-            logger.warning("No fallback transports available")
+        """Переключение на запасной транспорт с автоматическим обнаружением"""
+        logger.info("Attempting to switch to fallback transport...")
+        
+        # Сначала пробуем обнаружить доступные транспортсы
+        available_transports = self._discover_available_transports()
+        
+        if not available_transports:
+            logger.warning("No available transports found via discovery")
             return
         
-        # Выбираем первый доступный запасной транспорт
-        for fallback in self.fallback_transports:
-            if self._check_transport_health(fallback):
-                old_transport = self.current_transport
-                self.current_transport = fallback
-                self.failure_count = 0
-                
-                logger.info(f"Switched from {old_transport['id']} to {fallback['id']}")
-                
-                # Здесь можно добавить логику перезапуска VPN с новым транспортом
-                self._restart_vpn_with_transport(fallback)
-                break
+        # Выбираем лучший доступный транспорт
+        best_transport = available_transports[0]
+        old_transport = self.current_transport
+        
+        if best_transport:
+            self.current_transport = best_transport
+            self.failure_count = 0
+            
+            logger.info(f"Auto-switched from {old_transport['id'] if old_transport else 'None'} to {best_transport['id']} (Score: {best_transport.get('score', 0)})")
+            
+            # Перезапускаем VPN с новым транспортом
+            self._restart_vpn_with_transport(best_transport)
         else:
             logger.error("No fallback transport is available")
+    
+    def _discover_available_transports(self):
+        """Обнаружение доступных транспортов с оценкой"""
+        try:
+            manifest_path = Path.home() / 'chatvpn' / 'client' / 'transports' / 'manifest.json'
+            discovered = discover_transports(manifest_path)
+            
+            available_transports = []
+            for result in discovered:
+                if result['score'] >= 2:  # Минимальная оценка для использования
+                    available_transports.append(result['transport'])
+            
+            logger.info(f"Discovered {len(available_transports)} available transports")
+            return available_transports
+            
+        except Exception as e:
+            logger.error(f"Error discovering transports: {e}")
+            return []
     
     def _restart_vpn_with_transport(self, transport: Dict):
         """Перезапуск VPN с указанным транспортом"""
         try:
-            # Здесь должна быть логика перезапуска VPN с новым транспортом
-            # Пока просто записываем в лог
             logger.info(f"VPN restart requested with transport: {transport['id']}")
             
-            # Пример: сохраняем конфигурацию и перезапускаем
+            # Сохраняем конфигурацию транспорта
             config = transport.get('config', {})
             vpn_config = {
                 'server': config.get('server'),
                 'port': config.get('port'),
                 'protocol': config.get('protocol', 'tcp'),
                 'type': transport.get('type'),
-                'uuid': self.client_uuid
+                'uuid': self.client_uuid,
+                'transport_id': transport.get('id'),
+                'transport_name': transport.get('name')
             }
             
             # Сохраняем конфигурацию
             config_path = Path.home() / 'chatvpn' / 'client' / 'current_transport.json'
+            config_path.parent.mkdir(parents=True, exist_ok=True)
             with open(config_path, 'w') as f:
                 json.dump(vpn_config, f, indent=2)
             
             logger.info(f"Transport config saved to {config_path}")
+            
+            # Перезапускаем XRay с новой конфигурацией
+            try:
+                reload_xray_config()
+                logger.info("XRay configuration reloaded successfully")
+            except Exception as e:
+                logger.error(f"Failed to reload XRay configuration: {e}")
+                # Пробуем перезапустить XRay
+                try:
+                    from chatvpn_backend import restart_xray
+                    restart_xray()
+                    logger.info("XRay restarted successfully")
+                except Exception as restart_e:
+                    logger.error(f"Failed to restart XRay: {restart_e}")
             
         except Exception as e:
             logger.error(f"Error restarting VPN with transport {transport['id']}: {e}")

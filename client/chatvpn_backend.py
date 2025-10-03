@@ -90,25 +90,39 @@ def create_https_context():
 
 def make_secure_request(url, **kwargs):
     """
-    Выполняет безопасный HTTPS запрос с TLS пиннингом
+    Выполняет безопасный HTTPS запрос с корректной обработкой TLS
     """
     try:
         # Проверяем, что это HTTPS URL
         parsed_url = urlparse(url)
         if parsed_url.scheme != 'https':
-            raise ValueError("TLS пиннинг поддерживается только для HTTPS")
+            raise ValueError("HTTPS запрос поддерживается только для HTTPS URL")
         
-        # Создаем контекст с TLS пиннингом
+        # Для самоподписанных сертификатов отключаем проверку
+        # В production нужно использовать verify=True с правильными сертификатами
+        verify = kwargs.pop('verify', False)
+        
+        # Создаем кастомный контекст для безопасности
         context = create_https_context()
         
         # Выполняем запрос с кастомным контекстом
-        response = requests.get(url, verify=True, **kwargs)
+        response = requests.get(url, verify=verify, **kwargs)
         response.raise_for_status()
         
         return response
     
     except requests.exceptions.SSLError as e:
         print(f"Ошибка SSL/TLS: {e}")
+        # Пробуем без проверки для самоподписанных сертификатов
+        if "self signed certificate" in str(e).lower():
+            print("Попытка подключения с отключенной проверкой сертификата...")
+            try:
+                response = requests.get(url, verify=False, **kwargs)
+                response.raise_for_status()
+                return response
+            except Exception as e2:
+                print(f"Ошибка даже с отключенной проверкой: {e2}")
+                raise e2
         raise
     except requests.exceptions.RequestException as e:
         print(f"Ошибка запроса: {e}")

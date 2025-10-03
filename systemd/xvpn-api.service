@@ -1,8 +1,9 @@
 [Unit]
 Description=XVPN API Service with uv
 Documentation=https://docs.xvpn.local
-After=network.target
+After=network.target network-online.target
 Requires=network.target
+Requires=xvpn-redis.service xvpn-traefik.service
 
 [Service]
 Type=simple
@@ -11,9 +12,41 @@ Group=xvpn
 WorkingDirectory=/opt/xvpn
 ExecStart=/usr/local/bin/uvx run --app server.api.main:app
 Restart=always
-RestartSec=3
+RestartSec=5
+RestartMaxRetries=5
+StartLimitInterval=10min
+StartLimitBurst=5
 StandardOutput=journal
 StandardError=journal
+TimeoutStopSec=30
+TimeoutStartSec=30
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/xvpn/data /opt/xvpn/logs /opt/xvpn/pids /opt/xvpn/config
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictSUIDSGID=true
+RemoveIPC=true
+PrivateUsers=true
+ProtectKernelLogs=true
+ProtectHostname=true
+RestrictRealtime=true
+RestrictNamespaces=true
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+MemoryMax=512M
+CPUQuota=50%
+TasksMax=512
+
+# Environment
 Environment=PYTHONPATH=/opt/xvpn/src:/opt/xvpn/server
 Environment=FLASK_ENV=production
 Environment=FLASK_DEBUG=false
@@ -22,27 +55,20 @@ Environment=DATABASE_URL=sqlite:///data/xvpn.db
 Environment=REDIS_URL=redis://localhost:6379/0
 Environment=LOG_LEVEL=INFO
 Environment=XVPN_CONFIG_FILE=/opt/xvpn/config/api.json
+Environment=UVICORN_WORKERS=4
+Environment=UVICORN_TIMEOUT=30
 
-# Security settings
-NoNewPrivileges=true
-PrivateTmp=true
-ProtectSystem=strict
-ProtectHome=true
-ReadWritePaths=/opt/xvpn/data /opt/xvpn/logs /opt/xvpn/pids
-ReadWritePaths=/opt/xvpn/config
-ProtectKernelTunables=true
-ProtectKernelModules=true
-ProtectControlGroups=true
-RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
-RestrictSUIDSGID=true
-RemoveIPC=true
-PrivateUsers=true
+# Health checking and monitoring
+WatchdogSec=30
+WatchdogSignal=SIGTERM
 
-# Resource limits
-LimitNOFILE=65536
-LimitNPROC=4096
-MemoryMax=512M
-CPUQuota=50%
+# Logging configuration
+SyslogIdentifier=xvpn-api
+SyslogLevel=info
+
+# Dependencies and ordering
+BindsTo=xvpn-redis.service
+After=xvpn-redis.service
 
 [Install]
 WantedBy=multi-user.target

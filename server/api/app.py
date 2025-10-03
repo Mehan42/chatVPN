@@ -115,6 +115,69 @@ def index():
         "status": "running"
     })
 
+@app.route("/api/v1/status")
+def api_status():
+    """Статус API сервиса"""
+    try:
+        # Проверка состояния БД
+        db_status = "ok"
+        try:
+            conn = sqlite3.connect(DB_PATH)
+            conn.close()
+        except:
+            db_status = "error"
+        
+        # Проверка манифеста
+        manifest_status = "ok"
+        try:
+            if not MANIFEST_PATH.exists():
+                manifest_status = "missing"
+            else:
+                with open(MANIFEST_PATH) as f:
+                    json.load(f)
+        except:
+            manifest_status = "error"
+        
+        # Проверка директории клиентов
+        clients_status = "ok"
+        try:
+            if not CLIENTS_DIR.exists():
+                clients_status = "missing"
+            else:
+                # Проверяем наличие хотя бы одного клиента
+                client_files = [f for f in CLIENTS_DIR.glob("*.json")]
+                if not client_files:
+                    clients_status = "empty"
+        except:
+            clients_status = "error"
+        
+        # Общая оценка состояния
+        overall_status = "ok"
+        if db_status == "error" or manifest_status == "error":
+            overall_status = "error"
+        elif clients_status == "missing":
+            overall_status = "warning"
+        
+        result = {
+            "service": "XVPN Control API",
+            "version": "1.0",
+            "status": overall_status,
+            "timestamp": int(time.time()),
+            "components": {
+                "database": db_status,
+                "manifest": manifest_status,
+                "clients": clients_status
+            },
+            "uptime": int(time.time())  # Простой uptime счетчик
+        }
+        
+        log_api_event("status", "check", "success")
+        return jsonify(result)
+        
+    except Exception as e:
+        log_api_event("status", "check", "error", str(e))
+        return jsonify({"error": "status check failed", "details": str(e)}), 500
+
 @app.route("/transports/manifest.json")
 def manifest():
     """Получение манифеста транспортов"""
@@ -379,13 +442,13 @@ def new_client():
         return jsonify({"error": "client creation failed"}), 500
 
 def create_https_context():
-    """Создание HTTPS контекста с продвинутой безопасностью"""
+    """Создание HTTPS контекста для сервера"""
     context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
     
-    # Настройка безопасности
+    # Настройка безопасности - отключаем проверку клиентских сертификатов для самоподписанных
     context.minimum_version = ssl.TLSVersion.TLSv1_2
-    context.verify_mode = ssl.CERT_REQUIRED
-    context.check_hostname = True
+    context.verify_mode = ssl.CERT_NONE  # Изменено с CERT_REQUIRED на CERT_NONE
+    context.check_hostname = False
     
     # Списки безопасных шифров
     context.set_ciphers('ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:'

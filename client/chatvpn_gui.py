@@ -137,19 +137,21 @@ class App(tk.Tk):
             print(f"[CLIENT] Error initializing client: {e}")
             messagebox.showerror("Ошибка", f"Ошибка инициализации: {e}")
     
-    def on_state_change(self, event_type, context):
+    def on_state_change(self, state, context):
         """Callback для изменения состояния"""
         # Обновление GUI в основном потоке
-        self.after(0, self.update_gui_state, event_type, context)
+        self.after(0, self.update_gui_state, state, context)
     
-    def update_gui_state(self, event_type, context):
+    def update_gui_state(self, state, context):
         """Обновление GUI при изменении состояния"""
         if not self.client:
             return
         
-        # Обновление статуса
-        state_info = self.client.get_state_info()
-        current_state = state_info.get('current_state', 'unknown')
+        # Обновление статуса на основе состояния
+        if hasattr(state, 'value'):
+            current_state = state.value
+        else:
+            current_state = str(state)
         
         if current_state == 'running':
             self.status_lbl.config(text="Статус: ON")
@@ -162,7 +164,7 @@ class App(tk.Tk):
         
         # Обновление индикатора безопасности
         try:
-            health_score = self.client.get_health_score()
+            health_score = context.health_score if context else 0
             self.update_security_indicator(health_score)
         except:
             self.security_indicator.config(fg="gray")
@@ -170,7 +172,10 @@ class App(tk.Tk):
         
         # Обновление информации о сети
         try:
-            network_info = self.client.get_network_info()
+            if context and hasattr(context, 'network_info') and context.network_info:
+                network_info = context.network_info
+            else:
+                network_info = self.client.get_network_info()
             
             # IPv4 информация
             ipv4 = network_info.get("external_ips", {}).get("ipv4", "-")
@@ -196,11 +201,9 @@ class App(tk.Tk):
         except:
             self.speed_lbl.config(text="Скорость: Ошибка")
     
-    def update_security_indicator(self):
+    def update_security_indicator(self, health_score=0):
         """Обновление индикатора безопасности на основе оценки маскировки"""
         try:
-            health_score = self.client.get_health_score()
-            
             # Определяем цвет и статус на основе оценки
             if health_score >= 4:
                 color = "green"
@@ -350,10 +353,14 @@ class App(tk.Tk):
         
         try:
             # Обновление состояния через client
-            self.update_gui_state("refresh", None)
+            state_info = self.client.get_state_info()
+            current_state = State(state_info.get('current_state', 'idle'))
+            context = self.client.context if hasattr(self.client, 'context') else None
+            self.update_gui_state(current_state, context)
             
             # Обновление индикатора безопасности
-            self.update_security_indicator()
+            health_score = self.client.get_health_score() if hasattr(self.client, 'get_health_score') else 0
+            self.update_security_indicator(health_score)
         except Exception as e:
             print(f"Error refreshing status: {e}")
 

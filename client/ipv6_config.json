@@ -1,0 +1,17 @@
+{
+  "ipv6_enabled": true,
+  "dual_stack_enabled": true,
+  "preferred_v6_services": [
+    "https://api6.ipify.org",
+    "https://ifconfig.co/ip",
+    "https://icanhazip.com",
+    "https://v6.ident.me"
+  ],
+  "ipv6_dns_servers": [
+    "2001:4860:4860::8888",
+    "2606:4700:4700::1111",
+    "2001:503:BA3E::2:30"
+  ],
+  "ipv6_routing_table": "main",
+  "prefer_ipv6_over_ipv4": false
+}

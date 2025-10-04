@@ -1,0 +1,435 @@
+# XVPN Changelog Configuration
+# Конфигурация автоматической генерации журнала изменений
+
+# === Конфигурация Changelog ===
+changelog:
+  # Формат даты
+  date_format: "%Y-%m-%d"
+  
+  # Заголовок журнала изменений
+  header: |
+    # Changelog
+    
+    All notable changes to this project will be documented in this file.
+    
+    The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+    and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+  
+  # Шаблон для новой версии
+  version_template: "## [{version}] - {date}"
+  
+  # Шаблон для неопубликованных изменений
+  unreleased_template: "## [Unreleased] - {date}"
+  
+  # Категории изменений
+  categories:
+    - title: "### Added"
+      labels:
+        - "feature"
+        - "enhancement"
+        - "new-feature"
+      commits:
+        - "feat"
+        - "feature"
+        
+    - title: "### Changed"
+      labels:
+        - "changed"
+        - "enhancement"
+        - "refactor"
+      commits:
+        - "change"
+        - "refactor"
+        - "chore"
+        
+    - title: "### Deprecated"
+      labels:
+        - "deprecated"
+        - "deprecation"
+      commits:
+        - "deprecate"
+        
+    - title: "### Removed"
+      labels:
+        - "removed"
+        - "removal"
+      commits:
+        - "remove"
+        
+    - title: "### Fixed"
+      labels:
+        - "bug"
+        - "fix"
+        - "hotfix"
+      commits:
+        - "fix"
+        - "bugfix"
+        
+    - title: "### Security"
+      labels:
+        - "security"
+        - "vulnerability"
+        - "cve"
+      commits:
+        - "security"
+        - "sec"
+        
+    - title: "### Performance"
+      labels:
+        - "performance"
+        - "optimization"
+        - "speed"
+      commits:
+        - "perf"
+        - "performance"
+        
+    - title: "### Documentation"
+      labels:
+        - "documentation"
+        - "docs"
+      commits:
+        - "docs"
+        - "doc"
+        
+    - title: "### Testing"
+      labels:
+        - "testing"
+        - "test"
+      commits:
+        - "test"
+        - "testing"
+        
+    - title: "### Build"
+      labels:
+        - "build"
+        - "ci"
+        - "cd"
+      commits:
+        - "build"
+        - "ci"
+        - "cd"
+        
+    - title: "### Dependencies"
+      labels:
+        - "dependencies"
+        - "deps"
+      commits:
+        - "deps"
+        - "dependency"
+        
+    - title: "### Docker"
+      labels:
+        - "docker"
+        - "container"
+      commits:
+        - "docker"
+        - "container"
+        
+    - title: "### Configuration"
+      labels:
+        - "configuration"
+        - "config"
+      commits:
+        - "config"
+        - "configuration"
+
+# === Конфигурация Semantic Release ===
+semantic-release:
+  # Плагины Semantic Release
+  plugins:
+    - "@semantic-release/commit-analyzer"
+    - "@semantic-release/release-notes-generator"
+    - "@semantic-release/github"
+    - "@semantic-release/changelog"
+    - "@semantic-release/git"
+    
+  # Настройки плагинов
+  commit-analyzer:
+    preset: "angular"
+    releaseRules:
+      - type: "feat"
+        release: "minor"
+      - type: "fix"
+        release: "patch"
+      - type: "perf"
+        release: "patch"
+      - type: "revert"
+        release: "patch"
+      - type: "docs"
+        release: "patch"
+      - type: "refactor"
+        release: "patch"
+      - type: "chore"
+        release: false
+      - type: "style"
+        release: false
+      - type: "test"
+        release: false
+      - breaking: true
+        release: "major"
+        
+  release-notes-generator:
+    preset: "angular"
+    writerOpts:
+      groupBy: "type"
+      commitGroupsSort: "title"
+      commitsSort: "header"
+      
+  github:
+    assets:
+      - "dist/**"
+      - "docs/**"
+    releasedLabels:
+      - "Status: Released"
+      - "Type: Release"
+      
+  changelog:
+    changelogFile: "CHANGELOG.md"
+    changelogTitle: "# Changelog\n\nAll notable changes to this project will be documented in this file."
+    
+  git:
+    assets:
+      - "CHANGELOG.md"
+      - "package.json"
+    commitMessage: "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+
+# === Конфигурация conventional-changelog ===
+conventional-changelog:
+  preset: "angular"
+  tagPrefix: "v"
+  releaseCount: 0
+  
+  # Настройки генератора
+  writerOpts:
+    # Группировка по типам коммитов
+    groupBy: "type"
+    # Сортировка групп коммитов
+    commitGroupsSort: "title"
+    # Сортировка коммитов внутри групп
+    commitsSort: "header"
+    
+    # Формат заголовка
+    mainTemplate: |
+      # Changelog
+      
+      All notable changes to this project will be documented in this file.
+      
+      The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+      and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+      
+      {{> header}}
+      
+      {{#each releases}}
+      {{#if @first}}
+      {{> version-dropdown}}
+      {{/if}}
+      {{/each}}
+      
+    # Шаблон для заголовка версии
+    headerPartial: |
+      ## {{#if @root.linkCompare~}}
+      [{{version}}]({{@root.repositoryUrl}}/compare/{{previousTag}}...{{currentTag}})
+      {{~else}}
+      {{~version}}
+      {{~/if}}
+      {{~#if title}} "{{title}}"
+      {{~/if}}
+      {{~#if date}} ({{date}})
+      {{/if}}
+      
+    # Шаблон для группы коммитов
+    commitGroupTemplate: |
+      ### {{title}}
+      
+      {{#each commits}}
+      {{> commit-root}}
+      {{/each}}
+      
+    # Шаблон для отдельного коммита
+    commitTemplate: |
+      - {{#if scope}}**{{scope}}:** {{/if}}{{subject}}
+      {{~#if hash}} {{#if @root.linkReferences~}}
+      ([{{shortHash}}]({{@root.repositoryUrl}}/commit/{{hash}}))
+      {{~else}}
+      ({{shortHash}})
+      {{~/if}}{{/if}}
+
+# === Конфигурация автоматической генерации ===
+auto-changelog:
+  # Входной файл с коммитами
+  input: ".git/logs/HEAD"
+  
+  # Выходной файл журнала изменений
+  output: "CHANGELOG.md"
+  
+  # Шаблон для заголовка
+  template: "keepachangelog"
+  
+  # Формат даты
+  date-format: "YYYY-MM-DD"
+  
+  # Игнорируемые коммиты
+  ignore-commit-pattern: "^chore|^style|^refactor|^test"
+  
+  # Максимальное количество коммитов для обработки
+  max-commits: 1000
+  
+  # Сортировка коммитов
+  sort-commits: "date-desc"
+  
+  # Добавлять ли ссылки на коммиты
+  commit-partial: |
+    - {{#if scope}}**{{scope}}:** {{/if}}{{subject}}
+    {{~#if hash}} {{#if @root.linkReferences~}}
+    ([{{shortHash}}]({{@root.repositoryUrl}}/commit/{{hash}}))
+    {{~else}}
+    ({{shortHash}})
+    {{~/if}}{{/if}}
+
+# === Конфигурация GitHub ===
+github:
+  # URL репозитория
+  repository-url: "https://github.com/Mehan42/chatVPN"
+  
+  # Префикс для тегов версий
+  tag-prefix: "v"
+  
+  # Формат даты для релизов
+  release-date-format: "YYYY-MM-DD"
+  
+  # Автоматически создавать релизы
+  auto-create-releases: true
+  
+  # Автоматически публиковать релизы
+  auto-publish-releases: true
+  
+  # Добавлять заметки к релизам
+  release-notes: true
+  
+  # Добавлять ассеты к релизам
+  release-assets:
+    - "dist/**"
+    - "docs/**"
+
+# === Конфигурация версионирования ===
+versioning:
+  # Тип версионирования
+  type: "semver"
+  
+  # Начальная версия
+  initial-version: "1.0.0"
+  
+  # Автоматическое увеличение версии
+  auto-increment: true
+  
+  # Префикс для версий
+  version-prefix: "v"
+  
+  # Формат версии
+  version-format: "major.minor.patch"
+  
+  # Автоматически обновлять файлы версий
+  auto-update-files:
+    - "package.json"
+    - "pyproject.toml"
+    - "setup.py"
+    - "src/xvpn/__init__.py"
+
+# === Конфигурация уведомлений ===
+notifications:
+  # Уведомлять о новых релизах
+  release-notifications: true
+  
+  # Уведомлять о важных изменениях
+  important-changes: true
+  
+  # Уведомлять о breaking changes
+  breaking-changes: true
+  
+  # Уведомлять о security updates
+  security-updates: true
+  
+  # Каналы уведомлений
+  channels:
+    - type: "slack"
+      webhook: "${{ secrets.SLACK_WEBHOOK }}"
+      channel: "#releases"
+      
+    - type: "telegram"
+      bot-token: "${{ secrets.TELEGRAM_BOT_TOKEN }}"
+      chat-id: "${{ secrets.TELEGRAM_CHAT_ID }}"
+      
+    - type: "email"
+      smtp-server: "smtp.gmail.com"
+      smtp-port: 465
+      username: "${{ secrets.EMAIL_USERNAME }}"
+      password: "${{ secrets.EMAIL_PASSWORD }}"
+      to: "releases@xvpn.local"
+      from: "release-bot@xvpn.local"
+
+# === Конфигурация интеграции ===
+integrations:
+  # Интеграция с GitHub
+  github:
+    enabled: true
+    auto-sync: true
+    auto-publish: true
+    
+  # Интеграция с Docker Hub
+  docker-hub:
+    enabled: true
+    auto-publish: true
+    repositories:
+      - "mehan42/xvpn"
+      - "mehan42/xvpn-api"
+      - "mehan42/xvpn-agent"
+      - "mehan42/xvpn-bot"
+      - "mehan42/xvpn-worker"
+      - "mehan42/xvpn-orchestrator"
+      
+  # Интеграция с PyPI
+  pypi:
+    enabled: true
+    auto-publish: true
+    packages:
+      - "xvpn"
+      
+  # Интеграция с npm
+  npm:
+    enabled: false
+    auto-publish: false
+    
+  # Интеграция с Maven Central
+  maven-central:
+    enabled: false
+    auto-publish: false
+
+# === Конфигурация безопасности ===
+security:
+  # Проверять зависимости на уязвимости
+  check-dependencies: true
+  
+  # Автоматически обновлять уязвимые зависимости
+  auto-update-vulnerable: true
+  
+  # Уведомлять о найденных уязвимостях
+  vulnerability-notifications: true
+  
+  # Блокировать выпуск с уязвимостями
+  block-release-with-vulnerabilities: true
+
+# === Пример использования ===
+# Для генерации журнала изменений вручную:
+# ```bash
+# npx conventional-changelog-cli -p angular -i CHANGELOG.md -s
+# ```
+#
+# Для автоматической генерации при релизе:
+# ```bash
+# npx semantic-release
+# ```
+#
+# Для обновления журнала изменений:
+# ```bash
+# npx auto-changelog --commit-limit false
+# ```

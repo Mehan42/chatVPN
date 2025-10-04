@@ -1,34 +1,33 @@
+# XVPN Worker Service
+# Служба XVPN воркера
+
 [Unit]
-Description=XVPN Worker Service with uv
-Documentation=https://docs.xvpn.local
-After=network.target
-Requires=network.target
-Requires=redis.service
+Description=XVPN Worker Service
+After=network.target xvpn-api.service redis.service
+Wants=network.target xvpn-api.service redis.service
+Requires=network.target xvpn-api.service redis.service
 
 [Service]
 Type=simple
-User=xvpn
-Group=xvpn
-WorkingDirectory=/opt/xvpn
-ExecStart=/usr/local/bin/uvx run --app server.worker.main:worker
+User=uss
+Group=uss
+WorkingDirectory=/home/uss/chatvpn/server/worker
+Environment=PYTHONPATH=/home/uss/chatvpn/server/worker
+ExecStart=/usr/bin/python3 /home/uss/chatvpn/server/worker/worker.py
 Restart=always
-RestartSec=3
+RestartSec=5
 StandardOutput=journal
 StandardError=journal
-Environment=PYTHONPATH=/opt/xvpn/src:/opt/xvpn/server
-Environment=PYTHONUNBUFFERED=1
-Environment=LOG_LEVEL=INFO
-Environment=WORKER_CONFIG_FILE=/opt/xvpn/config/worker.json
-Environment=REDIS_URL=redis://localhost:6379/0
-Environment=WORKER_COUNT=2
+SyslogIdentifier=xvpn-worker
 
 # Security settings
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=true
-ReadWritePaths=/opt/xvpn/data /opt/xvpn/logs /opt/xvpn/pids
-ReadWritePaths=/opt/xvpn/config
+ReadWritePaths=/home/uss/chatvpn/server/worker /var/log/xvpn /opt/xvpn/data
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 ProtectKernelTunables=true
 ProtectKernelModules=true
 ProtectControlGroups=true
@@ -41,27 +40,8 @@ PrivateUsers=true
 LimitNOFILE=65536
 LimitNPROC=4096
 MemoryMax=512M
-CPUQuota=50%
-
-# Watchdog for monitoring
-WatchdogSec=30
-WatchdogSignal=SIGTERM
-
-# Security: Restrict filesystem access
-ProtectProc=invisible
-ProtectHostname=true
-RemoveIPC=true
-RestrictSUIDSGID=true
-RestrictRealtime=true
-RestrictNamespaces=true
-
-# Temporary file handling
-PrivateTmp=true
-PrivateDevices=true
-ProtectHome=true
-ProtectSystem=strict
-ReadWritePaths=/opt/xvpn/data /opt/xvpn/logs /opt/xvpn/pids
-ReadWritePaths=/opt/xvpn/config
+CPUQuota=25%
+TasksMax=256
 
 [Install]
 WantedBy=multi-user.target

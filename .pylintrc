@@ -1,0 +1,166 @@
+# XVPN Pylint Configuration
+# Конфигурация линтера Python
+
+[MASTER]
+# Директории для исключения
+ignore-patterns = test_.*,conftest.py
+ignore-paths = ^\..*,^build/.*,^dist/.*,^.eggs/.*,^venv/.*,^.venv/.*,^env/.*,^.env/.*
+
+# Расширения для загрузки
+load-plugins = pylint.extensions.docparams,pylint.extensions.docstyle
+
+# Файлы для исключения из проверки
+ignore = CVS
+
+[MESSAGES CONTROL]
+# Отключить определенные предупреждения
+disable =
+    # Слишком много аргументов у функции
+    too-many-arguments,
+    # Слишком много локальных переменных
+    too-many-locals,
+    # Слишком много публичных методов
+    too-many-public-methods,
+    # Слишком длинные строки
+    line-too-long,
+    # Слишком сложные функции
+    too-many-branches,
+    too-many-statements,
+    too-many-return-statements,
+    too-many-nested-blocks,
+    too-many-instance-attributes,
+    too-few-public-methods,
+    missing-docstring,
+    invalid-name,
+    unused-argument,
+    broad-except,
+    duplicate-code,
+    fixme,
+    TODO,
+    FIXME,
+    XXX,
+    W0511,
+    C0103,
+    C0111,
+    C0114,
+    C0115,
+    C0116,
+    R0903,
+    R0904,
+    R0913,
+    R0914,
+    R0915,
+    W0613,
+    W0622,
+    W0703,
+    R0801
+
+# Включить определенные предупреждения
+enable =
+    # Проверка документации
+    missing-param-doc,
+    missing-return-doc,
+    missing-yield-doc,
+    differing-param-doc,
+    differing-return-doc,
+    differing-yield-doc
+
+[FORMAT]
+# Максимальная длина строки
+max-line-length = 88
+
+# Отступ для продолжения строки
+indent-string = '    '
+
+# Количество пробелов для отступа
+indent-after-paren = 4
+
+[VARIABLES]
+# Имена переменных для игнорирования
+ignored-argument-names = _.*
+
+# Разрешить использование глобальных переменных
+allow-global-unused-variables = yes
+
+[BASIC]
+# Регулярные выражения для имен переменных
+good-names = i,j,k,x,y,z,_,id
+
+# Максимальная арность функции
+max-args = 10
+
+# Максимальное количество локальных переменных
+max-locals = 20
+
+# Максимальное количество возвращаемых значений
+max-returns = 6
+
+# Максимальное количество ветвлений
+max-branches = 20
+
+# Максимальное количество операторов
+max-statements = 100
+
+# Максимальная вложенность блоков
+max-nested-blocks = 5
+
+# Максимальное количество публичных методов
+max-public-methods = 20
+
+# Максимальное количество атрибутов экземпляра
+max-attributes = 10
+
+[DESIGN]
+# Минимальное количество публичных методов
+min-public-methods = 0
+
+# Максимальное количество родителей
+max-parents = 7
+
+# Максимальная глубина наследования
+max-depth = 10
+
+[SIMILARITIES]
+# Минимальное количество строк для срабатывания дублирования
+min-similarity-lines = 10
+
+# Игнорировать комментарии при проверке дублирования
+ignore-comments = yes
+
+# Игнорировать строки документации при проверке дублирования
+ignore-docstrings = yes
+
+# Игнорировать импорты при проверке дублирования
+ignore-imports = yes
+
+[LOGGING]
+# Формат сообщений логгера
+logging-format-style = %%
+
+# Уровень логгирования по умолчанию
+logging-modules = logging
+
+[CLASSES]
+# Игнорировать методы, которые не переопределяют родительские
+ignore-mixin-members = yes
+
+[MISCELLANEOUS]
+# Заметки для поиска
+notes = FIXME,XXX,TODO
+
+[TYPECHECK]
+# Игнорировать отсутствующие члены класса
+ignored-modules = _.*
+
+[REPORTS]
+# Формат отчета
+output-format = colorized
+
+# Показывать рейтинги
+evaluate-qualities = yes
+
+# Показывать статистику
+reports = no
+
+# Уровень детализации
+score = yes

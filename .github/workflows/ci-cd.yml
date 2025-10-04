@@ -1,0 +1,382 @@
+# XVPN GitHub Actions CI/CD Configuration
+# Конфигурация непрерывной интеграции и доставки
+
+name: XVPN CI/CD Pipeline
+
+on:
+  # Запуск при пуше в ветки
+  push:
+    branches:
+      - main
+      - develop
+      - feature/**
+      - hotfix/**
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+      - "LICENSE"
+      - ".gitignore"
+      - ".editorconfig"
+      - ".flake8"
+      - ".pylintrc"
+      - ".black.cfg"
+  
+  # Запуск при создании pull request
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+      - "LICENSE"
+      - ".gitignore"
+      - ".editorconfig"
+      - ".flake8"
+      - ".pylintrc"
+      - ".black.cfg"
+
+  # Запуск по расписанию (ежедневно в 2:00)
+  schedule:
+    - cron: "0 2 * * *"
+
+  # Запуск вручную
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to deploy to"
+        required: true
+        default: "staging"
+        type: choice
+        options:
+          - staging
+          - production
+
+# Переменные окружения
+env:
+  PYTHON_VERSION: "3.10"
+  UV_VERSION: "0.2.0"
+  DOCKER_REGISTRY: "ghcr.io"
+  IMAGE_NAME: ${{ github.repository }}
+
+# Задания
+jobs:
+  # === Проверка кода ===
+  code-quality:
+    name: Code Quality Checks
+    runs-on: ubuntu-latest
+    steps:
+      # Проверка кода
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Установка Python
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      # Установка зависимостей
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev,test]"
+          
+      # Проверка синтаксиса
+      - name: Syntax Check
+        run: python -m py_compile $(find . -name "*.py" -not -path "./venv/*" -not -path "./.git/*")
+
+      # Форматирование с Black
+      - name: Black Formatting Check
+        run: black --check .
+
+      # Сортировка импортов с isort
+      - name: Import Sorting Check
+        run: isort --check-only .
+
+      # Проверка стиля с flake8
+      - name: Flake8 Linting
+        run: flake8 .
+
+      # Статическая типизация с MyPy
+      - name: MyPy Type Checking
+        run: mypy src/ server/ client/
+
+      # Проверка безопасности с Bandit
+      - name: Security Check with Bandit
+        run: bandit -r src/ server/ client/ -c pyproject.toml
+
+      # Проверка безопасности зависимостей с Safety
+      - name: Dependency Security Check
+        run: safety check
+
+  # === Тестирование ===
+  testing:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    needs: code-quality
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      # Проверка кода
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Установка Python
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # Установка зависимостей
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[test]"
+
+      # Запуск юнит тестов
+      - name: Run Unit Tests
+        run: pytest tests/unit -v --tb=short
+
+      # Запуск интеграционных тестов
+      - name: Run Integration Tests
+        run: pytest tests/integration -v --tb=short
+
+      # Запуск функциональных тестов
+      - name: Run Functional Tests
+        run: pytest tests/functional -v --tb=short
+
+      # Генерация отчета о покрытии
+      - name: Generate Coverage Report
+        run: pytest --cov=src --cov=server --cov=client --cov-report=xml
+
+      # Загрузка отчета о покрытии
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+
+  # === Сборка Docker образов ===
+  docker-build:
+    name: Build Docker Images
+    runs-on: ubuntu-latest
+    needs: testing
+    strategy:
+      matrix:
+        service: [api, agent, bot, worker, orchestrator]
+    steps:
+      # Проверка кода
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Установка QEMU для multi-arch сборки
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      # Установка Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Вход в Docker Registry
+      - name: Log in to Docker Hub
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # Вход в GitHub Container Registry
+      - name: Log in to GHCR
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Извлечение метаданных для Docker
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            name=ghcr.io/${{ env.IMAGE_NAME }}-${{ matrix.service }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha
+
+      # Сборка и пуш Docker образа
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: docker/Dockerfile.${{ matrix.service }}
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # === Сканирование безопасности ===
+  security-scan:
+    name: Security Scanning
+    runs-on: ubuntu-latest
+    needs: docker-build
+    steps:
+      # Проверка кода
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Сканирование уязвимостей в коде
+      - name: Code Vulnerability Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: "fs"
+          ignore-unfixed: true
+          format: "sarif"
+          output: "trivy-results.sarif"
+          severity: "CRITICAL,HIGH"
+
+      # Загрузка результатов сканирования
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: "trivy-results.sarif"
+
+      # Сканирование Docker образов
+      - name: Docker Image Vulnerability Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: "ghcr.io/${{ env.IMAGE_NAME }}-api:latest"
+          format: "sarif"
+          output: "trivy-image-results.sarif"
+          severity: "CRITICAL,HIGH"
+
+      # Загрузка результатов сканирования образов
+      - name: Upload Trivy image scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: "trivy-image-results.sarif"
+
+  # === Развертывание в staging ===
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [docker-build, security-scan]
+    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main'
+    environment:
+      name: staging
+      url: https://staging.xvpn.local
+    steps:
+      # Развертывание в staging окружение
+      - name: Deploy to Staging
+        run: |
+          echo "Deploying to staging environment..."
+          # TODO: Add actual deployment commands
+          # This would typically involve:
+          # 1. Connecting to staging server
+          # 2. Pulling latest Docker images
+          # 3. Updating configuration
+          # 4. Restarting services
+          
+      # Проверка развертывания
+      - name: Verify Staging Deployment
+        run: |
+          echo "Verifying staging deployment..."
+          # TODO: Add health checks and verification
+
+  # === Развертывание в production ===
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [deploy-staging]
+    if: github.ref == 'refs/heads/main' && github.event.inputs.environment == 'production'
+    environment:
+      name: production
+      url: https://xvpn.local
+    steps:
+      # Развертывание в production окружение
+      - name: Deploy to Production
+        run: |
+          echo "Deploying to production environment..."
+          # TODO: Add actual deployment commands
+          # This should be very careful and include:
+          # 1. Backups
+          # 2. Rollback plans
+          # 3. Canary deployments
+          # 4. Monitoring setup
+          
+      # Проверка развертывания
+      - name: Verify Production Deployment
+        run: |
+          echo "Verifying production deployment..."
+          # TODO: Add comprehensive health checks
+
+  # === Уведомления ===
+  notifications:
+    name: Send Notifications
+    runs-on: ubuntu-latest
+    needs: [deploy-staging, deploy-production]
+    if: always()
+    steps:
+      # Отправка уведомления в Slack
+      - name: Notify Slack
+        uses: 8398a7/action-slack@v3
+        if: failure()
+        with:
+          status: ${{ job.status }}
+          channel: "#ci-cd-notifications"
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+          
+      # Отправка уведомления в Telegram
+      - name: Notify Telegram
+        if: failure()
+        run: |
+          curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
+            -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+            -d text="🚨 CI/CD Pipeline failed for ${{ github.repository }} on ${{ github.ref }}"
+            
+      # Отправка уведомления по электронной почте
+      - name: Notify Email
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: XVPN CI/CD Pipeline Failure
+          body: CI/CD pipeline failed for repository ${{ github.repository }} on branch ${{ github.ref }}
+          to: devops@xvpn.local
+          from: ci-cd@xvpn.local
+
+# === Настройки по умолчанию ===
+defaults:
+  run:
+    shell: bash
+
+# === Секреты, необходимые для работы ===
+# Для работы этого workflow необходимы следующие секреты:
+# - DOCKER_USERNAME: имя пользователя Docker Hub
+# - DOCKER_PASSWORD: пароль Docker Hub
+# - TELEGRAM_BOT_TOKEN: токен Telegram бота для уведомлений
+# - TELEGRAM_CHAT_ID: ID чата для уведомлений
+# - SLACK_WEBHOOK: webhook URL для Slack уведомлений
+# - EMAIL_USERNAME: имя пользователя для email уведомлений
+# - EMAIL_PASSWORD: пароль для email уведомлений
+
+# === Переменные среды ===
+# Следующие переменные могут быть установлены в настройках репозитория:
+# - PYTHON_VERSION: версия Python для использования (по умолчанию 3.10)
+# - UV_VERSION: версия UV package manager
+# - DOCKER_REGISTRY: реестр Docker образов (по умолчанию ghcr.io)

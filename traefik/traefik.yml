@@ -1,13 +1,16 @@
-# XVPN Traefik Configuration
-# Production-ready TLS and routing configuration
+# XVPN Traefik Configuration for Development
+# Конфигурация Traefik для локальной разработки
 
-api:
-  dashboard: true
-  insecure: true
+# === Global Configuration ===
+global:
+  checkNewVersion: true
+  sendAnonymousUsage: false
 
+# === Entry Points ===
 entryPoints:
   web:
     address: ":80"
+    # Redirect all HTTP to HTTPS
     http:
       redirections:
         entryPoint:
@@ -16,49 +19,170 @@ entryPoints:
           permanent: true
   websecure:
     address: ":443"
+    # TLS configuration
+    http:
+      tls:
+        # Use Let's Encrypt for production
+        # For development, use self-signed certificates
+        certResolver: myresolver
+  xvpn:
+    address: ":8443"
+    # XVPN API endpoint
+    http:
+      tls:
+        certResolver: myresolver
 
+# === Providers Configuration ===
 providers:
+  # Docker provider for automatic service discovery
   docker:
-    exposedByDefault: false
-    network: xvpn-network
     endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+    # Watch for Docker events
+    watch: true
+    # Network to use for container IP resolution
+    network: xvpn-dev-network
+    # Constraints for service discovery
+    constraints: 
+      - "Label(`traefik.enable`, `true`)"
+  
+  # File provider for static routes
+  file:
+    # Watch for file changes
+    watch: true
+    # Directory to watch for dynamic configuration files
+    directory: /etc/traefik/dynamic
+    # Filename for static configuration
+    filename: /etc/traefik/tls.yml
 
-certificatesResolvers:
-  myresolver:
-    acme:
-      email: admin@uss.hopto.org
-      storage: "/letsencrypt/acme.json"
-      tlsChallenge: {}
+# === API and Dashboard ===
+api:
+  # Enable dashboard
+  dashboard: true
+  # Enable API
+  insecure: true
+  # Debug mode
+  debug: true
 
-#serversTransport:
-#  default:
-#    insecureSkipVerify: false
-#    rootCAs:
-#      - "/etc/ssl/certs/ca-certificates.crt"
-
+# === Logging Configuration ===
 log:
-  level: INFO
+  # Log level
+  level: DEBUG
+  # Log format
   format: json
+  # Log file path
+  filePath: /var/log/traefik/traefik.log
 
+# === Access Logs ===
 accessLog:
+  # Enable access logs
+  enabled: true
+  # Log format
   format: json
+  # Log file path
+  filePath: /var/log/traefik/access.log
+  # Buffering
+  bufferingSize: 100
+  # Filtering
   filters:
+    # Don't log health checks
     statusCodes:
-      - "200-299"
-      - "400-499"
-      - "500-599"
-  fields:
-    defaultMode: keep
-    names:
-      ClientUsername: drop
-      RequestHost: keep
-      RequestURI: keep
-      StatusCode: keep
-      ContentLength: keep
+      - "200"
+      - "404"
+      - "500"
+      - "502"
+      - "503"
 
+# === Tracing Configuration ===
+tracing:
+  # Jaeger tracing
+  jaeger:
+    # Sampling server URL
+    samplingServerURL: http://jaeger:5778/sampling
+    # Local agent host port
+    localAgentHostPort: jaeger:6831
+    # Service name
+    serviceName: traefik
+
+# === Metrics Configuration ===
 metrics:
+  # Prometheus metrics
   prometheus:
+    # Enable metrics
+    enable: true
+    # Metrics entry point
     entryPoint: metrics
-    addEntryPointsLabels: true
-    addRoutersLabels: true
-    addServicesLabels: true
+    # Buckets for histogram
+    buckets:
+      - 0.1
+      - 0.3
+      - 1.2
+      - 5.0
+
+# === Certificate Resolvers ===
+certificatesResolvers:
+  # Let's Encrypt resolver
+  myresolver:
+    # ACME configuration
+    acme:
+      # Email for Let's Encrypt
+      email: admin@xvpn.local
+      # Storage for certificates
+      storage: /letsencrypt/acme.json
+      # TLS challenge
+      tlsChallenge: {}
+      # HTTP challenge
+      httpChallenge:
+        # Entry point for HTTP challenge
+        entryPoint: web
+      # DNS challenge (for wildcard certificates)
+      dnsChallenge:
+        # Provider for DNS challenge
+        provider: cloudflare
+        # Delay before DNS propagation check
+        delayBeforeCheck: 0
+        # Disable propagation check
+        disablePropagationCheck: false
+        # Resolvers to use for DNS propagation check
+        resolvers:
+          - "1.1.1.1:53"
+          - "8.8.8.8:53"
+
+# === Pilot Configuration ===
+pilot:
+  # Token for Traefik Pilot
+  token: your-traefik-pilot-token
+
+# === Experimental Features ===
+experimental:
+  # Enable plugins
+  plugins:
+    enabled: true
+  # Enable HTTP/3
+  http3:
+    enabled: true
+
+# === Additional Configuration ===
+# Additional configuration files
+additionalArguments:
+  - "--providers.docker.constraints=Label(`traefik.constraint-label`,`xvpn`)"
+  - "--providers.docker.watch=true"
+  - "--providers.file.directory=/etc/traefik/dynamic"
+  - "--providers.file.watch=true"
+  - "--log.level=DEBUG"
+  - "--accesslog=true"
+  - "--accesslog.format=json"
+  - "--accesslog.filepath=/var/log/traefik/access.log"
+  - "--tracing.jaeger=true"
+  - "--tracing.jaeger.samplingServerURL=http://jaeger:5778/sampling"
+  - "--tracing.jaeger.localAgentHostPort=jaeger:6831"
+  - "--tracing.jaeger.serviceName=traefik"
+  - "--metrics.prometheus=true"
+  - "--metrics.prometheus.entryPoint=metrics"
+  - "--certificatesresolvers.myresolver.acme.email=admin@xvpn.local"
+  - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+  - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+  - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+  - "--pilot.token=your-traefik-pilot-token"
+  - "--experimental.plugins.enabled=true"
+  - "--experimental.http3.enabled=true"

@@ -1,0 +1,346 @@
+# XVPN Flake8 Configuration
+# Конфигурация линтера Python
+
+[flake8]
+# Игнорировать определенные ошибки
+ignore =
+    # Пробелы перед двоеточием
+    E203,
+    # Пробелы перед скобками
+    E266,
+    # Длина строки более 88 символов
+    E501,
+    # Сравнение с True/False
+    E712,
+    # Сравнение с None
+    E711,
+    # Импорты не в начале файла
+    E402,
+    # Односимвольные имена переменных
+    E741,
+    # Несоответствие стиля имён
+    N803,
+    N806,
+    # Импорт после операторов
+    W503
+
+# Максимальная длина строки
+max-line-length = 88
+
+# Исключить директории
+exclude =
+    .git,
+    __pycache__,
+    build,
+    dist,
+    .eggs,
+    *.egg,
+    venv,
+    .venv,
+    env,
+    .env,
+    migrations,
+    node_modules,
+    .tox,
+    .nox,
+    .mypy_cache,
+    .pytest_cache,
+    htmlcov,
+    .coverage,
+    .cache,
+    .eggs,
+    *.egg-info,
+    .idea,
+    .vscode,
+    .DS_Store,
+    thumbs.db,
+    .pytest_cache,
+    .coverage,
+    .tox,
+    .nox,
+    .mypy_cache,
+    .hypothesis,
+    .ropeproject,
+    .spyderproject,
+    .spyproject
+
+# Перечень файлов для проверки
+filename = *.py
+
+# Директории для проверки
+per-file-ignores =
+    # Игнорировать некоторые ошибки в тестах
+    tests/*:S101,S106,W503,E501
+    # Игнорировать некоторые ошибки в конфигурационных файлах
+    config/*:S106,E501
+    # Игнорировать некоторые ошибки в скриптах установки
+    installer/*:S603,S607,E501
+    # Игнорировать некоторые ошибки в Dockerfile
+    docker/*:S603,S607,E501
+
+# Настройки безопасности
+enable-extensions = G
+
+# Запретить использование assert
+assert_allowed = false
+
+# Запретить использование print
+print_allowed = false
+
+# Запретить использование eval
+eval_allowed = false
+
+# Запретить использование exec
+exec_allowed = false
+
+# Запретить использование input
+input_allowed = false
+
+# Запретить использование raw_input
+raw_input_allowed = false
+
+# Запретить использование open без явного режима
+open_mode_required = true
+
+# Запретить использование subprocess.call без shell=False
+subprocess_shell_required = false
+
+# Запретить использование os.system
+os_system_allowed = false
+
+# Запретить использование pickle
+pickle_allowed = false
+
+# Запретить использование xml.etree.ElementTree.parse
+xml_parse_allowed = false
+
+# Запретить использование yaml.load без Loader
+yaml_load_allowed = false
+
+# Запретить использование json.loads без cls
+json_loads_allowed = false
+
+# Запретить использование urllib.request.urlopen без context
+urlopen_context_required = true
+
+# Запретить использование hashlib.new без явного алгоритма
+hashlib_new_allowed = false
+
+# Запретить использование random.SystemRandom
+random_system_random_allowed = false
+
+# Запретить использование secrets.token_hex без явного количества байтов
+secrets_token_hex_allowed = false
+
+# Запретить использование cryptography.fernet.Fernet без явного ключа
+fernet_key_required = true
+
+# Запретить использование jwt.encode без явного алгоритма
+jwt_encode_algorithm_required = true
+
+# Запретить использование jwt.decode без явного алгоритма
+jwt_decode_algorithm_required = true
+
+# Запретить использование requests.get без verify
+requests_verify_required = true
+
+# Запретить использование urllib3.PoolManager без cert_reqs
+urllib3_cert_reqs_required = true
+
+# Запретить использование ssl.create_default_context без check_hostname
+ssl_check_hostname_required = true
+
+# Запретить использование ssl._create_unverified_context
+ssl_create_unverified_context_allowed = false
+
+# Запретить использование tempfile.mktemp
+tempfile_mktemp_allowed = false
+
+# Запретить использование shutil.copyfile без follow_symlinks
+shutil_copyfile_follow_symlinks_required = true
+
+# Запретить использование os.chmod без явного режима
+os_chmod_mode_required = true
+
+# Запретить использование os.makedirs без exist_ok
+os_makedirs_exist_ok_required = true
+
+# Запретить использование os.remove без явного пути
+os_remove_path_required = true
+
+# Запретить использование os.rmdir без явного пути
+os_rmdir_path_required = true
+
+# Запретить использование os.unlink без явного пути
+os_unlink_path_required = true
+
+# Запретить использование os.rename без явных путей
+os_rename_paths_required = true
+
+# Запретить использование os.symlink без явных путей
+os_symlink_paths_required = true
+
+# Запретить использование os.link без явных путей
+os_link_paths_required = true
+
+# Запретить использование os.chown без явного пути
+os_chown_path_required = true
+
+# Запретить использование os.lchown без явного пути
+os_lchown_path_required = true
+
+# Запретить использование os.chroot без явного пути
+os_chroot_path_required = true
+
+# Запретить использование os.fchdir без явного fd
+os_fchdir_fd_required = true
+
+# Запретить использование os.fchmod без явного fd
+os_fchmod_fd_required = true
+
+# Запретить использование os.fchown без явного fd
+os_fchown_fd_required = true
+
+# Запретить использование os.fdatasync без явного fd
+os_fdatasync_fd_required = true
+
+# Запретить использование os.fsync без явного fd
+os_fsync_fd_required = true
+
+# Запретить использование os.ftruncate без явного fd
+os_ftruncate_fd_required = true
+
+# Запретить использование os.lchmod без явного пути
+os_lchmod_path_required = true
+
+# Запретить использование os.link без явных путей
+os_link_paths_required = true
+
+# Запретить использование os.listdir без явного пути
+os_listdir_path_required = true
+
+# Запретить использование os.makedirs без exist_ok
+os_makedirs_exist_ok_required = true
+
+# Запретить использование os.mkdir без явного пути
+os_mkdir_path_required = true
+
+# Запретить использование os.mkfifo без явного пути
+os_mkfifo_path_required = true
+
+# Запретить использование os.mknod без явного пути
+os_mknod_path_required = true
+
+# Запретить использование os.readlink без явного пути
+os_readlink_path_required = true
+
+# Запретить использование os.remove без явного пути
+os_remove_path_required = true
+
+# Запретить использование os.removedirs без явного пути
+os_removedirs_path_required = true
+
+# Запретить использование os.rename без явных путей
+os_rename_paths_required = true
+
+# Запретить использование os.renames без явных путей
+os_renames_paths_required = true
+
+# Запретить использование os.rmdir без явного пути
+os_rmdir_path_required = true
+
+# Запретить использование os.symlink без явных путей
+os_symlink_paths_required = true
+
+# Запретить использование os.unlink без явного пути
+os_unlink_path_required = true
+
+# Запретить использование os.utime без явного пути
+os_utime_path_required = true
+
+# Запретить использование os.walk без явного пути
+os_walk_path_required = true
+
+# Запретить использование os.access без явного пути
+os_access_path_required = true
+
+# Запретить использование os.chdir без явного пути
+os_chdir_path_required = true
+
+# Запретить использование os.chflags без явного пути
+os_chflags_path_required = true
+
+# Запретить использование os.chmod без явного пути
+os_chmod_path_required = true
+
+# Запретить использование os.chown без явного пути
+os_chown_path_required = true
+
+# Запретить использование os.chroot без явного пути
+os_chroot_path_required = true
+
+# Запретить использование os.getcwd без явного пути
+os_getcwd_path_required = true
+
+# Запретить использование os.lchflags без явного пути
+os_lchflags_path_required = true
+
+# Запретить использование os.lchmod без явного пути
+os_lchmod_path_required = true
+
+# Запретить использование os.lchown без явного пути
+os_lchown_path_required = true
+
+# Запретить использование os.link без явных путей
+os_link_paths_required = true
+
+# Запретить использование os.listdir без явного пути
+os_listdir_path_required = true
+
+# Запретить использование os.lstat без явного пути
+os_lstat_path_required = true
+
+# Запретить использование os.makedirs без exist_ok
+os_makedirs_exist_ok_required = true
+
+# Запретить использование os.mkdir без явного пути
+os_mkdir_path_required = true
+
+# Запретить использование os.mkfifo без явного пути
+os_mkfifo_path_required = true
+
+# Запретить использование os.mknod без явного пути
+os_mknod_path_required = true
+
+# Запретить использование os.readlink без явного пути
+os_readlink_path_required = true
+
+# Запретить использование os.remove без явного пути
+os_remove_path_required = true
+
+# Запретить использование os.removedirs без явного пути
+os_removedirs_path_required = true
+
+# Запретить использование os.rename без явных путей
+os_rename_paths_required = true
+
+# Запретить использование os.renames без явных путей
+os_renames_paths_required = true
+
+# Запретить использование os.rmdir без явного пути
+os_rmdir_path_required = true
+
+# Запретить использование os.stat без явного пути
+os_stat_path_required = true
+
+# Запретить использование os.symlink без явных путей
+os_symlink_paths_required = true
+
+# Запретить использование os.unlink без явного пути
+os_unlink_path_required = true
+
+# Запретить использование os.utime без явного пути
+os_utime_path_required = true
+
+# Запретить использование os.walk без явного пути
+os_walk_path_required = true

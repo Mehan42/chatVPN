@@ -1,0 +1,40 @@
+# XVPN Grafana Configuration
+# Конфигурация Grafana
+
+# === Datasources Configuration ===
+# monitoring/grafana/provisioning/datasources/prometheus.yml
+
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    jsonData:
+      timeInterval: "15s"
+    editable: true
+
+  - name: Loki
+    type: loki
+    access: proxy
+    url: http://loki:3100
+    jsonData:
+      maxLines: 1000
+    editable: true
+
+# === Dashboards Configuration ===
+# monitoring/grafana/provisioning/dashboards/xvpn-overview.yml
+
+apiVersion: 1
+
+providers:
+  - name: "XVPN Dashboards"
+    orgId: 1
+    folder: "XVPN"
+    type: file
+    disableDeletion: false
+    editable: true
+    options:
+      path: /etc/grafana/provisioning/dashboards

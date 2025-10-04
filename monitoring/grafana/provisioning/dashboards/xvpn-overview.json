@@ -1,0 +1,117 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "XVPN Overview",
+    "tags": ["xvpn", "vpn", "overview"],
+    "timezone": "browser",
+    "schemaVersion": 16,
+    "version": 0,
+    "refresh": "30s",
+    "panels": [
+      {
+        "id": 1,
+        "type": "graph",
+        "title": "API Requests",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+        "targets": [
+          {
+            "expr": "rate(xvpn_api_requests_total[5m])",
+            "legendFormat": "{{method}} {{endpoint}}",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          {"format": "reqps", "label": "Requests per second"},
+          {"format": "short"}
+        ]
+      },
+      {
+        "id": 2,
+        "type": "singlestat",
+        "title": "Current Health Score",
+        "gridPos": {"h": 4, "w": 6, "x": 12, "y": 0},
+        "targets": [
+          {
+            "expr": "xvpn_agent_health_score",
+            "refId": "A"
+          }
+        ],
+        "format": "none",
+        "valueName": "current",
+        "prefix": "Score: ",
+        "colorBackground": true,
+        "colors": ["#d44a3a", "rgba(237, 129, 40, 0.89)", "#299c46"]
+      },
+      {
+        "id": 3,
+        "type": "singlestat",
+        "title": "Active Connections",
+        "gridPos": {"h": 4, "w": 6, "x": 18, "y": 0},
+        "targets": [
+          {
+            "expr": "xvpn_active_connections",
+            "refId": "A"
+          }
+        ],
+        "format": "none",
+        "valueName": "current",
+        "prefix": "Connections: ",
+        "colorBackground": false,
+        "colors": ["#299c46", "rgba(237, 129, 40, 0.89)", "#d44a3a"]
+      },
+      {
+        "id": 4,
+        "type": "graph",
+        "title": "Agent Health Score Over Time",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+        "targets": [
+          {
+            "expr": "xvpn_agent_health_score",
+            "legendFormat": "Health Score",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          {"format": "none", "label": "Score", "min": 0, "max": 5},
+          {"format": "short"}
+        ]
+      },
+      {
+        "id": 5,
+        "type": "graph",
+        "title": "Transport Switches",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
+        "targets": [
+          {
+            "expr": "increase(xvpn_agent_transport_switches_total[5m])",
+            "legendFormat": "Switches",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          {"format": "none", "label": "Switches"},
+          {"format": "short"}
+        ]
+      },
+      {
+        "id": 6,
+        "type": "table",
+        "title": "Recent Errors",
+        "gridPos": {"h": 8, "w": 24, "x": 0, "y": 16},
+        "targets": [
+          {
+            "expr": "xvpn_errors_total",
+            "legendFormat": "{{component}}: {{error}}",
+            "refId": "A"
+          }
+        ],
+        "columns": [
+          {"text": "Time", "value": "time"},
+          {"text": "Component", "value": "component"},
+          {"text": "Error", "value": "error"},
+          {"text": "Count", "value": "count"}
+        ]
+      }
+    ]
+  }
+}

@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [
-    {name = "XVPN Team", email = "team@xvpn.local"},
+    {name = "XVPN Team", email = "team @xvpn.local"},
 ]
 keywords = ["vpn", "ai", "agent", "monitoring", "security"]
 classifiers = [
@@ -125,17 +125,18 @@ all = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/xvpn/xvpn"
+Homepage = "https://github.com/Mehan42/chatVPN"
 Documentation = "https://docs.xvpn.local"
-Repository = "https://github.com/xvpn/xvpn.git"
-Issues = "https://github.com/xvpn/xvpn/issues"
-Changelog = "https://github.com/xvpn/xvpn/blob/main/CHANGELOG.md"
+Repository = "https://github.com/Mehan42/chatVPN.git"
+Issues = "https://github.com/Mehan42/chatVPN/issues"
+Changelog = "https://github.com/Mehan42/chatVPN/blob/main/CHANGELOG.md"
 
 [project.scripts]
-xvpn-server = "xvpn.server.cli:main"
-xvpn-agent = "xvpn.agent.cli:main"
-xvpn-bot = "xvpn.bot.cli:main"
-xvpn-monitor = "xvpn.monitoring.cli:main"
+xvpn-api = "server.api.app:main"
+xvpn-agent = "server.agent.agent:main"
+xvpn-bot = "server.admin.tg_bot:main"
+xvpn-worker = "server.worker.worker:main"
+xvpn-orchestrator = "server.agent.orchestrator:main"
 
 # Настройки для Hatch (build system)
 [tool.hatch.build.targets.wheel]

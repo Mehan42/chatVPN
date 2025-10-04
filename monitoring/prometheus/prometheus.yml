@@ -1,0 +1,98 @@
+# XVPN Monitoring and Logging Configuration
+# Основная конфигурация мониторинга и логирования
+
+# === Prometheus Configuration ===
+# monitoring/prometheus/prometheus.yml
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  scrape_timeout: 10s
+
+rule_files:
+  - "rules/*.yml"
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:9093
+
+scrape_configs:
+  # XVPN API metrics
+  - job_name: 'xvpn-api'
+    static_configs:
+      - targets: ['xvpn-api:8443']
+    scrape_interval: 5s
+    metrics_path: /metrics
+    scheme: https
+    tls_config:
+      insecure_skip_verify: true
+
+  # XVPN Agent metrics
+  - job_name: 'xvpn-agent'
+    static_configs:
+      - targets: ['xvpn-agent:8443']
+    scrape_interval: 10s
+    metrics_path: /metrics
+    scheme: https
+    tls_config:
+      insecure_skip_verify: true
+
+  # XVPN Bot metrics
+  - job_name: 'xvpn-bot'
+    static_configs:
+      - targets: ['xvpn-bot:8443']
+    scrape_interval: 30s
+    metrics_path: /metrics
+    scheme: https
+    tls_config:
+      insecure_skip_verify: true
+
+  # XVPN Worker metrics
+  - job_name: 'xvpn-worker'
+    static_configs:
+      - targets: ['xvpn-worker:8443']
+    scrape_interval: 15s
+    metrics_path: /metrics
+    scheme: https
+    tls_config:
+      insecure_skip_verify: true
+
+  # XVPN Orchestrator metrics
+  - job_name: 'xvpn-orchestrator'
+    static_configs:
+      - targets: ['xvpn-orchestrator:8080']
+    scrape_interval: 20s
+    metrics_path: /metrics
+    scheme: http
+
+  # Node exporter metrics
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+    scrape_interval: 15s
+    metrics_path: /metrics
+
+  # Docker container metrics
+  - job_name: 'docker-containers'
+    static_configs:
+      - targets: ['cadvisor:8080']
+    scrape_interval: 15s
+    metrics_path: /metrics
+
+  # Redis metrics
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis:6379']
+    scrape_interval: 15s
+    metrics_path: /metrics
+    scheme: http
+
+  # PostgreSQL metrics
+  - job_name: 'postgresql'
+    static_configs:
+      - targets: ['postgres:5432']
+    scrape_interval: 30s
+    metrics_path: /metrics
+    scheme: http

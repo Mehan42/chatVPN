@@ -1,22 +1,183 @@
-# XVPN TLS Options Configuration
-# Secure TLS settings for production
+# XVPN Traefik TLS Configuration
+# Конфигурация TLS для Traefik
 
+# === TLS Options ===
 tls:
+  # Default TLS options
   options:
+    # Default TLS configuration
     default:
+      # Minimum TLS version
       minVersion: VersionTLS12
+      # Maximum TLS version
+      maxVersion: VersionTLS13
+      # Cipher suites
       cipherSuites:
-        - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
-        - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         - TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
         - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        - TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256
-        - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
-      sniStrict: true
+        - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
+        - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305
+      # Curve preferences
+      curvePreferences:
+        - CurveP521
+        - CurveP384
+        - CurveP256
+      # Prefer server cipher suites
       preferServerCipherSuites: true
+      # Session tickets
+      sessionTickets:
+        enabled: true
+      # ALPN protocols
+      alpnProtocols:
+        - h2
+        - http/1.1
+
+    # Modern TLS configuration (more secure)
     modern:
       minVersion: VersionTLS13
+      maxVersion: VersionTLS13
+      cipherSuites: []
+      curvePreferences:
+        - CurveP521
+        - CurveP384
+        - CurveP256
+      preferServerCipherSuites: true
+      sessionTickets:
+        enabled: true
+      alpnProtocols:
+        - h2
+
+    # Intermediate TLS configuration (compatibility)
+    intermediate:
+      minVersion: VersionTLS12
+      maxVersion: VersionTLS13
       cipherSuites:
-        - TLS_AES_128_GCM_SHA256
-        - TLS_AES_256_GCM_SHA384
-        - TLS_CHACHA20_POLY1305_SHA256
+        - TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
+        - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305
+        - TLS_DHE_RSA_WITH_AES_256_GCM_SHA384
+        - TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
+      curvePreferences:
+        - CurveP521
+        - CurveP384
+        - CurveP256
+      preferServerCipherSuites: true
+      sessionTickets:
+        enabled: true
+      alpnProtocols:
+        - h2
+        - http/1.1
+
+  # Custom certificates
+  certificates:
+    # Default certificate
+    - certFile: /etc/traefik/certs/default.crt
+      keyFile: /etc/traefik/certs/default.key
+      # Store certificate
+      stores:
+        - default
+
+    # Wildcard certificate
+    - certFile: /etc/traefik/certs/wildcard.crt
+      keyFile: /etc/traefik/certs/wildcard.key
+      # Store certificate
+      stores:
+        - default
+
+  # Certificate stores
+  stores:
+    # Default store
+    default:
+      # Default certificate
+      defaultCertificate:
+        certFile: /etc/traefik/certs/default.crt
+        keyFile: /etc/traefik/certs/default.key
+
+# === Certificate Resolvers ===
+certificatesResolvers:
+  # Let's Encrypt resolver
+  le:
+    # ACME configuration
+    acme:
+      # Email for Let's Encrypt
+      email: admin@xvpn.local
+      # Storage for certificates
+      storage: /letsencrypt/acme.json
+      # TLS challenge
+      tlsChallenge: {}
+      # HTTP challenge
+      httpChallenge:
+        # Entry point for HTTP challenge
+        entryPoint: web
+      # DNS challenge (for wildcard certificates)
+      dnsChallenge:
+        # Provider for DNS challenge
+        provider: cloudflare
+        # Delay before DNS propagation check
+        delayBeforeCheck: 0
+        # Disable propagation check
+        disablePropagationCheck: false
+        # Resolvers to use for DNS propagation check
+        resolvers:
+          - "1.1.1.1:53"
+          - "8.8.8.8:53"
+
+  # Self-signed certificate resolver
+  self-signed:
+    # Self-signed certificate
+    selfSigned: {}
+
+# === TLS Store Configuration ===
+tlsStore:
+  # Default TLS store
+  default:
+    # Default certificate
+    defaultCertificate:
+      certFile: /etc/traefik/certs/default.crt
+      keyFile: /etc/traefik/certs/default.key
+
+# === Additional TLS Configuration ===
+# Additional TLS settings
+additionalArguments:
+  - "--tls.options.default.minVersion=VersionTLS12"
+  - "--tls.options.default.maxVersion=VersionTLS13"
+  - "--tls.options.default.cipherSuites=TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305"
+  - "--tls.options.default.curvePreferences=CurveP521,CurveP384,CurveP256"
+  - "--tls.options.default.preferServerCipherSuites=true"
+  - "--tls.options.default.sessionTickets.enabled=true"
+  - "--tls.options.default.alpnProtocols=h2,http/1.1"
+  - "--tls.options.modern.minVersion=VersionTLS13"
+  - "--tls.options.modern.maxVersion=VersionTLS13"
+  - "--tls.options.intermediate.minVersion=VersionTLS12"
+  - "--tls.options.intermediate.maxVersion=VersionTLS13"
+  - "--tls.options.intermediate.cipherSuites=TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,TLS_DHE_RSA_WITH_AES_128_GCM_SHA256"
+  - "--tls.options.intermediate.curvePreferences=CurveP521,CurveP384,CurveP256"
+  - "--tls.options.intermediate.preferServerCipherSuites=true"
+  - "--tls.options.intermediate.sessionTickets.enabled=true"
+  - "--tls.options.intermediate.alpnProtocols=h2,http/1.1"
+  - "--certificatesresolvers.le.acme.email=admin@xvpn.local"
+  - "--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json"
+  - "--certificatesresolvers.le.acme.tlschallenge=true"
+  - "--certificatesresolvers.le.acme.httpchallenge.entrypoint=web"
+  - "--certificatesresolvers.self-signed.selfsigned=true"
+  - "--tlsstore.default.defaultcertificate.certfile=/etc/traefik/certs/default.crt"
+  - "--tlsstore.default.defaultcertificate.keyfile=/etc/traefik/certs/default.key"
+
+# === Certificate Pinning ===
+# Certificate pinning configuration
+certificatePinning:
+  # Enable certificate pinning
+  enabled: false
+  # Pinning mode
+  mode: SPKI
+  # Trusted certificates
+  trustedCertificates:
+    - /etc/traefik/certs/trusted.crt
+  # Trusted fingerprints
+  trustedFingerprints:
+    - "sha256//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="

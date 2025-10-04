@@ -1,154 +1,138 @@
 #!/bin/bash
-# Установщик XVPN
-# Автоматическая установка XVPN системы
 
-set -e
+# XVPN Installation Script
+# Установка XVPN системы с нуля на Ubuntu/Debian сервер
 
-echo "=== Установка XVPN ==="
-echo "Дата: $(date)"
-echo ""
+set -e  # Выход при любой ошибке
+
+echo "🚀 Установка XVPN системы..."
 
 # Проверка прав root
-if [[ $EUID -ne 0 ]]; then
-   echo "Этот скрипт должен быть запущен с правами root"
-   echo "Используйте: sudo ./install_xvpn.sh"
-   exit 1
+if [ "$EUID" -ne 0 ]; then
+    echo "❌ Пожалуйста, запустите скрипт с правами root (sudo)"
+    exit 1
 fi
 
-# Проверка Python
-if ! command -v python3 &> /dev/null; then
-    echo "Python 3 не найден. Установка Python 3..."
-    apt-get update
-    apt-get install -y python3 python3-pip python3-venv
-fi
+# Инициализация переменных
+XVPN_USER="xvpn"
+XVPN_DIR="/opt/xvpn"
+SYSTEMD_DIR="/etc/systemd/system"
+LOG_DIR="/var/log/xvpn"
+BACKUP_DIR="/opt/xvpn/backups"
 
-# Проверка Docker
-if ! command -v docker &> /dev/null; then
-    echo "Docker не найден. Установка Docker..."
-    curl -fsSL https://get.docker.com -o get-docker.sh
-    sh get-docker.sh
-    usermod -aG docker $USER
-fi
+echo "🔧 Обновление системы..."
+apt update && apt upgrade -y
 
-# Проверка Docker Compose
-if ! command -v docker-compose &> /dev/null; then
-    echo "Docker Compose не найден. Установка Docker Compose..."
-    curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    chmod +x /usr/local/bin/docker-compose
-fi
+echo "📦 Установка системных зависимостей..."
+apt install -y python3 python3-pip python3-venv curl wget git docker.io docker-compose jq
+
+# Установка uv
+echo "📦 Установка uv (современный Python пакетный менеджер)..."
+curl -LsSf https://astral.sh/uv/install.sh | sh
+export PATH="$HOME/.cargo/bin:$PATH"
+source "$HOME/.cargo/env"
 
 # Создание пользователя XVPN
-if ! id "xvpn" &>/dev/null; then
-    echo "Создание пользователя xvpn..."
-    useradd -m -s /bin/bash xvpn
-    passwd -d xvpn  # Установка пустого пароля
-else
-    echo "Пользователь xvpn уже существует"
+echo "👤 Создание пользователя xvpn..."
+if ! id "$XVPN_USER" &>/dev/null; then
+    useradd -r -s /bin/false -d "$XVPN_DIR" "$XVPN_USER"
 fi
 
 # Создание директорий
-echo "Создание директорий..."
-mkdir -p /home/xvpn/chatvpn
-mkdir -p /home/xvpn/chatvpn/client
-mkdir -p /home/xvpn/chatvpn/server
-mkdir -p /home/xvpn/chatvpn/server/security
-mkdir -p /home/xvpn/chatvpn/server/api
-mkdir -p /home/xvpn/chatvpn/server/agent
-mkdir -p /home/xvpn/chatvpn/server/deploy
-mkdir -p /home/xvpn/chatvpn/docker
-mkdir -p /home/xvpn/chatvpn/scripts
-mkdir -p /home/xvpn/chatvpn/docs
-mkdir -p /home/xvpn/chatvpn/systemd
-mkdir -p /var/log/xvpn
-mkdir -p /etc/xvpn
+echo "📁 Создание директорий..."
+mkdir -p "$XVPN_DIR" "$LOG_DIR" "$BACKUP_DIR"
+chown -R "$XVPN_USER:$XVPN_USER" "$XVPN_DIR" "$LOG_DIR"
 
-# Копирование файлов
-echo "Копирование файлов..."
-cp -r client/* /home/xvpn/chatvpn/client/
-cp -r server/* /home/xvpn/chatvpn/server/
-cp -r docker/* /home/xvpn/chatvpn/docker/
-cp -r scripts/* /home/xvpn/chatvpn/scripts/
-cp -r systemd/* /etc/systemd/system/
+# Копирование файлов проекта (предполагаем, что мы уже в корневой директории проекта)
+echo "📥 Копирование файлов проекта..."
+cp -r ./* "$XVPN_DIR/"
+chown -R "$XVPN_USER:$XVPN_USER" "$XVPN_DIR"
 
-# Установка прав
-echo "Установка прав..."
-chown -R xvpn:xvpn /home/xvpn/chatvpn
-chmod +x /home/xvpn/chatvpn/client/*.py
-chmod +x /home/xvpn/chatvpn/server/*.py
-chmod +x /home/xvpn/chatvpn/scripts/*.sh
-chmod +x /home/xvpn/chatvpn/scripts/*.py
+# Создание виртуального окружения для серверных компонентов
+echo "🐍 Создание виртуального окружения для сервера..."
+SERVER_ENV="$XVPN_DIR/server/venv"
+python3 -m venv "$SERVER_ENV"
+chown -R "$XVPN_USER:$XVPN_USER" "$SERVER_ENV"
 
-# Установка зависимостей
-echo "Установка зависимостей..."
-cd /home/xvpn/chatvpn
-pip3 install -r requirements.txt
+# Установка зависимостей в виртуальное окружение
+echo "📦 Установка Python зависимостей..."
+sudo -u "$XVPN_USER" bash -c "source $SERVER_ENV/bin/activate && pip install --upgrade pip"
+sudo -u "$XVPN_USER" bash -c "source $SERVER_ENV/bin/activate && pip install -r $XVPN_DIR/requirements.txt"
 
-# Копирование конфигурации
-echo "Копирование конфигурации..."
-if [ ! -f /etc/xvpn/config.json ]; then
-    cp client/client.json.example /etc/xvpn/config.json
-    chown xvpn:xvpn /etc/xvpn/config.json
-fi
+# Установка ChromaDB и других AI зависимостей
+echo "🤖 Установка AI компонентов..."
+sudo -u "$XVPN_USER" bash -c "source $SERVER_ENV/bin/activate && pip install chromadb sentence-transformers"
 
-# Настройка systemd
-echo "Настройка systemd..."
+# Копирование systemd сервисов
+echo "⚙️ Копирование systemd сервисов..."
+cp "$XVPN_DIR/systemd/"*.service "$SYSTEMD_DIR/"
 systemctl daemon-reload
 
-# Включение сервисов
-echo "Включение сервисов..."
-systemctl enable xvpn-api.service
-systemctl enable xvpn-bot.service
-systemctl enable xvpn-agent.service
-systemctl enable xvpn-worker.service
+# Создание конфигурационного файла
+echo "📝 Создание конфигурационных файлов..."
+mkdir -p "$XVPN_DIR/config"
+cat > "$XVPN_DIR/config/xvpn.conf" << EOF
+{
+  "server_ip": "$(curl -s ifconfig.co)",
+  "api_port": 8443,
+  "bot_token": "",
+  "chat_id": "",
+  "log_level": "INFO",
+  "data_dir": "/opt/xvpn/data",
+  "logs_dir": "/var/log/xvpn"
+}
+EOF
 
-# Запуск сервисов
-echo "Запуск сервисов..."
-systemctl start xvpn-api.service
-systemctl start xvpn-bot.service
-systemctl start xvpn-agent.service
-systemctl start xvpn-worker.service
+# Создание директорий для данных
+mkdir -p "$XVPN_DIR/data/clients" "$XVPN_DIR/data/transports" "$XVPN_DIR/db"
 
-# Настройка Docker
-echo "Настройка Docker..."
-cd /home/xvpn/chatvpn
-docker-compose up -d
+# Настройка прав доступа
+chown -R "$XVPN_USER:$XVPN_USER" "$XVPN_DIR/data" "$XVPN_DIR/db"
+chmod -R 750 "$XVPN_DIR/data" "$XVPN_DIR/db"
+
+# Создание файла .env для сервисов
+cat > "$XVPN_DIR/.env" << EOF
+XVPN_USER=$XVPN_USER
+XVPN_DIR=$XVPN_DIR
+LOG_DIR=$LOG_DIR
+BOT_TOKEN=
+CHAT_ID=
+API_BASE_URL=https://$(curl -s ifconfig.co):8443
+DATABASE_URL=sqlite:////opt/xvpn/db/agent.db
+REDIS_URL=redis://localhost:6379/0
+LOG_LEVEL=INFO
+EOF
+
+# Включение и запуск Docker
+systemctl enable docker
+systemctl start docker
+
+# Настройка firewall (только необходимые порты)
+echo "🛡️ Настройка firewall..."
+apt install -y ufw
+ufw --force enable
+ufw allow ssh
+ufw allow 443/tcp
+ufw allow 8443/tcp
+ufw allow 8080/tcp  # Traefik dashboard (только для администратора, в продакшене отключить)
+
+# Предупреждение о безопасности
+echo "⚠️  ВАЖНО: После установки установите токен Telegram бота в $XVPN_DIR/.env"
+
+echo "✅ Установка завершена!"
+echo ""
+echo "📋 Дальнейшие шаги:"
+echo "1. Установите токен Telegram бота в $XVPN_DIR/.env"
+echo "2. Запустите сервисы: sudo systemctl start xvpn-api xvpn-agent xvpn-bot"
+echo "3. Проверьте статус: sudo systemctl status xvpn-api xvpn-agent xvpn-bot"
+echo "4. Документация: $XVPN_DIR/INSTALLATION_GUIDE.md"
 
 # Проверка установки
-echo "Проверка установки..."
-sleep 10
-
-# Проверка сервисов
-if systemctl is-active --quiet xvpn-api.service; then
-    echo "✓ API сервис запущен"
+if systemctl list-unit-files | grep -q xvpn-api.service; then
+    echo "✅ Сервисы установлены корректно"
 else
-    echo "✗ API сервис не запущен"
+    echo "❌ Ошибка установки сервисов"
+    exit 1
 fi
 
-if systemctl is-active --quiet xvpn-bot.service; then
-    echo "✓ Bot сервис запущен"
-else
-    echo "✗ Bot сервис не запущен"
-fi
-
-if docker ps | grep -q xvpn-api; then
-    echo "✓ Docker контейнер API запущен"
-else
-    echo "✗ Docker контейнер API не запущен"
-fi
-
-# Завершение установки
-echo ""
-echo "=== Установка XVPN завершена ==="
-echo "Логи:"
-echo "  - Системные: journalctl -u xvpn-api.service"
-echo "  - Docker: docker logs xvpn-api"
-echo "  - Приложения: tail -f /var/log/xvpn/*.log"
-echo ""
-echo "Управление сервисами:"
-echo "  - Запуск: sudo systemctl start xvpn-*.service"
-echo "  - Остановка: sudo systemctl stop xvpn-*.service"
-echo "  - Статус: sudo systemctl status xvpn-*.service"
-echo ""
-echo "Документация: /home/xvpn/chatvpn/docs/"
-echo ""
-echo "Для перезагрузки системы: sudo reboot"
+exit 0

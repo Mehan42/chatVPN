@@ -1,0 +1,104 @@
+# XVPN Docker Compose Override for Development
+# Используется для локальной разработки и тестирования
+
+version: '3.8'
+
+services:
+  # === Development overrides for API ===
+  xvpn-api:
+    # Mount local code for development
+    volumes:
+      - .:/app:cached
+      - /opt/xvpn/data:/data
+      - ./config:/config:ro
+      - uv-cache:/tmp/uv-cache
+    # Enable debug mode
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=true
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=DEBUG
+      - DATABASE_URL=sqlite:////data/xvpn.db
+      - REDIS_URL=redis://redis:6379/0
+    # Command for development
+    command: >
+      bash -c "
+        uv pip install --system -e .
+        && python -m flask run --host=0.0.0.0 --port=8443 --debug --reload"
+
+  # === Development overrides for Agent ===
+  xvpn-agent:
+    volumes:
+      - .:/app:cached
+      - /opt/xvpn/data:/data
+      - ./config:/config:ro
+      - uv-cache:/tmp/uv-cache
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=DEBUG
+      - DATABASE_URL=sqlite:////data/agent.db
+      - MANIFEST_URL=http://xvpn-api:8443/transports/manifest.json
+      - HEALTH_URL=http://xvpn-api:8443/mcp/v1/vpn.health
+    command: >
+      bash -c "
+        uv pip install --system -e .
+        && python -m server.agent.agent"
+
+  # === Development overrides for Bot ===
+  xvpn-bot:
+    volumes:
+      - .:/app:cached
+      - ./config:/config:ro
+      - uv-cache:/tmp/uv-cache
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=DEBUG
+      - BOT_TOKEN=${BOT_TOKEN}
+      - CHAT_ID=${CHAT_ID}
+      - API_BASE_URL=https://api.xvpn.local
+    command: >
+      bash -c "
+        uv pip install --system -e .
+        && python -m server.admin.tg_bot"
+
+  # === Development overrides for Worker ===
+  xvpn-worker:
+    volumes:
+      - .:/app:cached
+      - /opt/xvpn/data:/data
+      - ./config:/config:ro
+      - uv-cache:/tmp/uv-cache
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=DEBUG
+      - WORKER_COUNT=1
+      - REDIS_URL=redis://redis:6379/0
+    command: >
+      bash -c "
+        uv pip install --system -e .
+        && python -m server.worker.worker"
+
+  # === Development overrides for Orchestrator ===
+  xvpn-orchestrator:
+    volumes:
+      - .:/app:cached
+      - /opt/xvpn/data:/data
+      - uv-cache:/tmp/uv-cache
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=DEBUG
+    command: >
+      bash -c "
+        uv pip install --system -e .
+        && python -m server.agent.orchestrator"
+
+  # === Development overrides for Core ===
+  xvpn-core:
+    volumes:
+      - ./config/xray:/config:ro
+      - /opt/xvpn/data:/data
+
+# Volumes
+volumes:
+  uv-cache:
+    driver: local

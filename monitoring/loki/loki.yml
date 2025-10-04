@@ -1,0 +1,137 @@
+# XVPN Loki Configuration
+# Конфигурация Loki для централизованного логирования
+
+# === Loki Configuration ===
+# monitoring/loki/loki.yml
+
+auth_enabled: false
+
+server:
+  http_listen_port: 3100
+  grpc_listen_port: 9096
+
+common:
+  path_prefix: /loki
+  storage:
+    filesystem:
+      chunks_directory: /loki/chunks
+      rules_directory: /loki/rules
+  replication_factor: 1
+  ring:
+    kvstore:
+      store: inmemory
+
+schema_config:
+  configs:
+    - from: 2020-10-24
+      store: boltdb-shipper
+      object_store: filesystem
+      schema: v11
+      index:
+        prefix: index_
+        period: 24h
+
+ruler:
+  alertmanager_url: http://alertmanager:9093
+
+# === Promtail Configuration ===
+# monitoring/promtail/promtail.yml
+
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  # XVPN API logs
+  - job_name: xvpn-api
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: xvpn-api
+          __path__: /var/log/xvpn/api.log
+
+  # XVPN Agent logs
+  - job_name: xvpn-agent
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: xvpn-agent
+          __path__: /var/log/xvpn/agent.log
+
+  # XVPN Bot logs
+  - job_name: xvpn-bot
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: xvpn-bot
+          __path__: /var/log/xvpn/bot.log
+
+  # XVPN Worker logs
+  - job_name: xvpn-worker
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: xvpn-worker
+          __path__: /var/log/xvpn/worker.log
+
+  # XVPN Orchestrator logs
+  - job_name: xvpn-orchestrator
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: xvpn-orchestrator
+          __path__: /var/log/xvpn/orchestrator.log
+
+  # System logs
+  - job_name: system
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: system
+          __path__: /var/log/syslog
+
+# === Alertmanager Configuration ===
+# monitoring/alertmanager/alertmanager.yml
+
+global:
+  smtp_smarthost: 'smtp.gmail.com:587'
+  smtp_from: 'alerts@xvpn.local'
+  smtp_auth_username: 'alerts@xvpn.local'
+  smtp_auth_password: 'your-smtp-password'
+  smtp_require_tls: true
+
+route:
+  group_by: ['alertname']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 1h
+  receiver: 'telegram-notifications'
+
+receivers:
+  - name: 'telegram-notifications'
+    webhook_configs:
+      - url: 'http://bot:8443/webhook/alerts'
+        send_resolved: true
+
+  - name: 'email-notifications'
+    email_configs:
+      - to: 'admin@xvpn.local'
+        send_resolved: true
+
+  - name: 'slack-notifications'
+    slack_configs:
+      - api_url: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'
+        channel: '#alerts'
+        send_resolved: true

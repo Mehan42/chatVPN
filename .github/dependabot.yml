@@ -1,0 +1,162 @@
+# XVPN Dependabot Configuration
+# Конфигурация автоматического обновления зависимостей
+
+version: 2
+
+updates:
+  # === Python Dependencies ===
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "Mehan42"
+      - "Avtandil42"
+    assignees:
+      - "Mehan42"
+    labels:
+      - "dependencies"
+      - "python"
+      - "automated-pr"
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps(dev)"
+    allow:
+      - dependency-type: "direct"
+      - dependency-type: "indirect"
+    ignore:
+      # Игнорировать обновления, которые могут сломать совместимость
+      - dependency-name: "flask"
+        versions: ["3.x"]
+      - dependency-name: "django"
+        versions: ["4.x"]
+      - dependency-name: "sqlalchemy"
+        versions: ["2.x"]
+    groups:
+      # Группировать обновления по категориям
+      production-dependencies:
+        dependency-type: "production"
+      development-dependencies:
+        dependency-type: "development"
+
+  # === Docker Dependencies ===
+  - package-ecosystem: "docker"
+    directory: "/docker"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "09:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "Mehan42"
+      - "Avtandil42"
+    assignees:
+      - "Mehan42"
+    labels:
+      - "dependencies"
+      - "docker"
+      - "automated-pr"
+    commit-message:
+      prefix: "docker"
+    allow:
+      - dependency-name: "python"
+      - dependency-name: "alpine"
+      - dependency-name: "debian"
+      - dependency-name: "ubuntu"
+
+  # === GitHub Actions Dependencies ===
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+      time: "09:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "Mehan42"
+      - "Avtandil42"
+    assignees:
+      - "Mehan42"
+    labels:
+      - "dependencies"
+      - "github-actions"
+      - "automated-pr"
+    commit-message:
+      prefix: "actions"
+
+  # === NPM Dependencies (для веб-интерфейса, если будет) ===
+  - package-ecosystem: "npm"
+    directory: "/web"
+    schedule:
+      interval: "weekly"
+      day: "thursday"
+      time: "09:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "Mehan42"
+      - "Avtandil42"
+    assignees:
+      - "Mehan42"
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "automated-pr"
+    commit-message:
+      prefix: "npm"
+    allow:
+      - dependency-type: "direct"
+      - dependency-type: "indirect"
+    ignore:
+      # Игнорировать обновления крупных библиотек, которые могут сломать совместимость
+      - dependency-name: "react"
+        versions: ["18.x"]
+      - dependency-name: "vue"
+        versions: ["3.x"]
+      - dependency-name: "@angular/*"
+        versions: ["15.x", "16.x"]
+
+# === Настройки оповещений ===
+# Dependabot будет отправлять уведомления о созданных PR в следующие места:
+# 1. Указанные reviewers получат уведомления по email
+# 2. PR будут автоматически назначены указанным assignees
+# 3. PR будут помечены указанными labels
+
+# === Настройки группировки ===
+# Dependabot будет группировать зависимости по:
+# 1. Типу зависимости (production/development)
+# 2. Экосистеме (pip, docker, github-actions, npm)
+# 3. Критичности обновлений
+
+# === Настройки расписания ===
+# Обновления происходят:
+# - Понедельник: Python зависимости
+# - Вторник: Docker зависимости
+# - Среда: GitHub Actions зависимости
+# - Четверг: NPM зависимости (если есть)
+
+# === Настройки лимитов ===
+# - Максимум 10 открытых PR для Python зависимостей
+# - Максимум 5 открытых PR для Docker зависимостей
+# - Максимум 5 открытых PR для GitHub Actions зависимостей
+# - Максимум 10 открытых PR для NPM зависимостей
+
+# === Настройки безопасности ===
+# Dependabot будет:
+# 1. Игнорировать обновления, которые могут сломать совместимость
+# 2. Автоматически закрывать PR при конфликтах слияния
+# 3. Обновлять PR при изменении базовой ветки
+
+# === Настройки коммитов ===
+# Сообщения коммитов будут иметь префиксы:
+# - deps: для production зависимостей
+# - deps(dev): для development зависимостей
+# - docker: для Docker зависимостей
+# - actions: для GitHub Actions зависимостей
+# - npm: для NPM зависимостей

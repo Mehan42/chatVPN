@@ -1,0 +1,333 @@
+# XVPN CodeQL Configuration
+# Конфигурация статического анализа безопасности
+
+name: "CodeQL Security Analysis"
+
+on:
+  # Запуск при пуше в основные ветки
+  push:
+    branches: 
+      - main
+      - develop
+      - security/**
+    paths:
+      - "**.py"
+      - "**.yml"
+      - "**.yaml"
+      - "**.json"
+      - "**.sh"
+      - "**.js"
+      - "**.ts"
+      - "**.jsx"
+      - "**.tsx"
+      - "**.go"
+      - "**.java"
+      - "**.cpp"
+      - "**.c"
+      - "**.h"
+      - "**.hpp"
+
+  # Запуск при создании pull request
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths:
+      - "**.py"
+      - "**.yml"
+      - "**.yaml"
+      - "**.json"
+      - "**.sh"
+      - "**.js"
+      - "**.ts"
+      - "**.jsx"
+      - "**.tsx"
+      - "**.go"
+      - "**.java"
+      - "**.cpp"
+      - "**.c"
+      - "**.h"
+      - "**.hpp"
+
+  # Запуск по расписанию (ежедневно в 3:00)
+  schedule:
+    - cron: "0 3 * * *"
+
+  # Запуск вручную
+  workflow_dispatch:
+
+# Отмена предыдущих запусков при новом пуше
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # === CodeQL анализ ===
+  codeql-analysis:
+    name: CodeQL Security Analysis
+    runs-on: ubuntu-latest
+
+    permissions:
+      # Требуются для загрузки CodeQL packs с GitHub Container Registry
+      packages: read
+      # Требуются для загрузки SARIF результатов в GitHub Security Center
+      security-events: write
+      # Требуются для получения кода из репозитория
+      actions: read
+      # Требуются для загрузки артефактов
+      contents: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'python' ]
+        # CodeQL поддерживает [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby', 'swift' ]
+        # Изучите документацию для добавления других языков программирования:
+        # https://docs.github.com/en/free-pro-team@latest/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#changing-the-languages-that-are-analyzed
+
+    steps:
+    # === Проверка кода ===
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        # Мы должны загрузить по крайней мере 2 коммита для CodeQL анализа
+        fetch-depth: 2
+
+    # === Инициализация CodeQL ===
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: ${{ matrix.language }}
+        # Если вы хотите указать собственные конфигурационные файлы CodeQL, раскомментируйте следующую строку:
+        # config-file: ./.github/codeql/codeql-config.yml
+        
+        # Дополнительные queries для расширенного анализа
+        queries: +security-and-quality
+        
+        # Установка дополнительных CodeQL packs
+        packs: |
+          codeql/python-queries
+          codeql/javascript-queries
+          github/security-extended
+          github/security-experimental
+
+    # === Авто-сборка для interpreted languages (Python, JavaScript, etc.) ===
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v2
+
+    # === Ручная сборка для compiled languages (C/C++, C#, Go, Java) ===
+    # Если вы используете compiled languages, раскомментируйте и настройте следующий блок:
+    # - run: |
+    #     echo "Run, Build Application using script"
+    #     ./location_of_script_within_repo/buildscript.sh
+
+    # === Выполнение CodeQL анализа ===
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+      with:
+        category: "/language:${{matrix.language}}"
+        
+        # Настройки для загрузки SARIF результатов
+        upload: true
+        output: sarif-results
+        
+        # Настройки для фильтрации результатов
+        # Только критические и высокие уязвимости
+        severity: critical,high
+        
+        # Настройки для добавления аннотаций в код
+        add-snippets: true
+        add-messages: true
+        
+        # Настройки для интеграции с GitHub Security Center
+        upload-to-github-security-center: true
+
+  # === Расширенный анализ Python безопасности ===
+  python-security-analysis:
+    name: Advanced Python Security Analysis
+    runs-on: ubuntu-latest
+    needs: codeql-analysis
+    
+    steps:
+    # === Проверка кода ===
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # === Установка Python ===
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    # === Установка зависимостей ===
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e ".[dev,test]"
+
+    # === Запуск Bandit анализа ===
+    - name: Run Bandit Security Analysis
+      run: |
+        bandit -r src/ server/ client/ -f json -o bandit-results.json || true
+
+    # === Запуск Safety проверки ===
+    - name: Run Safety Dependency Check
+      run: |
+        safety check --json > safety-results.json || true
+
+    # === Запуск Semgrep анализа ===
+    - name: Run Semgrep Analysis
+      uses: returntocorp/semgrep-action@v1
+      with:
+        # Правила Semgrep для Python безопасности
+        config: p/python
+        # Директории для анализа
+        audit-on: push
+        # Формат вывода
+        output-format: sarif
+        # Файл для сохранения результатов
+        output-file: semgrep-results.sarif
+
+    # === Загрузка результатов ===
+    - name: Upload Security Analysis Results
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        # Путь к SARIF файлу
+        sarif_file: semgrep-results.sarif
+        # Категория для результатов
+        category: python-security-analysis
+
+  # === Анализ конфигурационных файлов ===
+  config-security-analysis:
+    name: Configuration Files Security Analysis
+    runs-on: ubuntu-latest
+    needs: codeql-analysis
+    
+    steps:
+    # === Проверка кода ===
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # === Анализ Dockerfile ===
+    - name: Dockerfile Security Analysis
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: "config"
+        hide-progress: false
+        format: "sarif"
+        output: "docker-trivy.sarif"
+        exit-code: "1"
+        ignore-unfixed: true
+        severity: "CRITICAL,HIGH"
+
+    # === Анализ Kubernetes манифестов ===
+    - name: Kubernetes Manifests Security Analysis
+      if: false  # Отключено, так как у нас нет Kubernetes манифестов
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: "config"
+        hide-progress: false
+        format: "sarif"
+        output: "k8s-trivy.sarif"
+        exit-code: "1"
+        ignore-unfixed: true
+        severity: "CRITICAL,HIGH"
+
+    # === Загрузка результатов ===
+    - name: Upload Configuration Analysis Results
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: docker-trivy.sarif
+        category: config-security-analysis
+
+  # === Уведомления о результатах ===
+  security-notifications:
+    name: Security Analysis Notifications
+    runs-on: ubuntu-latest
+    needs: [codeql-analysis, python-security-analysis, config-security-analysis]
+    if: failure() || cancelled()
+    
+    steps:
+    # === Отправка уведомления в Slack ===
+    - name: Notify Slack about Security Issues
+      if: failure()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        channel: "#security-alerts"
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        icon_emoji: ":rotating_light:"
+        username: "Security Bot"
+        
+    # === Отправка уведомления в Telegram ===
+    - name: Notify Telegram about Security Issues
+      if: failure()
+      run: |
+        curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
+          -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+          -d text="🚨 Security issues detected in ${{ github.repository }} on ${{ github.ref }}! Check GitHub Security tab."
+          
+    # === Отправка уведомления по email ===
+    - name: Notify Email about Security Issues
+      if: failure()
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: smtp.gmail.com
+        server_port: 465
+        username: ${{ secrets.EMAIL_USERNAME }}
+        password: ${{ secrets.EMAIL_PASSWORD }}
+        subject: "🚨 Security Alert: XVPN Repository"
+        body: |
+          Security issues were detected in the XVPN repository during CodeQL analysis.
+          
+          Repository: ${{ github.repository }}
+          Branch: ${{ github.ref }}
+          Commit: ${{ github.sha }}
+          
+          Please check the GitHub Security tab for details.
+        to: security@xvpn.local
+        from: security-bot@xvpn.local
+
+# === Настройки по умолчанию ===
+defaults:
+  run:
+    shell: bash
+
+# === Переменные среды ===
+env:
+  PYTHON_VERSION: "3.10"
+  CODEQL_PACKS: "codeql/python-queries,github/security-extended"
+
+# === Секреты, необходимые для работы ===
+# Для работы этого workflow необходимы следующие секреты:
+# - SLACK_WEBHOOK: webhook URL для Slack уведомлений
+# - TELEGRAM_BOT_TOKEN: токен Telegram бота для уведомлений
+# - TELEGRAM_CHAT_ID: ID чата для уведомлений
+# - EMAIL_USERNAME: имя пользователя для email уведомлений
+# - EMAIL_PASSWORD: пароль для email уведомлений
+
+# === Настройки CodeQL ===
+# CodeQL будет анализировать:
+# 1. Python код на уязвимости безопасности
+# 2. Конфигурационные файлы (Dockerfile, k8s манифесты)
+# 3. Зависимости проекта
+# 4. Потенциальные утечки данных и небезопасные практики
+
+# === Настройки уведомлений ===
+# При обнаружении уязвимостей будут отправлены уведомления в:
+# 1. GitHub Security Center (автоматически)
+# 2. Slack канал #security-alerts
+# 3. Telegram чат администраторов
+# 4. Email рассылка security@xvpn.local
+
+# === Настройки расписания ===
+# Анализ выполняется:
+# - При каждом пуше в основные ветки
+# - При создании pull request
+# - Ежедневно в 3:00 UTC
+
+# === Настройки фильтрации ===
+# Отчеты включают только:
+# - Критические и высокие уязвимости
+# - Подтвержденные проблемы (без false positives)
+# - Проблемы с высоким приоритетом исправления

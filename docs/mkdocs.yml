@@ -1,0 +1,547 @@
+# XVPN Documentation Configuration
+# Конфигурация автоматической генерации документации
+
+# === MkDocs Configuration ===
+site_name: XVPN Documentation
+site_url: https://docs.xvpn.local
+site_description: Complete documentation for XVPN - Intelligent VPN with AI Agents
+site_author: XVPN Team
+
+# Тема документации
+theme:
+  name: material
+  language: en
+  palette:
+    # Темная тема по умолчанию
+    - scheme: slate
+      primary: deep purple
+      accent: deep purple
+      toggle:
+        icon: material/weather-night
+        name: Switch to light mode
+    # Светлая тема
+    - scheme: default
+      primary: deep purple
+      accent: deep purple
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to dark mode
+  font:
+    text: Roboto
+    code: Roboto Mono
+  features:
+    - navigation.instant
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.indexes
+    - toc.follow
+    - toc.integrate
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+    - content.code.annotate
+
+# Плагины
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_source: true
+            show_root_heading: true
+            heading_level: 2
+  - autorefs
+  - git-revision-date-localized:
+      enable_creation_date: true
+  - minify:
+      minify_html: true
+  - redirects:
+      redirect_maps:
+        'old/page.md': 'new/page.md'
+
+# Расширения Markdown
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - attr_list
+  - md_in_html
+  - admonition
+  - footnotes
+  - toc:
+      permalink: true
+
+# Навигация
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Installation: getting-started/installation.md
+      - Quick Start: getting-started/quick-start.md
+      - Configuration: getting-started/configuration.md
+      - First Steps: getting-started/first-steps.md
+  - User Guide:
+      - Basic Usage: user-guide/basic-usage.md
+      - Advanced Features: user-guide/advanced-features.md
+      - Security: user-guide/security.md
+      - Troubleshooting: user-guide/troubleshooting.md
+      - FAQ: user-guide/faq.md
+  - Administrator Guide:
+      - Server Installation: admin-guide/server-installation.md
+      - Configuration: admin-guide/configuration.md
+      - Monitoring: admin-guide/monitoring.md
+      - Maintenance: admin-guide/maintenance.md
+      - Security: admin-guide/security.md
+      - Backup and Restore: admin-guide/backup-restore.md
+  - Developer Guide:
+      - Architecture: developer-guide/architecture.md
+      - API Reference: developer-guide/api-reference.md
+      - Contributing: developer-guide/contributing.md
+      - Testing: developer-guide/testing.md
+      - Building from Source: developer-guide/building.md
+  - API Documentation:
+      - REST API: api/rest-api.md
+      - WebSocket API: api/websocket-api.md
+      - Internal API: api/internal-api.md
+  - Changelog: changelog.md
+  - License: license.md
+
+# Каталог с документацией
+docs_dir: docs
+
+# Каталог для сборки
+site_dir: site
+
+# Файлы для исключения
+exclude_docs: |
+  /templates/
+  /snippets/
+  /drafts/
+
+# Дополнительные файлы
+extra:
+  version:
+    provider: mike
+  analytics:
+    provider: google
+    property: G-XXXXXXXXXX
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Mehan42/chatVPN
+    - icon: fontawesome/brands/telegram
+      link: https://t.me/xvpn_community
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/xvpn
+
+# === Sphinx Configuration ===
+# sphinx/conf.py
+
+# Расширения Sphinx
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.napoleon',
+    'sphinx.ext.intersphinx',
+    'sphinx.ext.todo',
+    'sphinx.ext.coverage',
+    'sphinx.ext.mathjax',
+    'sphinx.ext.ifconfig',
+    'sphinx.ext.githubpages',
+    'sphinx.ext.autosummary',
+    'sphinx.ext.graphviz',
+    'sphinx.ext.inheritance_diagram',
+    'sphinx.ext.autosectionlabel',
+    'sphinxcontrib.httpdomain',
+    'sphinxcontrib.openapi',
+    'sphinx_tabs.tabs',
+    'sphinx_copybutton',
+    'sphinxemoji.sphinxemoji',
+]
+
+# Основная конфигурация
+project = 'XVPN'
+copyright = '2025, XVPN Team'
+author = 'XVPN Team'
+
+# Версия и релиз
+version = '1.0'
+release = '1.0.0'
+
+# Язык
+language = 'en'
+
+# Тема
+html_theme = 'sphinx_rtd_theme'
+html_static_path = ['_static']
+
+# === PyDoc-Markdown Configuration ===
+# pydoc-markdown.yml
+
+# Загрузчики
+loaders:
+  - type: python
+    search_path: [.]
+    modules: ['xvpn', 'server', 'client']
+    ignore_when_discovered: ['test_.*']
+
+# Renderer
+renderer:
+  - type: markdown
+    output_file: docs/api/reference.md
+    render_toc: true
+    render_module_header: true
+    render_function_header: true
+    render_class_header: true
+    render_method_header: true
+    render_attribute_header: true
+    render_data_header: true
+    render_package_header: true
+    render_module_toc: true
+    render_module_children_toc: true
+    render_function_signature: true
+    render_class_signature: true
+    render_method_signature: true
+    render_attribute_signature: true
+    render_data_signature: true
+    render_package_signature: true
+    render_module_docstring: true
+    render_function_docstring: true
+    render_class_docstring: true
+    render_method_docstring: true
+    render_attribute_docstring: true
+    render_data_docstring: true
+    render_package_docstring: true
+    render_module_examples: true
+    render_function_examples: true
+    render_class_examples: true
+    render_method_examples: true
+    render_attribute_examples: true
+    render_data_examples: true
+    render_package_examples: true
+    render_module_attributes: true
+    render_class_attributes: true
+    render_module_functions: true
+    render_class_methods: true
+    render_module_classes: true
+    render_module_data: true
+    render_module_packages: true
+    render_inherited_members: true
+    render_private_members: false
+    render_special_members: false
+    render_undocumented_members: false
+    render_empty_modules: false
+    render_empty_classes: false
+    render_empty_functions: false
+    render_empty_attributes: false
+    render_empty_data: false
+    render_empty_packages: false
+    render_module_source: true
+    render_function_source: true
+    render_class_source: true
+    render_method_source: true
+    render_attribute_source: true
+    render_data_source: true
+    render_package_source: true
+    render_module_tests: true
+    render_function_tests: true
+    render_class_tests: true
+    render_method_tests: true
+    render_attribute_tests: true
+    render_data_tests: true
+    render_package_tests: true
+    render_module_coverage: true
+    render_function_coverage: true
+    render_class_coverage: true
+    render_method_coverage: true
+    render_attribute_coverage: true
+    render_data_coverage: true
+    render_package_coverage: true
+    render_module_deprecated: true
+    render_function_deprecated: true
+    render_class_deprecated: true
+    render_method_deprecated: true
+    render_attribute_deprecated: true
+    render_data_deprecated: true
+    render_package_deprecated: true
+    render_module_todo: true
+    render_function_todo: true
+    render_class_todo: true
+    render_method_todo: true
+    render_attribute_todo: true
+    render_data_todo: true
+    render_package_todo: true
+    render_module_warnings: true
+    render_function_warnings: true
+    render_class_warnings: true
+    render_method_warnings: true
+    render_attribute_warnings: true
+    render_data_warnings: true
+    render_package_warnings: true
+    render_module_errors: true
+    render_function_errors: true
+    render_class_errors: true
+    render_method_errors: true
+    render_attribute_errors: true
+    render_data_errors: true
+    render_package_errors: true
+    render_module_infos: true
+    render_function_infos: true
+    render_class_infos: true
+    render_method_infos: true
+    render_attribute_infos: true
+    render_data_infos: true
+    render_package_infos: true
+
+# === Конфигурация автоматической генерации ===
+# docs/.readthedocs.yaml
+
+# Версия конфигурации
+version: 2
+
+# Сборка
+build:
+  os: ubuntu-22.04
+  tools:
+    python: "3.10"
+  jobs:
+    pre_build:
+      - pip install -r docs/requirements.txt
+      - mkdocs build
+
+# Форматы вывода
+formats:
+  - pdf
+  - epub
+
+# Python конфигурация
+python:
+  install:
+    - requirements: docs/requirements.txt
+    - method: pip
+      path: .
+
+# Уведомления
+notifications:
+  email:
+    on_success: change
+    on_failure: always
+  slack:
+    webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+    channel: "#documentation"
+
+# === Конфигурация API документации ===
+# docs/openapi.yaml
+
+openapi: 3.0.0
+info:
+  title: XVPN API
+  description: REST API for XVPN - Intelligent VPN with AI Agents
+  version: 1.0.0
+  contact:
+    name: XVPN Team
+    email: team@xvpn.local
+    url: https://github.com/Mehan42/chatVPN
+  license:
+    name: MIT
+    url: https://github.com/Mehan42/chatVPN/blob/main/LICENSE
+
+servers:
+  - url: https://api.xvpn.local
+    description: Production server
+  - url: https://staging.api.xvpn.local
+    description: Staging server
+  - url: http://localhost:8443
+    description: Development server
+
+# Пути API
+paths:
+  /mcp/v1/vpn.health:
+    get:
+      summary: Get VPN health status
+      description: Returns current VPN health status and mask score
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+        '500':
+          description: Internal server error
+          
+  /transports/manifest.json:
+    get:
+      summary: Get transport manifest
+      description: Returns available transport protocols manifest
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransportManifest'
+        '500':
+          description: Internal server error
+          
+  /clients/{uuid}.json:
+    get:
+      summary: Get client configuration
+      description: Returns client configuration by UUID
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientConfig'
+        '404':
+          description: Client not found
+        '500':
+          description: Internal server error
+
+# Компоненты схем
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [healthy, warning, critical]
+        mask_score:
+          type: integer
+          minimum: 0
+          maximum: 5
+        timestamp:
+          type: string
+          format: date-time
+        version:
+          type: string
+          
+    TransportManifest:
+      type: object
+      properties:
+        version:
+          type: integer
+        transports:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transport'
+            
+    Transport:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        priority:
+          type: integer
+        ipv6:
+          type: boolean
+        need_udp:
+          type: boolean
+        config:
+          type: object
+          
+    ClientConfig:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        transports:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transport'
+        settings:
+          type: object
+
+# === Конфигурация автоматического развертывания ===
+# .github/workflows/documentation.yml
+
+name: Documentation Deployment
+
+on:
+  push:
+    branches:
+      - main
+      - docs/**
+    paths:
+      - "docs/**"
+      - "README.md"
+      - "CONTRIBUTING.md"
+      - "CHANGELOG.md"
+      - "LICENSE"
+      
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "docs/**"
+      - "README.md"
+      - "CONTRIBUTING.md"
+      - "CHANGELOG.md"
+      - "LICENSE"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+          
+      - name: Install dependencies
+        run: |
+          pip install -r docs/requirements.txt
+          
+      - name: Build documentation
+        run: |
+          mkdocs build
+          
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
+          cname: docs.xvpn.local
+          
+      - name: Deploy to Read the Docs
+        if: github.ref == 'refs/heads/main'
+        run: |
+          # TODO: Add Read the Docs deployment commands
+          
+      - name: Notify on success
+        if: success()
+        run: |
+          echo "Documentation deployed successfully!"
+          
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "Documentation deployment failed!"

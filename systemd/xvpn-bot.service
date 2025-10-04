@@ -1,33 +1,33 @@
+# XVPN Telegram Bot Service
+# Служба XVPN Telegram бота
+
 [Unit]
-Description=XVPN Bot Service with uv
-Documentation=https://docs.xvpn.local
-After=network.target network-online.target
-Requires=network.target
-Requires=xvpn-api.service xvpn-redis.service
+Description=XVPN Telegram Bot Service
+After=network.target xvpn-api.service
+Wants=network.target xvpn-api.service
+Requires=network.target xvpn-api.service
 
 [Service]
 Type=simple
-User=xvpn
-Group=xvpn
-WorkingDirectory=/opt/xvpn
-ExecStart=/usr/local/bin/uvx run --app server.admin.main:bot
+User=uss
+Group=uss
+WorkingDirectory=/home/uss/chatvpn/server/admin
+Environment=PYTHONPATH=/home/uss/chatvpn/server/admin
+ExecStart=/usr/bin/python3 /home/uss/chatvpn/server/admin/tg_bot.py
 Restart=always
 RestartSec=5
-RestartMaxRetries=3
-StartLimitInterval=10min
-StartLimitBurst=3
 StandardOutput=journal
 StandardError=journal
-TimeoutStopSec=30
-TimeoutStartSec=30
+SyslogIdentifier=xvpn-bot
 
 # Security settings
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=true
-ReadWritePaths=/opt/xvpn/data /opt/xvpn/logs /opt/xvpn/pids
-ReadOnlyPaths=/opt/xvpn/config
+ReadWritePaths=/home/uss/chatvpn/server/admin /var/log/xvpn /opt/xvpn/data
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 ProtectKernelTunables=true
 ProtectKernelModules=true
 ProtectControlGroups=true
@@ -35,38 +35,13 @@ RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
 RestrictSUIDSGID=true
 RemoveIPC=true
 PrivateUsers=true
-ProtectKernelLogs=true
-ProtectHostname=true
-RestrictRealtime=true
-RestrictNamespaces=true
 
 # Resource limits
 LimitNOFILE=65536
 LimitNPROC=4096
-MemoryMax=128M
+MemoryMax=256M
 CPUQuota=10%
-TasksMax=256
-
-# Environment
-Environment=PYTHONPATH=/opt/xvpn/src:/opt/xvpn/server/admin
-Environment=PYTHONUNBUFFERED=1
-Environment=LOG_LEVEL=INFO
-Environment=BOT_CONFIG_FILE=/opt/xvpn/config/bot.json
-Environment=API_BASE_URL=https://localhost:8443
-Environment=BOT_WEBHOOK_TIMEOUT=60
-Environment=BOT_POLLING_INTERVAL=30
-
-# Health checking and monitoring
-WatchdogSec=30
-WatchdogSignal=SIGTERM
-
-# Logging configuration
-SyslogIdentifier=xvpn-bot
-SyslogLevel=info
-
-# Dependencies and ordering
-BindsTo=xvpn-api.service xvpn-redis.service
-After=xvpn-api.service xvpn-redis.service
+TasksMax=128
 
 [Install]
 WantedBy=multi-user.target

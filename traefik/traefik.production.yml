@@ -1,0 +1,170 @@
+# XVPN Traefik Production Configuration
+# Конфигурация Traefik для production среды
+
+# === Global Configuration ===
+global:
+  checkNewVersion: true
+  sendAnonymousUsage: false
+
+# === Entry Points ===
+entryPoints:
+  # HTTP entry point (redirects to HTTPS)
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+          permanent: true
+          
+  # HTTPS entry point
+  websecure:
+    address: ":443"
+    http:
+      tls:
+        # Use Let's Encrypt for production
+        certResolver: le
+        # Force redirect to HTTPS
+        redirect:
+          entryPoint:
+            to: websecure
+            scheme: https
+            permanent: true
+      # Middleware for security headers
+      middlewares:
+        - security-headers
+        - rate-limit
+        - compress
+      
+  # XVPN API entry point
+  xvpn:
+    address: ":8443"
+    http:
+      tls:
+        certResolver: le
+      middlewares:
+        - security-headers
+        - rate-limit
+        - compress
+        
+  # Traefik dashboard entry point
+  traefik:
+    address: ":8080"
+    http:
+      middlewares:
+        - auth
+
+# === Providers Configuration ===
+providers:
+  # Docker provider for automatic service discovery
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+    watch: true
+    network: xvpn-network
+    constraints: 
+      - "Label(`traefik.enable`, `true`)"
+  
+  # File provider for static routes
+  file:
+    watch: true
+    directory: /etc/traefik/dynamic
+    filename: /etc/traefik/tls.yml
+
+# === API and Dashboard ===
+api:
+  dashboard: true
+  insecure: false
+  debug: false
+
+# === Logging Configuration ===
+log:
+  level: INFO
+  format: json
+  filePath: /var/log/traefik/traefik.log
+
+# === Access Logs ===
+accessLog:
+  enabled: true
+  format: json
+  filePath: /var/log/traefik/access.log
+  bufferingSize: 100
+  filters:
+    statusCodes:
+      - "200"
+      - "404"
+      - "500"
+      - "502"
+      - "503"
+
+# === Tracing Configuration ===
+tracing:
+  jaeger:
+    samplingServerURL: http://jaeger:5778/sampling
+    localAgentHostPort: jaeger:6831
+    serviceName: traefik
+
+# === Metrics Configuration ===
+metrics:
+  prometheus:
+    enable: true
+    entryPoint: metrics
+    buckets:
+      - 0.1
+      - 0.3
+      - 1.2
+      - 5.0
+
+# === Certificate Resolvers ===
+certificatesResolvers:
+  # Let's Encrypt resolver
+  le:
+    acme:
+      email: admin@your-domain.com
+      storage: /letsencrypt/acme.json
+      tlsChallenge: {}
+      httpChallenge:
+        entryPoint: web
+      dnsChallenge:
+        provider: cloudflare
+        delayBeforeCheck: 0
+        disablePropagationCheck: false
+        resolvers:
+          - "1.1.1.1:53"
+          - "8.8.8.8:53"
+
+# === Pilot Configuration ===
+pilot:
+  token: your-traefik-pilot-token
+
+# === Experimental Features ===
+experimental:
+  plugins:
+    enabled: true
+  http3:
+    enabled: true
+
+# === Additional Configuration ===
+additionalArguments:
+  - "--providers.docker.constraints=Label(`traefik.constraint-label`,`xvpn`)"
+  - "--providers.docker.watch=true"
+  - "--providers.file.directory=/etc/traefik/dynamic"
+  - "--providers.file.watch=true"
+  - "--log.level=INFO"
+  - "--accesslog=true"
+  - "--accesslog.format=json"
+  - "--accesslog.filepath=/var/log/traefik/access.log"
+  - "--tracing.jaeger=true"
+  - "--tracing.jaeger.samplingServerURL=http://jaeger:5778/sampling"
+  - "--tracing.jaeger.localAgentHostPort=jaeger:6831"
+  - "--tracing.jaeger.serviceName=traefik"
+  - "--metrics.prometheus=true"
+  - "--metrics.prometheus.entryPoint=metrics"
+  - "--certificatesresolvers.le.acme.email=admin@your-domain.com"
+  - "--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json"
+  - "--certificatesresolvers.le.acme.tlschallenge=true"
+  - "--certificatesresolvers.le.acme.httpchallenge.entrypoint=web"
+  - "--pilot.token=your-traefik-pilot-token"
+  - "--experimental.plugins.enabled=true"
+  - "--experimental.http3.enabled=true"

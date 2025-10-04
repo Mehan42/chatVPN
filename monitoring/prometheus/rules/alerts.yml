@@ -1,0 +1,135 @@
+# XVPN Prometheus Alert Rules
+# Правила оповещений Prometheus
+
+groups:
+  # XVPN API alerts
+  - name: xvpn-api-alerts
+    rules:
+      # High error rate
+      - alert: XVPNAPIHighErrorRate
+        expr: rate(xvpn_api_requests_total{status=~"5.."}[5m]) / rate(xvpn_api_requests_total[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "XVPN API high error rate"
+          description: "XVPN API error rate is above 5% (current value: {{ $value }}%)"
+
+      # High latency
+      - alert: XVPNAPIHighLatency
+        expr: histogram_quantile(0.95, rate(xvpn_api_request_duration_seconds_bucket[5m])) > 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "XVPN API high latency"
+          description: "XVPN API 95th percentile latency is above 1 second (current value: {{ $value }}s)"
+
+      # Low availability
+      - alert: XVPNAPIUnavailable
+        expr: up{xvpn-api} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "XVPN API unavailable"
+          description: "XVPN API is unreachable"
+
+  # XVPN Agent alerts
+  - name: xvpn-agent-alerts
+    rules:
+      # Low health score
+      - alert: XVPNAGLowHealthScore
+        expr: xvpn_agent_health_score < 3
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "XVPN Agent low health score"
+          description: "XVPN Agent health score is below 3 (current value: {{ $value }})"
+
+      # Transport switching
+      - alert: XVPNAGTransportSwitching
+        expr: increase(xvpn_agent_transport_switches_total[5m]) > 0
+        for: 1m
+        labels:
+          severity: info
+        annotations:
+          summary: "XVPN Agent transport switching"
+          description: "XVPN Agent is switching transports (current value: {{ $value }})"
+
+      # Agent offline
+      - alert: XVPNAGOffline
+        expr: up{xvpn-agent} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "XVPN Agent offline"
+          description: "XVPN Agent is unreachable"
+
+  # XVPN Bot alerts
+  - name: xvpn-bot-alerts
+    rules:
+      # Bot errors
+      - alert: XVPNBotErrors
+        expr: increase(xvpn_bot_errors_total[5m]) > 0
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "XVPN Bot errors"
+          description: "XVPN Bot has encountered errors (current value: {{ $value }})"
+
+      # Bot inactive
+      - alert: XVPNBotInactive
+        expr: up{xvpn-bot} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "XVPN Bot inactive"
+          description: "XVPN Bot is not responding"
+
+  # System alerts
+  - name: system-alerts
+    rules:
+      # High CPU usage
+      - alert: HighCPUUsage
+        expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage"
+          description: "CPU usage is above 80% (current value: {{ $value }}%)"
+
+      # High memory usage
+      - alert: HighMemoryUsage
+        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage"
+          description: "Memory usage is above 85% (current value: {{ $value }}%)"
+
+      # Low disk space
+      - alert: LowDiskSpace
+        expr: (node_filesystem_size_bytes - node_filesystem_free_bytes) / node_filesystem_size_bytes * 100 > 90
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Low disk space"
+          description: "Disk usage is above 90% (current value: {{ $value }}%)"
+
+      # High network errors
+      - alert: HighNetworkErrors
+        expr: rate(node_network_receive_errs_total[5m]) > 10
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High network errors"
+          description: "Network receive errors are above 10/s (current value: {{ $value }})"

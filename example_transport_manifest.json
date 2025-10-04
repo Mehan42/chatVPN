@@ -1,0 +1,141 @@
+{
+  "version": 1,
+  "generated_at": "2025-10-04T12:00:00Z",
+  "transports": [
+    {
+      "id": "vless-reality-1",
+      "name": "VLESS + Reality Transport 1",
+      "type": "vless-reality",
+      "priority": 1,
+      "ipv6": true,
+      "need_udp": false,
+      "description": "High-performance VLESS transport with Reality protocol",
+      "config_template": {
+        "server": "example1.server.com",
+        "port": 443,
+        "protocol": "tcp"
+      },
+      "health_check": {
+        "interval": 30,
+        "timeout": 10,
+        "retries": 3
+      }
+    },
+    {
+      "id": "vless-reality-2",
+      "name": "VLESS + Reality Transport 2",
+      "type": "vless-reality",
+      "priority": 2,
+      "ipv6": true,
+      "need_udp": false,
+      "description": "Backup VLESS transport with Reality protocol",
+      "config_template": {
+        "server": "example2.server.com",
+        "port": 443,
+        "protocol": "tcp"
+      },
+      "health_check": {
+        "interval": 30,
+        "timeout": 10,
+        "retries": 3
+      }
+    },
+    {
+      "id": "vmess-ws-1",
+      "name": "VMess + WebSocket Transport 1",
+      "type": "vmess-ws",
+      "priority": 3,
+      "ipv6": true,
+      "need_udp": false,
+      "description": "WebSocket-based VMess transport",
+      "config_template": {
+        "server": "example3.server.com",
+        "port": 443,
+        "protocol": "vmess"
+      },
+      "health_check": {
+        "interval": 30,
+        "timeout": 10,
+        "retries": 3
+      }
+    },
+    {
+      "id": "vmess-ws-2",
+      "name": "VMess + WebSocket Transport 2",
+      "type": "vmess-ws",
+      "priority": 4,
+      "ipv6": true,
+      "need_udp": false,
+      "description": "Backup WebSocket-based VMess transport",
+      "config_template": {
+        "server": "example4.server.com",
+        "port": 443,
+        "protocol": "vmess"
+      },
+      "health_check": {
+        "interval": 30,
+        "timeout": 10,
+        "retries": 3
+      }
+    },
+    {
+      "id": "trojan-tcp-1",
+      "name": "Trojan + TCP Transport 1",
+      "type": "trojan-tcp",
+      "priority": 5,
+      "ipv6": true,
+      "need_udp": false,
+      "description": "Classic Trojan transport over TCP",
+      "config_template": {
+        "server": "example5.server.com",
+        "port": 443,
+        "protocol": "trojan"
+      },
+      "health_check": {
+        "interval": 30,
+        "timeout": 10,
+        "retries": 3
+      }
+    },
+    {
+      "id": "shadowsocks-aead-1",
+      "name": "Shadowsocks AEAD Transport 1",
+      "type": "shadowsocks-aead",
+      "priority": 6,
+      "ipv6": true,
+      "need_udp": true,
+      "description": "Shadowsocks transport with AEAD encryption",
+      "config_template": {
+        "server": "example6.server.com",
+        "port": 8388,
+        "protocol": "shadowsocks"
+      },
+      "health_check": {
+        "interval": 30,
+        "timeout": 10,
+        "retries": 3
+      }
+    }
+  ],
+  "fallback_transports": [
+    {
+      "id": "direct-ipv4",
+      "name": "Direct IPv4 Connection",
+      "type": "direct",
+      "priority": 100,
+      "ipv6": false,
+      "need_udp": false,
+      "description": "Direct internet connection without VPN (fallback)",
+      "config_template": {
+        "server": "0.0.0.0",
+        "port": 0,
+        "protocol": "direct"
+      },
+      "health_check": {
+        "interval": 60,
+        "timeout": 10,
+        "retries": 1
+      }
+    }
+  ]
+}

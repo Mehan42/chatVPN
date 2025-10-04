@@ -1,0 +1,469 @@
+# XVPN Production Configuration
+# Конфигурация для продакшена
+
+# === Production Environment Variables ===
+# .env.production
+
+# Telegram Bot Configuration
+BOT_TOKEN=your_production_bot_token_here
+CHAT_ID=your_production_chat_id_here
+
+# Server Configuration
+SERVER_IP=your_production_server_ip
+API_BASE_URL=https://your-domain.com:8443
+DATABASE_URL=postgresql://xvpn:password@postgres:5432/xvpn_prod
+REDIS_URL=redis://redis:6379/0
+
+# Security Configuration
+JWT_SECRET=your_production_jwt_secret_here
+JWT_ALGORITHM=HS256
+JWT_EXPIRE_HOURS=24
+
+# Logging Configuration
+LOG_LEVEL=INFO
+LOG_FILE=/var/log/xvpn/production.log
+
+# Production Configuration
+FLASK_ENV=production
+FLASK_DEBUG=false
+PYTHONUNBUFFERED=1
+
+# Feature Flags
+FEATURE_AI_ORCHESTRATOR=true
+FEATURE_IPV6_SUPPORT=true
+FEATURE_PROXY_MODES=true
+FEATURE_HEALTH_MONITORING=true
+
+# Performance Configuration
+WORKER_COUNT=4
+HEALTH_CHECK_INTERVAL=60
+TRANSPORT_SWITCH_THRESHOLD=3
+
+# Database Configuration
+DB_POOL_SIZE=20
+DB_MAX_OVERFLOW=30
+DB_ECHO=false
+
+# Redis Configuration
+REDIS_POOL_SIZE=20
+REDIS_MAX_CONNECTIONS=50
+
+# Monitoring Configuration
+PROMETHEUS_ENABLED=true
+PROMETHEUS_PORT=9090
+GRAFANA_ENABLED=true
+GRAFANA_PORT=3000
+
+# TLS Configuration
+TLS_CERT_FILE=/etc/letsencrypt/live/your-domain.com/fullchain.pem
+TLS_KEY_FILE=/etc/letsencrypt/live/your-domain.com/privkey.pem
+TLS_CA_FILE=/etc/letsencrypt/live/your-domain.com/chain.pem
+
+# === Docker Compose Production Configuration ===
+# docker-compose.production.yml
+
+version: '3.8'
+
+services:
+  # === XVPN API Service (Production) ===
+  xvpn-api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+      target: production
+    container_name: xvpn-api-prod
+    ports:
+      - "8443:8443"
+    volumes:
+      - xvpn-data:/data
+      - xvpn-logs:/var/log/xvpn
+      - xvpn-config:/config:ro
+      - letsencrypt:/etc/letsencrypt:ro
+    environment:
+      - FLASK_ENV=production
+      - FLASK_DEBUG=false
+      - PYTHONUNBUFFERED=1
+      - DATABASE_URL=postgresql://xvpn:${POSTGRES_PASSWORD}@postgres:5432/xvpn_prod
+      - REDIS_URL=redis://redis:6379/0
+      - LOG_LEVEL=INFO
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_ALGORITHM=HS256
+      - JWT_EXPIRE_HOURS=24
+      - BOT_TOKEN=${BOT_TOKEN}
+      - CHAT_ID=${CHAT_ID}
+      - API_BASE_URL=https://your-domain.com:8443
+    networks:
+      - xvpn-network
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis
+    labels:
+      # Traefik configuration
+      - "traefik.enable=true"
+      - "traefik.http.routers.xvpn-api.rule=Host(`api.your-domain.com`) || PathPrefix(`/mcp`)"
+      - "traefik.http.routers.xvpn-api.entrypoints=websecure"
+      - "traefik.http.routers.xvpn-api.tls.certresolver=myresolver"
+      - "traefik.http.services.xvpn-api.loadbalancer.server.port=8443"
+      - "traefik.http.middlewares.xvpn-api-stripprefix.stripprefix.prefixes=/mcp"
+      - "traefik.http.routers.xvpn-api.middlewares=xvpn-api-stripprefix"
+      # Health check
+      - "traefik.http.routers.xvpn-api.rule=Host(`api.your-domain.com`) || PathPrefix(`/mcp`) || PathPrefix(`/transports`)"
+      # Metrics for monitoring
+      - "traefik.http.routers.xvpn-api.priority=10"
+      # Security headers
+      - "traefik.http.middlewares.xvpn-api-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.xvpn-api-headers.headers.sslredirect=true"
+      - "traefik.http.routers.xvpn-api.middlewares=xvpn-api-stripprefix,xvpn-api-headers"
+
+  # === XVPN Agent Service (Production) ===
+  xvpn-agent:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.agent
+      target: production
+    container_name: xvpn-agent-prod
+    volumes:
+      - xvpn-data:/data
+      - xvpn-logs:/var/log/xvpn
+      - xvpn-config:/config:ro
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=INFO
+      - DATABASE_URL=postgresql://xvpn:${POSTGRES_PASSWORD}@postgres:5432/xvpn_prod
+      - MANIFEST_URL=https://api.your-domain.com:8443/transports/manifest.json
+      - HEALTH_URL=https://api.your-domain.com:8443/mcp/v1/vpn.health
+      - AGENT_CONFIG_FILE=/config/agent.json
+    networks:
+      - xvpn-network
+    restart: unless-stopped
+    depends_on:
+      - xvpn-api
+      - postgres
+      - redis
+    labels:
+      # Traefik configuration
+      - "traefik.enable=true"
+      - "traefik.http.routers.xvpn-agent.rule=PathPrefix(`/agent`)"
+      - "traefik.http.routers.xvpn-agent.entrypoints=websecure"
+      - "traefik.http.routers.xvpn-agent.tls.certresolver=myresolver"
+      - "traefik.http.services.xvpn-agent.loadbalancer.server.port=8443"
+      - "traefik.http.middlewares.xvpn-agent-stripprefix.stripprefix.prefixes=/agent"
+      - "traefik.http.routers.xvpn-agent.middlewares=xvpn-agent-stripprefix"
+      # Health check
+      - "traefik.http.routers.xvpn-agent.priority=20"
+
+  # === XVPN Bot Service (Production) ===
+  xvpn-bot:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.bot
+      target: production
+    container_name: xvpn-bot-prod
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=INFO
+      - BOT_TOKEN=${BOT_TOKEN}
+      - CHAT_ID=${CHAT_ID}
+      - API_BASE_URL=https://api.your-domain.com:8443
+      - BOT_CONFIG_FILE=/config/bot.json
+    volumes:
+      - xvpn-config:/config:ro
+    networks:
+      - xvpn-network
+    restart: unless-stopped
+    depends_on:
+      - xvpn-api
+    labels:
+      # Traefik configuration
+      - "traefik.enable=true"
+      - "traefik.http.routers.xvpn-bot.rule=Host(`bot.your-domain.com`)"
+      - "traefik.http.routers.xvpn-bot.entrypoints=websecure"
+      - "traefik.http.routers.xvpn-bot.tls.certresolver=myresolver"
+      - "traefik.http.services.xvpn-bot.loadbalancer.server.port=8443"
+      # Health check
+      - "traefik.http.routers.xvpn-bot.priority=30"
+      # Security headers
+      - "traefik.http.middlewares.xvpn-bot-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.xvpn-bot-headers.headers.sslredirect=true"
+      - "traefik.http.routers.xvpn-bot.middlewares=xvpn-bot-headers"
+
+  # === XVPN Worker Service (Production) ===
+  xvpn-worker:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.worker
+      target: production
+    container_name: xvpn-worker-prod
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=INFO
+      - WORKER_COUNT=4
+      - DATABASE_URL=postgresql://xvpn:${POSTGRES_PASSWORD}@postgres:5432/xvpn_prod
+      - REDIS_URL=redis://redis:6379/0
+    volumes:
+      - xvpn-data:/data
+      - xvpn-logs:/var/log/xvpn
+      - xvpn-config:/config:ro
+    networks:
+      - xvpn-network
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis
+    deploy:
+      replicas: 4
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+
+  # === XVPN Orchestrator Service (Production) ===
+  xvpn-orchestrator:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.orchestrator
+      target: production
+    container_name: xvpn-orchestrator-prod
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=INFO
+      - DATABASE_URL=postgresql://xvpn:${POSTGRES_PASSWORD}@postgres:5432/xvpn_prod
+      - ORCHESTRATOR_CONFIG_FILE=/config/orchestrator.json
+    volumes:
+      - xvpn-data:/data
+      - xvpn-logs:/var/log/xvpn
+      - xvpn-config:/config:ro
+      - xvpn-knowledge:/app/agent/knowledge:ro
+    networks:
+      - xvpn-network
+    restart: unless-stopped
+    depends_on:
+      - xvpn-api
+      - postgres
+      - redis
+    labels:
+      # Traefik configuration
+      - "traefik.enable=true"
+      - "traefik.http.routers.xvpn-orchestrator.rule=Host(`orchestrator.your-domain.com`)"
+      - "traefik.http.routers.xvpn-orchestrator.entrypoints=websecure"
+      - "traefik.http.routers.xvpn-orchestrator.tls.certresolver=myresolver"
+      - "traefik.http.services.xvpn-orchestrator.loadbalancer.server.port=8080"
+      # Health check
+      - "traefik.http.routers.xvpn-orchestrator.priority=15"
+      # Security headers
+      - "traefik.http.middlewares.xvpn-orchestrator-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.xvpn-orchestrator-headers.headers.sslredirect=true"
+      - "traefik.http.routers.xvpn-orchestrator.middlewares=xvpn-orchestrator-headers"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # === Redis Cache (Production) ===
+  redis:
+    image: redis:7-alpine
+    container_name: xvpn-redis-prod
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis-data:/data
+      - ./config/redis.conf:/etc/redis/redis.conf:ro
+    networks:
+      - xvpn-network
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=false"
+
+  # === PostgreSQL Database (Production) ===
+  postgres:
+    image: postgres:15-alpine
+    container_name: xvpn-postgres-prod
+    environment:
+      - POSTGRES_DB=xvpn_prod
+      - POSTGRES_USER=xvpn
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./config/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - xvpn-network
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=false"
+
+  # === XVPN Core VPN Service (Production) ===
+  xvpn-core:
+    image: teddysun/xray:latest
+    container_name: xvpn-core-prod
+    command: xray run -c /config/xray.json
+    volumes:
+      - ./config/xray:/config:ro
+      - xvpn-data:/data
+    networks:
+      - xvpn-network
+    restart: unless-stopped
+    labels:
+      # Traefik configuration
+      - "traefik.enable=true"
+      - "traefik.http.routers.xvpn-core.rule=Host(`vpn.your-domain.com`)"
+      - "traefik.http.routers.xvpn-core.entrypoints=websecure"
+      - "traefik.http.routers.xvpn-core.tls.certresolver=myresolver"
+      - "traefik.http.services.xvpn-core.loadbalancer.server.port=443"
+      # Health check
+      - "traefik.http.routers.xvpn-core.priority=5"
+      # Security headers
+      - "traefik.http.middlewares.xvpn-core-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.xvpn-core-headers.headers.sslredirect=true"
+      - "traefik.http.routers.xvpn-core.middlewares=xvpn-core-headers"
+
+  # === Traefik Load Balancer (Production) ===
+  traefik:
+    image: traefik:v2.10
+    container_name: xvpn-traefik-prod
+    command:
+      # Enable API for monitoring
+      - "--api.insecure=true"
+      # Enable Docker provider for automatic service discovery
+      - "--providers.docker=true"
+      # Disable Docker Swarm provider
+      - "--providers.docker.exposedbydefault=false"
+      # Define entry points
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.xvpn.address=:8443"
+      # Enable automatic SSL certificates with Let's Encrypt
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.email=admin@your-domain.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      # Enable TLS options from external file
+      - "--providers.file.filename=/etc/traefik/tls.yml"
+      - "--providers.file.watch=true"
+    ports:
+      # HTTP port
+      - "80:80"
+      # HTTPS port
+      - "443:443"
+      # XVPN API port (internal)
+      - "8443:8443"
+      # Traefik Dashboard (for monitoring)
+      - "8080:8080"
+    volumes:
+      # Access to Docker socket for automatic service discovery
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      # Storage for SSL certificates
+      - "letsencrypt:/letsencrypt"
+      # Configuration files
+      - "./traefik/traefik.yml:/etc/traefik/traefik.yml:ro"
+      - "./traefik/tls.yml:/etc/traefik/tls.yml:ro"
+    networks:
+      - xvpn-network
+    restart: unless-stopped
+    labels:
+      # Enable Traefik dashboard
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.your-domain.com`)"
+      - "traefik.http.routers.traefik.entrypoints=web"
+      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+
+  # === Monitoring Services (Production) ===
+  grafana:
+    image: grafana/grafana:latest
+    container_name: xvpn-grafana-prod
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+    networks:
+      - xvpn-network
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.your-domain.com`)"
+      - "traefik.http.routers.grafana.entrypoints=websecure"
+      - "traefik.http.routers.grafana.tls.certresolver=myresolver"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+      # Security headers
+      - "traefik.http.middlewares.grafana-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.grafana-headers.headers.sslredirect=true"
+      - "traefik.http.routers.grafana.middlewares=grafana-headers"
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: xvpn-prometheus-prod
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+      - '--storage.tsdb.retention.time=200h'
+    volumes:
+      - prometheus-data:/prometheus
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/prometheus/rules:/etc/prometheus/rules:ro
+    networks:
+      - xvpn-network
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=false"
+
+# === Volumes for Persistent Storage ===
+volumes:
+  xvpn-data:
+    driver: local
+  xvpn-logs:
+    driver: local
+  xvpn-config:
+    driver: local
+  xvpn-knowledge:
+    driver: local
+  redis-data:
+    driver: local
+  postgres-data:
+    driver: local
+  grafana-data:
+    driver: local
+  prometheus-data:
+    driver: local
+  letsencrypt:
+    driver: local
+
+# === Network for Service Communication ===
+networks:
+  xvpn-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+# === Environment Variables ===
+# Create a .env file in the project root with the following variables:
+# BOT_TOKEN=your_telegram_bot_token
+# CHAT_ID=your_chat_id
+# POSTGRES_PASSWORD=your_postgres_password
+# GRAFANA_PASSWORD=your_grafana_password
+# JWT_SECRET=your_jwt_secret
+# API_BASE_URL=https://your-domain.com:8443
+
+# === Commands for Use ===
+# Start all services
+# docker-compose -f docker-compose.production.yml up -d
+
+# Stop all services
+# docker-compose -f docker-compose.production.yml down
+
+# View logs
+# docker-compose -f docker-compose.production.yml logs -f [service_name]
+
+# Update services
+# docker-compose -f docker-compose.production.yml pull && docker-compose -f docker-compose.production.yml up -d --force-recreate
+
+# Clean up unused volumes
+# docker-compose -f docker-compose.production.yml down -v

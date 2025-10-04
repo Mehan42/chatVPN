@@ -1,0 +1,380 @@
+# XVPN Release Drafter Configuration
+# Конфигурация автоматического создания черновиков релизов
+
+name-template: 'v$NEXT_PATCH_VERSION'
+tag-template: 'v$NEXT_PATCH_VERSION'
+
+# === Категории изменений ===
+categories:
+  - title: '🚀 Features'
+    labels:
+      - 'feature'
+      - 'enhancement'
+      - 'new-feature'
+      
+  - title: '🐛 Bug Fixes'
+    labels:
+      - 'fix'
+      - 'bugfix'
+      - 'bug'
+      - 'hotfix'
+      
+  - title: '🧰 Maintenance'
+    labels:
+      - 'maintenance'
+      - 'refactor'
+      - 'cleanup'
+      - 'chore'
+      
+  - title: '🔒 Security'
+    labels:
+      - 'security'
+      - 'vulnerability'
+      - 'cve'
+      
+  - title: '📦 Dependencies'
+    labels:
+      - 'dependencies'
+      - 'dependency-update'
+      - 'deps'
+      
+  - title: '📝 Documentation'
+    labels:
+      - 'documentation'
+      - 'docs'
+      - 'doc'
+      
+  - title: '🧪 Testing'
+    labels:
+      - 'testing'
+      - 'test'
+      - 'tests'
+      
+  - title: '🏎️ Performance'
+    labels:
+      - 'performance'
+      - 'optimization'
+      - 'speed'
+      
+  - title: '♿ Accessibility'
+    labels:
+      - 'accessibility'
+      - 'a11y'
+      
+  - title: '🌐 Internationalization'
+    labels:
+      - 'internationalization'
+      - 'i18n'
+      - 'localization'
+      - 'l10n'
+      
+  - title: '🎨 UI/UX Improvements'
+    labels:
+      - 'ui'
+      - 'ux'
+      - 'design'
+      - 'frontend'
+      
+  - title: '🏗️ Build System'
+    labels:
+      - 'build'
+      - 'ci'
+      - 'cd'
+      - 'pipeline'
+      
+  - title: '🐳 Docker'
+    labels:
+      - 'docker'
+      - 'container'
+      - 'kubernetes'
+      - 'k8s'
+      
+  - title: '🔧 Configuration'
+    labels:
+      - 'configuration'
+      - 'config'
+      - 'settings'
+      
+  - title: '📱 Platform Support'
+    labels:
+      - 'platform'
+      - 'os'
+      - 'linux'
+      - 'windows'
+      - 'macos'
+      - 'android'
+      - 'ios'
+
+# === Изменения без категории ===
+change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
+change-title-escapes: '\<*_&' # Escapes for markdown control characters
+
+# === Шаблон релиза ===
+template: |
+  ## 🎉 What's New in XVPN v$NEXT_PATCH_VERSION
+  
+  Welcome to the latest release of XVPN! This version includes exciting new features, important bug fixes, and performance improvements.
+  
+  ### 📊 Release Statistics
+  - **Commits since last release:** $CHANGES_SINCE_LAST_RELEASE
+  - **Contributors:** $CONTRIBUTORS
+  - **Issues closed:** $CLOSED_ISSUES
+  - **Pull requests merged:** $MERGED_PULL_REQUESTS
+  
+  $CHANGES
+  
+  ## 🚀 Highlights
+  
+  ### 🔐 Enhanced Security
+  - Improved TLS certificate validation
+  - Added certificate pinning support
+  - Enhanced encryption algorithms
+  
+  ### ⚡ Performance Improvements
+  - Faster connection establishment
+  - Reduced memory footprint
+  - Optimized data transfer protocols
+  
+  ### 🌐 Better Connectivity
+  - Improved IPv6 support
+  - Enhanced dual-stack networking
+  - Better NAT traversal
+  
+  ## 📦 Installation
+  
+  ### Docker
+  ```bash
+  docker pull ghcr.io/mehan42/xvpn:v$NEXT_PATCH_VERSION
+  ```
+  
+  ### Package Managers
+  ```bash
+  # Using pip
+  pip install xvpn==$NEXT_PATCH_VERSION
+  
+  # Using conda
+  conda install xvpn==$NEXT_PATCH_VERSION
+  ```
+  
+  ### Binary Downloads
+  Download the latest binaries from our [releases page](https://github.com/Mehan42/chatVPN/releases/tag/v$NEXT_PATCH_VERSION).
+  
+  ## 🛠️ Migration Guide
+  
+  ### Breaking Changes
+  - [List any breaking changes here]
+  
+  ### Deprecations
+  - [List any deprecated features here]
+  
+  ### Upgrade Instructions
+  1. Backup your configuration files
+  2. Stop current XVPN services
+  3. Install the new version
+  4. Restore configuration files
+  5. Start XVPN services
+  6. Verify the upgrade was successful
+  
+  ## 🙏 Acknowledgements
+  
+  Special thanks to all contributors who helped make this release possible:
+  
+  $CONTRIBUTORS_LIST
+  
+  And thank you to our amazing community for your continued support and feedback!
+  
+  ## 📚 Documentation
+  
+  For detailed documentation, please visit:
+  - [User Guide](https://docs.xvpn.local/user-guide)
+  - [Administrator Guide](https://docs.xvpn.local/admin-guide)
+  - [API Documentation](https://docs.xvpn.local/api)
+  - [Troubleshooting](https://docs.xvpn.local/troubleshooting)
+  
+  ## 🐛 Reporting Issues
+  
+  If you encounter any issues with this release, please report them on our [issue tracker](https://github.com/Mehan42/chatVPN/issues).
+  
+  ## 🔗 Useful Links
+  
+  - [Project Homepage](https://github.com/Mehan42/chatVPN)
+  - [Documentation](https://docs.xvpn.local)
+  - [Community Forum](https://github.com/Mehan42/chatVPN/discussions)
+  - [Security Advisories](https://github.com/Mehan42/chatVPN/security/advisories)
+  
+  ---
+  
+  *Released on $RELEASE_DATE*
+  
+  *[XVPN - Intelligent VPN with AI Agents](https://github.com/Mehan42/chatVPN)*
+
+# === Настройки автоматического создания релизов ===
+autolabeler:
+  - label: 'bug'
+    files:
+      - '*.py'
+      - 'src/**'
+      - 'server/**'
+      - 'client/**'
+    branch:
+      - '/fix\/.+/'
+      - '/bugfix\/.+/'
+      - '/hotfix\/.+/'
+    title:
+      - '/fix/i'
+      - '/bug/i'
+      - '/hotfix/i'
+      
+  - label: 'feature'
+    files:
+      - '*.py'
+      - 'src/**'
+      - 'server/**'
+      - 'client/**'
+    branch:
+      - '/feature\/.+/'
+      - '/feat\/.+/'
+    title:
+      - '/feature/i'
+      - '/add/i'
+      - '/implement/i'
+      
+  - label: 'documentation'
+    files:
+      - '*.md'
+      - 'docs/**'
+      - 'README.md'
+      - 'CHANGELOG.md'
+    branch:
+      - '/docs\/.+/'
+      - '/documentation\/.+/'
+    title:
+      - '/doc/i'
+      - '/documentation/i'
+      
+  - label: 'dependencies'
+    files:
+      - 'requirements.txt'
+      - 'pyproject.toml'
+      - 'poetry.lock'
+      - 'Pipfile'
+      - 'Pipfile.lock'
+    branch:
+      - '/deps\/.+/'
+      - '/dependency\/.+/'
+    title:
+      - '/deps/i'
+      - '/dependency/i'
+      - '/update dependencies/i'
+      
+  - label: 'security'
+    files:
+      - 'security/**'
+      - 'crypto/**'
+      - 'certificates/**'
+    branch:
+      - '/security\/.+/'
+      - '/sec\/.+/'
+    title:
+      - '/security/i'
+      - '/cve/i'
+      - '/vulnerability/i'
+      
+  - label: 'performance'
+    files:
+      - 'performance/**'
+      - 'benchmarks/**'
+    branch:
+      - '/perf\/.+/'
+      - '/performance\/.+/'
+    title:
+      - '/perf/i'
+      - '/performance/i'
+      - '/optimize/i'
+      - '/speed/i'
+
+# === Настройки версионирования ===
+version-resolver:
+  major:
+    labels:
+      - 'major'
+      - 'breaking-change'
+  minor:
+    labels:
+      - 'minor'
+      - 'feature'
+      - 'enhancement'
+  patch:
+    labels:
+      - 'patch'
+      - 'bug'
+      - 'fix'
+      - 'hotfix'
+      - 'security'
+      - 'dependencies'
+      - 'maintenance'
+      - 'documentation'
+      - 'testing'
+
+# === Настройки автоматического публикования ===
+publish: true
+prerelease: false
+draft: false
+
+# === Настройки уведомлений ===
+notify:
+  slack:
+    webhook: ${{ secrets.SLACK_WEBHOOK }}
+    channel: '#releases'
+    username: 'Release Bot'
+    icon_emoji: ':rocket:'
+    
+  telegram:
+    bot_token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+    chat_id: ${{ secrets.TELEGRAM_CHAT_ID }}
+    
+  email:
+    smtp_server: smtp.gmail.com
+    smtp_port: 465
+    username: ${{ secrets.EMAIL_USERNAME }}
+    password: ${{ secrets.EMAIL_PASSWORD }}
+    to: releases@xvpn.local
+    from: release-bot@xvpn.local
+
+# === Настройки GitHub Releases ===
+github-release:
+  generate-release-notes: true
+  discussion-category: "announcements"
+  prerelease: false
+
+# === Настройки Docker ===
+docker:
+  images:
+    - name: ghcr.io/mehan42/xvpn
+      tag: v$NEXT_PATCH_VERSION
+      platforms:
+        - linux/amd64
+        - linux/arm64
+        - linux/arm/v7
+      push: true
+      cache-from:
+        - type=gha
+      cache-to:
+        - type=gha,mode=max
+
+# === Настройки контейнеров ===
+containers:
+  registry: ghcr.io
+  repository: mehan42/xvpn
+  tags:
+    - v$NEXT_PATCH_VERSION
+    - latest
+  platforms:
+    - linux/amd64
+    - linux/arm64
+    - linux/arm/v7
+  cache:
+    from:
+      - type=gha
+    to:
+      - type=gha,mode=max

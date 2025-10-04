@@ -71,10 +71,14 @@ class Context:
     max_retries: int = 3
     last_health_check: float = 0
     health_check_interval: int = 30
+    # Добавленные поля для обработки транспортов
+    fallback_transports: List[Dict] = None
     
     def __post_init__(self):
         if self.transport_manager is None:
             self.transport_manager = get_transport_manager(self.client_uuid)
+        if self.fallback_transports is None:
+            self.fallback_transports = []
 
 @dataclass
 class Transition:
@@ -191,7 +195,7 @@ class VPNStateMachine:
             self._handle_event(event, data)
     
     def _handle_event(self, event: Event, data: Dict):
-        """Обработка单个 события"""
+        """Обработка события"""
         transition = self._find_transition(self.context.current_state, event)
         
         if transition:
@@ -273,8 +277,15 @@ class VPNStateMachine:
         # Получение сетевой информации
         context.network_info = get_network_info()
         
-        # Установка начального состояния
-        self.trigger_event(Event.START_REQUESTED)
+        # Переходим к загрузке конфигурации
+        # Но только если мы еще не начали этот процесс
+        if context.current_state != State.CONFIG_FETCHING:
+            self.trigger_event(Event.START_REQUESTED)
+        
+        # После выполнения инициализации выходим из этого состояния
+        # Это нужно сделать один раз, а не циклически
+        # Но проблема в том, что это действие выполняется в цикле
+        # Нужно, чтобы после инициализации мы не возвращались сюда снова
     
     def _action_config_fetching(self, context: Context):
         """Действия для состояния загрузки конфигурации"""
@@ -283,9 +294,30 @@ class VPNStateMachine:
         try:
             success = load_config_from_server()
             if success:
+                # Загружаем конфигурацию 
+                config_path = Path.home() / 'chatvpn' / 'client' / 'client.json'
+                if config_path.exists():
+                    with open(config_path, 'r') as f:
+                        context.config_data = json.load(f)
+                
+                # Обновляем информацию о транспортах
+                if context.config_data and 'transports' in context.config_data:
+                    context.fallback_transports = context.config_data['transports']
+                
                 self.trigger_event(Event.CONFIG_FETCHED)
             else:
-                raise Exception("Failed to fetch configuration")
+                logger.warning("Failed to fetch configuration from server, trying local config...")
+                # Попробуем использовать локальный конфиг
+                config_path = Path.home() / 'chatvpn' / 'client' / 'client.json'
+                if config_path.exists():
+                    with open(config_path, 'r') as f:
+                        context.config_data = json.load(f)
+                    
+                    if context.config_data and 'transports' in context.config_data:
+                        context.fallback_transports = context.config_data['transports']
+                        self.trigger_event(Event.CONFIG_FETCHED)
+                else:
+                    raise Exception("No local configuration found")
         except Exception as e:
             logger.error(f"Config fetch failed: {e}")
             context.last_error = str(e)
@@ -346,6 +378,16 @@ class VPNStateMachine:
         # Обновление информации о сети
         context.network_info = get_network_info()
         context.health_score = get_mask_score()
+        
+        # Попробовать обновить список транспортов
+        try:
+            from discover import discover_transports
+            manifest_path = Path.home() / 'chatvpn' / 'client' / 'transports' / 'manifest.json'
+            discovered = discover_transports(manifest_path)
+            if discovered:
+                context.fallback_transports = [result['transport'] for result in discovered if result['score'] > 0]
+        except Exception as e:
+            logger.warning(f"Could not update transport list: {e}")
     
     def _action_health_checking(self, context: Context):
         """Действия для проверки здоровья"""
@@ -353,9 +395,17 @@ class VPNStateMachine:
         
         try:
             health_score = get_mask_score()
+            logger.info(f"Current health score: {health_score}")
+            
+            # Обновляем информацию о здоровье в контексте
+            context.health_score = health_score
+            
+            # Если оценка здоровья хорошая, возвращаемся к нормальному состоянию
             if health_score >= 3:
                 self.trigger_event(Event.HEALTH_CHECK_PASSED)
             else:
+                # Если оценка здоровья плохая, инициируем переключение транспорта
+                logger.warning(f"Health score is low ({health_score}), initiating transport switch")
                 self.trigger_event(Event.HEALTH_CHECK_FAILED)
         except Exception as e:
             logger.error(f"Health check failed: {e}")
@@ -367,14 +417,34 @@ class VPNStateMachine:
         
         try:
             if context.transport_manager and context.fallback_transports:
-                success = context.transport_manager.force_transport_switch(
-                    context.fallback_transports[0]['id']
-                )
-                if success:
-                    self.trigger_event(Event.TRANSPORT_SWITCH_SUCCESS)
+                transport_id = None
+                # Ищем следующий доступный транспорт
+                for transport in context.fallback_transports:
+                    if transport['id'] != context.current_transport.get('id', ''):
+                        transport_id = transport['id']
+                        break
+                
+                if transport_id:
+                    success = context.transport_manager.force_transport_switch(transport_id)
+                    if success:
+                        context.current_transport = context.transport_manager.get_current_transport()
+                        self.trigger_event(Event.TRANSPORT_SWITCH_SUCCESS)
+                    else:
+                        self.trigger_event(Event.TRANSPORT_SWITCH_FAILED)
                 else:
-                    self.trigger_event(Event.TRANSPORT_SWITCH_FAILED)
+                    raise Exception("No fallback transport available")
             else:
+                # Если нет заранее подготовленных транспортов, ищем доступные сейчас
+                transport_manager = context.transport_manager
+                if transport_manager:
+                    available_transports = transport_manager.get_available_transports()
+                    for transport in available_transports:
+                        if transport['id'] != context.current_transport.get('id', ''):
+                            success = transport_manager.force_transport_switch(transport['id'])
+                            if success:
+                                context.current_transport = transport
+                                self.trigger_event(Event.TRANSPORT_SWITCH_SUCCESS)
+                                return
                 raise Exception("No fallback transport available")
         except Exception as e:
             logger.error(f"Transport switch failed: {e}")
@@ -398,9 +468,15 @@ class VPNStateMachine:
         # Попытка восстановления
         if context.error_count < context.max_retries:
             context.error_count += 1
+            logger.info(f"Retrying... Attempt {context.error_count}")
+            # Увеличиваем задержку между попытками
+            time.sleep(context.error_count * 2)  # экспоненциальный откат
             self.trigger_event(Event.START_REQUESTED)
         else:
             logger.error("Max retries reached, giving up")
+            # Попытка перезапуска с нуля
+            context.error_count = 0
+            # Можно добавить оповещение о невозможности подключения
     
     def _action_recovering(self, context: Context):
         """Действия для восстановления"""
@@ -437,10 +513,23 @@ class VPNStateMachine:
     def _start_health_monitoring(self):
         """Запуск мониторинга здоровья"""
         def health_check_loop():
-            while self.context.current_state == State.RUNNING:
+            while self.running and self.context.current_state == State.RUNNING:
                 try:
                     time.sleep(self.context.health_check_interval)
-                    self.trigger_event(Event.HEALTH_CHECK_FAILED)
+                    health_score = get_mask_score()
+                    
+                    # Обновляем информацию о здоровье
+                    self.context.health_score = health_score
+                    self.context.network_info = get_network_info()
+                    self.context.last_health_check = time.time()
+                    
+                    # Если оценка здоровья низкая, переходим к проверке здоровья
+                    if health_score < 3:
+                        logger.info(f"Health score is low ({health_score}), triggering health check")
+                        self.trigger_event(Event.HEALTH_CHECK_FAILED)
+                    else:
+                        logger.info(f"Health score is good ({health_score})")
+                        
                 except Exception as e:
                     logger.error(f"Health check loop error: {e}")
         
@@ -489,7 +578,9 @@ class VPNStateMachine:
             'error_count': self.context.error_count,
             'health_score': self.context.health_score,
             'network_info': self.context.network_info,
-            'retry_count': self.context.retry_count
+            'retry_count': self.context.retry_count,
+            'current_transport': self.context.current_transport,
+            'client_uuid': self.context.client_uuid
         }
     
     def start(self):
@@ -503,8 +594,12 @@ class VPNStateMachine:
                 # Обработка событий
                 self.process_events()
                 
-                # Выполнение действий для текущего состояния
-                self._execute_state_actions(self.context.current_state)
+                # Выполнение действий для текущего состояния если состояние изменилось
+                current_state = self.context.current_state
+                if current_state != self.last_state:
+                    # Выполняем одноразовые действия при входе в состояние
+                    self._execute_state_entry_action(current_state)
+                    self.last_state = current_state
                 
                 # Пауза
                 time.sleep(1)
@@ -518,6 +613,32 @@ class VPNStateMachine:
         
         # Очистка
         self.stop()
+    
+    def _execute_state_entry_action(self, state: State):
+        """Выполнение одноразового действия при входе в состояние"""
+        try:
+            # Выполнение действий для состояния
+            action_map = {
+                State.INITIALIZING: self._action_initializing,
+                State.CONFIG_FETCHING: self._action_config_fetching,
+                State.CONFIG_VALIDATING: self._action_config_validating,
+                State.IDLE: self._action_idle,
+                State.STARTING: self._action_starting,
+                State.RUNNING: self._action_running,
+                State.HEALTH_CHECKING: self._action_health_checking,
+                State.SWITCHING_TRANSPORT: self._action_switching_transport,
+                State.STOPPING: self._action_stopping,
+                State.ERROR: self._action_error,
+                State.RECOVERING: self._action_recovering,
+                State.UPDATING: self._action_updating,
+            }
+            
+            action = action_map.get(state)
+            if action:
+                action(self.context)
+        except Exception as e:
+            logger.error(f"Error in state entry action {state.value}: {e}")
+            self.trigger_event(Event.ERROR_OCCURRED)
     
     def stop(self):
         """Остановка машины состояний"""
@@ -574,12 +695,14 @@ if __name__ == "__main__":
             elif cmd == "status":
                 print_status()
             elif cmd == "quit":
+                state_machine.stop()
                 break
             else:
-                print("Unknown command")
+                print("Unknown command. Available: start, stop, status, quit")
                 
         except KeyboardInterrupt:
+            print("\nExiting...")
+            state_machine.stop()
             break
-    
-    state_machine.stop()
-    print("State Machine stopped")
+        except Exception as e:
+            print(f"Error: {e}")

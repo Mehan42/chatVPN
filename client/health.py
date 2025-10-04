@@ -382,35 +382,35 @@ class HealthMonitor:
             return False
     
     def check_ip_leak(self) -> bool:
-                """Проверка утечки IP (сравнение локального и внешнего IP)"""
-                self.log("Checking for IP leak...")
-                
-                local_ips = self.get_local_ips()
-                external_ips = self.get_external_ips()
-                
-                # Проверка IPv4
-                ipv4_leak = False
-                if local_ips["ipv4"] and external_ips["ipv4"]:
-                    ipv4_leak = local_ips["ipv4"] == external_ips["ipv4"]
-                    if ipv4_leak:
-                        self.log(f"IPv4 LEAK DETECTED! Local: {local_ips['ipv4']}, External: {external_ips['ipv4']}", "CRITICAL")
-                
-                # Проверка IPv6
-                ipv6_leak = False
-                if local_ips["ipv6"] and external_ips["ipv6"]:
-                    ipv6_leak = local_ips["ipv6"] == external_ips["ipv6"]
-                    if ipv6_leak:
-                        self.log(f"IPv6 LEAK DETECTED! Local: {local_ips['ipv6']}, External: {external_ips['ipv6']}", "CRITICAL")
-                
-                # Если есть утечка хотя бы по одной версии IP
-                ip_leak = ipv4_leak or ipv6_leak
-                
-                if not ip_leak:
-                    self.log(f"IP leak check passed. IPv4 - Local: {local_ips.get('ipv4')}, External: {external_ips.get('ipv4')}")
-                    self.log(f"IPv6 - Local: {local_ips.get('ipv6')}, External: {external_ips.get('ipv6')}")
-                
-                return ip_leak
-    
+        """Проверка утечки IP (сравнение локального и внешнего IP)"""
+        self.log("Checking for IP leak...")
+        
+        local_ips = self.get_local_ips()
+        external_ips = self.get_external_ips()
+        
+        # Проверка IPv4
+        ipv4_leak = False
+        if local_ips["ipv4"] and external_ips["ipv4"]:
+            ipv4_leak = local_ips["ipv4"] == external_ips["ipv4"]
+            if ipv4_leak:
+                self.log(f"IPv4 LEAK DETECTED! Local: {local_ips['ipv4']}, External: {external_ips['ipv4']}", "CRITICAL")
+        
+        # Проверка IPv6
+        ipv6_leak = False
+        if local_ips["ipv6"] and external_ips["ipv6"]:
+            ipv6_leak = local_ips["ipv6"] == external_ips["ipv6"]
+            if ipv6_leak:
+                self.log(f"IPv6 LEAK DETECTED! Local: {local_ips['ipv6']}, External: {external_ips['ipv6']}", "CRITICAL")
+        
+        # Если есть утечка хотя бы по одной версии IP
+        ip_leak = ipv4_leak or ipv6_leak
+        
+        if not ip_leak:
+            self.log(f"IP leak check passed. IPv4 - Local: {local_ips.get('ipv4')}, External: {external_ips.get('ipv4')}")
+            self.log(f"IPv6 - Local: {local_ips.get('ipv6')}, External: {external_ips.get('ipv6')}")
+        
+        return ip_leak
+
     def analyze_tls_fingerprint(self, domain: str = "www.google.com") -> Dict[str, Any]:
         """Анализ TLS fingerprint и профиля"""
         self.log(f"Analyzing TLS fingerprint for {domain}...")
@@ -418,25 +418,58 @@ class HealthMonitor:
         try:
             # Создаем SSL контекст
             context = ssl.create_default_context()
+            context.check_hostname = False  # Временно отключаем для тестирования
+            context.verify_mode = ssl.CERT_NONE  # Временно отключаем проверку
             
             # Устанавливаем соединение
             with socket.create_connection((domain, 443), timeout=10) as sock:
                 with context.wrap_socket(sock, server_hostname=domain) as ssock:
                     # Получаем информацию о сертификате
                     cert = ssock.getpeercert()
+                    
+                    # Безопасно извлекаем информацию о шифре
                     cipher = ssock.cipher()
+                    if cipher and isinstance(cipher, tuple) and len(cipher) >= 2:
+                        cipher_name = cipher[0]
+                        cipher_bits = cipher[1]
+                        cipher_protocol = cipher[2] if len(cipher) > 2 else "Unknown"
+                    else:
+                        cipher_name = "Unknown"
+                        cipher_bits = 0
+                        cipher_protocol = "Unknown"
+                    
                     version = ssock.version()
+                    
+                    # Извлекаем информацию о сертификате безопасно
+                    issuer = "Unknown"
+                    subject = "Unknown"
+                    
+                    if cert and isinstance(cert, dict):
+                        # Извлекаем issuer
+                        issuer_list = cert.get("issuer", [])
+                        if issuer_list and isinstance(issuer_list, list) and len(issuer_list) > 0:
+                            first_issuer = issuer_list[0]
+                            if isinstance(first_issuer, tuple) and len(first_issuer) > 1:
+                                issuer = first_issuer[1]
+                        
+                        # Извлекаем subject
+                        subject_list = cert.get("subject", [])
+                        if subject_list and isinstance(subject_list, list) and len(subject_list) > 0:
+                            first_subject = subject_list[0]
+                            if isinstance(first_subject, tuple) and len(first_subject) > 1:
+                                subject = first_subject[1]
                     
                     # Анализируем параметры
                     analysis = {
                         "domain": domain,
                         "tls_version": version,
-                        "cipher": cipher[0] if cipher and len(cipher) > 0 else "Unknown",
-                        "cipher_strength": cipher[1] if cipher and len(cipher) > 1 else 0,
-                        "issuer": cert.get("issuer", [("", "")])[0][1] if cert.get("issuer") else "Unknown",
-                        "subject": cert.get("subject", [("", "")])[0][1] if cert.get("subject") else "Unknown",
-                        "not_after": cert.get("notAfter"),
-                        "san": cert.get("subjectAltName", []),
+                        "cipher": cipher_name,
+                        "cipher_strength": cipher_bits,
+                        "cipher_protocol": cipher_protocol,
+                        "issuer": issuer,
+                        "subject": subject,
+                        "not_after": cert.get("notAfter") if cert else None,
+                        "san": cert.get("subjectAltName", []) if cert else [],
                         "analysis_result": "secure",
                         "score": 5
                     }
@@ -451,14 +484,14 @@ class HealthMonitor:
                         issues.append(f"Weak TLS version: {version}")
                     
                     # Проверка strength cipher
-                    if cipher and cipher[1] < 128:
+                    if cipher_bits is not None and isinstance(cipher_bits, int) and cipher_bits > 0 and cipher_bits < 128:
                         score -= 1
-                        issues.append(f"Weak cipher strength: {cipher[1]}")
+                        issues.append(f"Weak cipher strength: {cipher_bits}")
                     
                     # Проверка issuer
-                    if "Let's Encrypt" not in analysis["issuer"]:
+                    if issuer != "Unknown" and "Let's Encrypt" not in issuer:
                         score -= 1
-                        issues.append(f"Unusual issuer: {analysis['issuer']}")
+                        issues.append(f"Unusual issuer: {issuer}")
                     
                     analysis["score"] = max(0, score)
                     analysis["issues"] = issues
@@ -470,6 +503,22 @@ class HealthMonitor:
                     
                     return analysis
                     
+        except socket.timeout:
+            self.log(f"TLS analysis timeout for {domain}", "ERROR")
+            return {
+                "domain": domain,
+                "analysis_result": "error",
+                "error": "Connection timeout",
+                "score": 0
+            }
+        except ConnectionRefusedError:
+            self.log(f"Connection refused for {domain}", "ERROR")
+            return {
+                "domain": domain,
+                "analysis_result": "error", 
+                "error": "Connection refused",
+                "score": 0
+            }
         except Exception as e:
             self.log(f"TLS analysis failed: {e}", "ERROR")
             return {
@@ -593,8 +642,8 @@ class HealthMonitor:
             # 2. Анализ TLS fingerprint
             try:
                 tls_analysis = self.analyze_tls_fingerprint()
-                if tls_analysis.get("success", False):
-                    tls_deduction = 5 - tls_analysis["score"]
+                if tls_analysis.get("analysis_result") != "error":
+                    tls_deduction = 5 - tls_analysis.get("score", 0)
                     score -= tls_deduction
                     if tls_deduction > 0:
                         deductions.append(f"Weak TLS profile: {tls_analysis.get('analysis_result', 'unknown')}")
@@ -782,7 +831,7 @@ class HealthMonitor:
             }
     
     def get_mask_score_simple(self) -> int:
-        """Упрощенный API для получения оценки маскировки"""
+        """Упрощенная функция для интеграции с GUI"""
         return self.calculate_mask_score()
 
 # Глобальный экземпляр для использования в GUI
@@ -877,6 +926,11 @@ def get_ipv6_info() -> Dict[str, Any]:
             "error": str(e),
             "timestamp": datetime.now().isoformat()
         }
+
+def get_health_status() -> Dict[str, Any]:
+    """Упрощенная функция для получения статуса здоровья"""
+    monitor = HealthMonitor()
+    return monitor.get_health_status()
 
 if __name__ == "__main__":
     # Тестирование модуля

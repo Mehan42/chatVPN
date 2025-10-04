@@ -1,0 +1,119 @@
+{
+  "ai_model": {
+    "provider": "ollama",
+    "model_name": "tinyllama:1.1b-chat",
+    "api_base": "http://localhost:11434",
+    "max_tokens": 500,
+    "temperature": 0.1,
+    "timeout": 30,
+    "retry_attempts": 3,
+    "retry_delay": 5
+  },
+  "system_prompt": "Ты - AI-оркестратор XVPN, отвечающий за управление рисками и автоматическое восстановление системы. Твоя задача:\n\n1. Мониторить состояние системы (VPN, API, сервисы)\n2. Анализировать проблемы и принимать решения о восстановлении\n3. Автоматически перезапускать сервисы при сбоях\n4. Логировать все действия для последующего анализа\n5. Уведомлять администратора о критических проблемах\n\nПри анализе проблем:\n- Оценивай серьезность каждой проблемы\n- Определяй возможные причины\n- Выбирай оптимальное действие восстановления\n- Контролируй последовательность действий\n\nПри восстановлении:\n- Проверяй зависимость сервисов перед перезапуском\n- Оценивай риски каждого действия\n- Мониторь результат восстановления\n- В случае неудачи - пробуй альтернативные методы\n\nВсегда:\n- Логируй все свои действия и решения\n- Сохраняй историю проблем для анализа\n- Уведомляй администратора о критических ситуациях",
+  "health_check": {
+    "interval": 30,
+    "timeout": 10,
+    "retries": 3,
+    "components": [
+      {
+        "name": "api",
+        "url": "https://127.0.0.1:8443/mcp/v1/vpn.health",
+        "expected_status": 200
+      },
+      {
+        "name": "vpn_core",
+        "command": "systemctl is-active xvpn-core",
+        "expected_output": "active"
+      },
+      {
+        "name": "agent",
+        "command": "systemctl is-active xvpn-agent",
+        "expected_output": "active"
+      }
+    ]
+  },
+  "recovery": {
+    "max_failures": 5,
+    "retry_attempts": 3,
+    "fallback_timeout": 300,
+    "actions": {
+      "restart_api": {
+        "command": "systemctl restart xvpn-api",
+        "timeout": 30,
+        "dependencies": [],
+        "health_check": "api"
+      },
+      "restart_agent": {
+        "command": "systemctl restart xvpn-agent",
+        "timeout": 30,
+        "dependencies": ["api"],
+        "health_check": "agent"
+      },
+      "restart_vpn_core": {
+        "command": "systemctl restart xvpn-core",
+        "timeout": 30,
+        "dependencies": [],
+        "health_check": "vpn_core"
+      },
+      "restart_all": {
+        "command": "systemctl restart xvpn-api xvpn-agent xvpn-core",
+        "timeout": 60,
+        "dependencies": [],
+        "health_check": "all"
+      }
+    }
+  },
+  "notifications": {
+    "enabled": true,
+    "telegram": {
+      "bot_token": "${TELEGRAM_BOT_TOKEN}",
+      "chat_id": "${TELEGRAM_CHAT_ID}",
+      "enabled": false
+    },
+    "email": {
+      "smtp_server": "${SMTP_SERVER}",
+      "smtp_port": 587,
+      "username": "${SMTP_USERNAME}",
+      "password": "${SMTP_PASSWORD}",
+      "from_email": "${FROM_EMAIL}",
+      "to_email": "${TO_EMAIL}",
+      "enabled": false
+    }
+  },
+  "logging": {
+    "level": "INFO",
+    "retention_days": 7,
+    "directories": [
+      "/var/log/xvpn/orchestration",
+      "/var/log/xvpn/agent",
+      "/var/log/xvpn/api",
+      "/var/log/xvpn/core"
+    ],
+    "cleanup_schedule": "02:00"
+  },
+  "monitoring": {
+    "metrics": {
+      "enabled": true,
+      "prometheus_port": 9090,
+      "grafana_port": 3000
+    },
+    "alerts": {
+      "mask_score_threshold": 3,
+      "response_time_threshold": 5000,
+      "error_rate_threshold": 0.1
+    }
+  },
+  "security": {
+    "api_key": "${API_KEY}",
+    "allowed_ips": ["127.0.0.1", "::1"],
+    "rate_limit": {
+      "requests_per_minute": 60,
+      "burst_size": 10
+    }
+  },
+  "database": {
+    "url": "sqlite:////opt/xvpn/agent/db/orchestrator.db",
+    "backup_interval": 86400,
+    "retention_days": 30
+  }
+}

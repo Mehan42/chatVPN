@@ -275,6 +275,54 @@ services:
       - "traefik.http.middlewares.vpn-headers.headers.sslredirect=true"
       - "traefik.http.routers.vpn.middlewares=vpn-headers"
 
+  # === XVPN AI Orchestrator ===
+  xvpn-orchestrator:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.orchestrator
+      args:
+        - UV_CACHE_DIR=/tmp/uv-cache
+        - PYTHON_VERSION=3.11
+    container_name: xvpn-orchestrator
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=INFO
+      - XVPN_CONFIG_FILE=/app/orchestrator_config.json
+    volumes:
+      - ./server/agent/orchestrator_config.json:/app/orchestrator_config.json:ro
+      - ./server/agent/scripts:/app/scripts:ro
+      - xvpn-data:/data
+      - uv-cache:/tmp/uv-cache
+      # Логи оркестратора
+      - /var/log/xvpn/orchestration:/var/log/xvpn/orchestration
+      - /var/log/xvpn/agent:/var/log/xvpn/agent
+      - /var/log/xvpn/api:/var/log/xvpn/api
+      - /var/log/xvpn/core:/var/log/xvpn/core
+    networks:
+      - xvpn-network
+    restart: unless-stopped
+    depends_on:
+      - xvpn-api
+    labels:
+      # Traefik конфигурация для оркестратора
+      - "traefik.enable=true"
+      - "traefik.http.routers.orchestrator.rule=Host(`orchestrator.uss.hopto.org`)"
+      - "traefik.http.routers.orchestrator.entrypoints=websecure"
+      - "traefik.http.routers.orchestrator.tls.certresolver=myresolver"
+      - "traefik.http.services.orchestrator.loadbalancer.server.port=8080"
+      # Health check
+      - "traefik.http.routers.orchestrator.priority=15"
+      # Дополнительные заголовки безопасности
+      - "traefik.http.middlewares.orchestrator-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.orchestrator-headers.headers.sslredirect=true"
+      - "traefik.http.routers.orchestrator.middlewares=orchestrator-headers"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
   # === Monitoring and Logging ===
   grafana:
     image: grafana/grafana:latest

@@ -1,0 +1,65 @@
+# Dockerfile для XVPN AI Orchestrator с Ollama и TinyLlama
+# Оптимизирован для минимального потребления ресурсов
+
+FROM ollama/ollama:latest
+
+# Установка необходимых пакетов
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
+    python3-venv \
+    curl \
+    wget \
+    git \
+    supervisor \
+    && rm -rf /var/lib/apt/lists/*
+
+# Установка uv для Python
+RUN pip install uv
+
+# Создание рабочей директории
+WORKDIR /app
+
+# Копирование файлов оркестратора
+COPY server/agent/orchestrator.py /app/
+COPY server/agent/orchestrator_config.json /app/
+COPY server/agent/scripts /app/scripts/
+
+# Установка Python зависимостей
+COPY requirements.txt /app/
+RUN uv pip install -r requirements.txt
+
+# Установка TinyLlama модели
+RUN ollama pull tinyllama:1.1b-chat
+
+# Создание директорий для логов
+RUN mkdir -p /var/log/xvpn/orchestration /var/log/xvpn/agent /var/log/xvpn/api /var/log/xvpn/core
+
+# Создание конфигурации supervisor
+RUN echo "[supervisord]" > /etc/supervisor/conf.d/orchestrator.conf && \
+    echo "[program:ollama]" >> /etc/supervisor/conf.d/orchestrator.conf && \
+    echo "command=/bin/sh -c \"ollama serve\"" >> /etc/supervisor/conf.d/orchestrator.conf && \
+    echo "autostart=true" >> /etc/supervisor/conf.d/orchestrator.conf && \
+    echo "autorestart=true" >> /etc/supervisor/conf.d/orchestrator.conf && \
+    echo "stdout_logfile=/var/log/supervisor/ollama.log" >> /etc/supervisor/conf.d/orchestrator.conf && \
+    echo "stderr_logfile=/var/log/supervisor/ollama.log" >> /etc/supervisor/conf.d/orchestrator.conf && \
+    echo "" >> /etc/supervisor/conf.d/orchestrator.conf && \
+    echo "[program:orchestrator]" >> /etc/supervisor/conf.d/orchestrator.conf && \
+    echo "command=uv run python3 orchestrator.py" >> /etc/supervisor/conf.d/orchestrator.conf && \
+    echo "directory=/app" >> /etc/supervisor/conf.d/orchestrator.conf && \
+    echo "autostart=true" >> /etc/supervisor/conf.d/orchestrator.conf && \
+    echo "autorestart=true" >> /etc/supervisor/conf.d/orchestrator.conf && \
+    echo "stdout_logfile=/var/log/supervisor/orchestrator.log" >> /etc/supervisor/conf.d/orchestrator.conf && \
+    echo "stderr_logfile=/var/log/supervisor/orchestrator.log" >> /etc/supervisor/conf.d/orchestrator.conf
+
+# Настройка прав доступа
+RUN chown -R root:root /app && \
+    chmod +x /app/orchestrator.py && \
+    chmod +x /app/scripts/*.py
+
+# Открытие портов
+EXPOSE 11434
+EXPOSE 8080
+
+# Запуск через supervisor
+CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]

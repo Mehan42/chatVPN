@@ -59,10 +59,11 @@ xray>=1.8.0
 # Health monitoring
 prometheus-client>=0.17.0
 
-# RAG system
-langchain>=0.0.200
+# RAG system - ОБЯЗАТЕЛЬНЫЕ ДЛЯ XVPN AI-ОРКЕСТРАТОРА
+chromadb>=0.4.0
 sentence-transformers>=2.2.0
 faiss-cpu>=1.7.4
+langchain>=0.0.200
 
 # Machine learning
 numpy>=1.24.0

@@ -1,0 +1,23 @@
+[Unit]
+Description=XVPN AI Orchestrator
+After=network.target xvpn-api.service xvpn-agent.service xvpn-core.service
+Wants=xvpn-api.service xvpn-agent.service xvpn-core.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/xvpn/agent
+ExecStart=/usr/bin/python3 /opt/xvpn/agent/orchestrator.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+Environment=PYTHONPATH=/opt/xvpn/agent
+Environment=LOG_LEVEL=INFO
+
+# Ограничения ресурсов
+MemoryMax=512M
+CPUQuota=50%
+
+[Install]
+WantedBy=multi-user.target

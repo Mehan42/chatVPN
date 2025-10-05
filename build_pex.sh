@@ -12,10 +12,24 @@ if ! command -v python3 &> /dev/null; then
     exit 1
 fi
 
+# Создание виртуального окружения для избежания проблем с PEP 668
+if [ ! -d "venv" ] && [ ! -d "/opt/xvpn/venv" ]; then
+    echo "🔧 Создание виртуального окружения для избежания PEP 668..."
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install --upgrade pip
+else
+    if [ -d "venv" ]; then
+        source venv/bin/activate
+    elif [ -d "/opt/xvpn/venv" ]; then
+        source /opt/xvpn/venv/bin/activate
+    fi
+fi
+
 # Установка pex если не установлен
 if ! python3 -c "import pex" &> /dev/null; then
-    echo "📦 Установка pex..."
-    pip3 install pex
+    echo "📦 Установка pex в виртуальном окружении..."
+    pip install pex
 fi
 
 # Создание директории для билдов

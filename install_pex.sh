@@ -11,10 +11,19 @@ if ! command -v python3 &> /dev/null; then
     exit 1
 fi
 
+# Создание виртуального окружения для избежания проблем с PEP 668
+if [ ! -d "/opt/xvpn/venv" ]; then
+    echo "🔧 Создание виртуального окружения для избежания PEP 668..."
+    sudo python3 -m venv /opt/xvpn/venv
+fi
+
+# Активация виртуального окружения
+source /opt/xvpn/venv/bin/activate
+
 # Проверка наличия pex
-if ! command -v python3 -m pex &> /dev/null; then
-    echo "📦 Установка pex..."
-    pip3 install pex
+if ! python3 -c "import pex" &> /dev/null; then
+    echo "📦 Установка pex в виртуальном окружении..."
+    pip install pex
 fi
 
 # Создание директории установки
@@ -42,6 +51,9 @@ if [ -f "dist/pex/xvpn-api.pex" ] && [ -f "dist/pex/xvpn-agent.pex" ]; then
     sudo chmod +x "$INSTALL_DIR/pex/xvpn-*.pex"
 else
     echo "⚠️ PEX-файлы не найдены, собираем..."
+    
+    # Активируем виртуальное окружение для сборки
+    source /opt/xvpn/venv/bin/activate
     
     # Сборка PEX-файлов
     chmod +x build_pex.sh
@@ -75,7 +87,7 @@ Type=simple
 User=xvpn
 Group=xvpn
 WorkingDirectory=/opt/xvpn
-ExecStart=/opt/xvpn/pex/xvpn-api.pex
+ExecStart=/opt/xvpn/venv/bin/python3 /opt/xvpn/pex/xvpn-api.pex
 Restart=always
 RestartSec=5
 Environment=PYTHONPATH=/opt/xvpn
@@ -95,7 +107,7 @@ Type=simple
 User=xvpn
 Group=xvpn
 WorkingDirectory=/opt/xvpn
-ExecStart=/opt/xvpn/pex/xvpn-agent.pex
+ExecStart=/opt/xvpn/venv/bin/python3 /opt/xvpn/pex/xvpn-agent.pex
 Restart=always
 RestartSec=5
 Environment=PYTHONPATH=/opt/xvpn
@@ -114,8 +126,8 @@ fi
 echo "✅ Установка XVPN с использованием PEX завершена!"
 echo ""
 echo "📋 Для запуска PEX-компонентов используйте:"
-echo "   sudo -u xvpn /opt/xvpn/pex/xvpn-api.pex"
-echo "   sudo -u xvpn /opt/xvpn/pex/xvpn-agent.pex"
-echo "   sudo -u xvpn /opt/xvpn/pex/xvpn-client.pex"
+echo "   sudo -u xvpn /opt/xvpn/venv/bin/python3 /opt/xvpn/pex/xvpn-api.pex"
+echo "   sudo -u xvpn /opt/xvpn/venv/bin/python3 /opt/xvpn/pex/xvpn-agent.pex"
+echo "   sudo -u xvpn /opt/xvpn/venv/bin/python3 /opt/xvpn/pex/xvpn-client.pex"
 echo ""
 echo " systemd сервисы: sudo systemctl start xvpn-api-pex"

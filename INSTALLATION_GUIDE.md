@@ -275,6 +275,57 @@ For more control over the installation:
    python3 client/vpn_client.py start
    ```
 
+## PEX Installation (Autonomous Executables)
+
+XVPN supports PEX (Python EXecutable) installation method that creates standalone executables without requiring virtual environments.
+
+### Build PEX Executables
+
+```bash
+# Install pex package
+pip install pex
+
+# Build server executables
+./build_pex.sh server
+
+# Build client executables
+./build_pex.sh client
+
+# Build all executables at once
+./build_pex.sh all
+```
+
+### Run PEX Executables
+
+Server components:
+```bash
+# Make executables executable
+chmod +x dist/pex/xvpn-*.pex
+
+# Run directly
+./dist/pex/xvpn-api.pex
+./dist/pex/xvpn-agent.pex
+./dist/pex/xvpn-bot.pex
+```
+
+Client components:
+```bash
+# Run client
+./dist/pex/xvpn-client.pex
+
+# Run GUI
+./dist/pex/xvpn-gui.pex
+```
+
+### Install PEX Version
+
+```bash
+# Install with PEX
+sudo ./install_pex.sh
+```
+
+This method creates autonomous executables that contain all dependencies and can run independently without any virtual environment or dependency management.
+
 ### Windows Client
 Download the Windows installer from releases page and run as administrator.
 

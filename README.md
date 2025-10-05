@@ -100,6 +100,25 @@ pip install -r requirements_client.txt
 pip install -r requirements_server.txt -r requirements_client.txt
 ```
 
+Using PEX (autonomous executables - no virtual environment needed):
+```bash
+# Install pex
+pip install pex
+
+# Build server executables
+./build_pex.sh server
+
+# Build client executables  
+./build_pex.sh client
+
+# Build all executables
+./build_pex.sh all
+
+# Run built executables
+chmod +x dist/pex/xvpn-*.pex
+./dist/pex/xvpn-api.pex
+```
+
 ## 🔧 Server Configuration
 
 1. Set up Telegram bot token in `/opt/xvpn/.env`:

@@ -138,6 +138,16 @@ xvpn-bot = "server.admin.tg_bot:main"
 xvpn-worker = "server.worker.worker:main"
 xvpn-orchestrator = "server.agent.orchestrator:main"
 
+# PEX-специфичные скрипты
+[project.entry-points."pex_scripts"]
+xvpn-api = "server.api.app:main"
+xvpn-agent = "server.agent.agent:main"
+xvpn-bot = "server.admin.tg_bot:main"
+xvpn-worker = "server.worker.worker:main"
+xvpn-orchestrator = "server.agent.orchestrator:main"
+xvpn-client = "client.vpn_client:main"
+xvpn-gui = "client.chatvpn_gui:main"
+
 # Настройки для Hatch (build system)
 [tool.hatch.build.targets.wheel]
 packages = ["src/xvpn", "src/server", "src/client"]

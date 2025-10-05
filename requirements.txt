@@ -1,79 +1,13 @@
 # XVPN Project Dependencies
-# Основные зависимости для клиента и сервера
-
-# GUI библиотеки
-Pillow==10.0.0
-pystray==0.19.4
-
-# Сетевые библиотеки
-requests>=2.31.0
-urllib3>=2.0.0
-
-# Системные библиотеки
-psutil>=5.9.0
-asyncio-mqtt>=0.16.1
-
-# Безопасность
-cryptography>=41.0.0
-PyJWT>=2.8.0
-
-# Логирование
-# logging встроен в Python
+# Основные зависимости для проекта
+# Для установки конкретной части используйте:
+#   pip install -r requirements_server.txt    # для серверной части
+#   pip install -r requirements_client.txt    # для клиентской части
 
 # Тестирование
 pytest>=7.4.0
 pytest-asyncio>=0.21.0
 
-# Дополнительные утилиты
+# Общие утилиты
 python-dotenv>=1.0.0
 click>=8.1.0
-rich>=13.0.0
-
-# Базы данных
-# sqlite3 встроен в Python
-sqlalchemy>=2.0.0
-
-# API и веб
-flask>=2.3.0
-flask-cors>=4.0.0
-flask-jwt-extended>=4.5.0
-
-# Docker
-docker>=6.1.0
-docker-compose>=1.29.0
-
-# Systemd
-# systemd-python не требуется для сервера
-
-# IPv6 support
-# ipaddress встроен в Python
-
-# Proxy support
-pysocks>=1.7.1
-PyOpenSSL>=23.0.0
-
-# Xray support
-# xray устанавливается отдельно
-
-# Health monitoring
-prometheus-client>=0.17.0
-
-# RAG system - ОБЯЗАТЕЛЬНЫЕ ДЛЯ XVPN AI-ОРКЕСТРАТОРА
-chromadb>=0.4.0
-sentence-transformers>=2.2.0
-faiss-cpu>=1.7.4
-langchain>=0.0.200
-
-# Machine learning
-numpy>=1.24.0
-pandas>=2.0.0
-
-# Network utilities
-websockets>=11.0.0
-
-# Configuration management
-pyyaml>=6.0.0
-configparser>=6.0.0
-
-# Cryptographic
-# hashlib, ssl, os, sys, json, time, datetime, threading, multiprocessing встроены в Python

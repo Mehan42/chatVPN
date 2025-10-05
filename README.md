@@ -58,7 +58,7 @@ git clone https://github.com/Mehan42/chatVPN.git
 cd chatVPN
 
 # Install server components
-sudo ./installer/install_xvpn.sh
+sudo ./install_server.sh
 ```
 
 ### Client Installation
@@ -70,6 +70,22 @@ cd chatVPN
 
 # Install client components (run as regular user, not root)
 ./install_client.sh
+```
+
+### Alternative Installation (Universal)
+
+If you need to install all dependencies at once:
+
+```bash
+# For server components only
+pip install -r requirements_server.txt
+
+# For client components only
+pip install -r requirements_client.txt
+
+# For development (both server and client)
+pip install -r requirements_server.txt
+pip install -r requirements_client.txt
 ```
 
 ## 🔧 Server Configuration

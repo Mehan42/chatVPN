@@ -1,0 +1,36 @@
+# XVPN Server Dependencies
+# Зависимости для серверной части XVPN
+
+# API и веб
+flask>=2.3.0
+flask-cors>=4.0.0
+flask-jwt-extended>=4.5.0
+
+# Сетевые библиотеки
+requests>=2.31.0
+urllib3>=2.0.0
+
+# Системные библиотеки
+psutil>=5.9.0
+
+# Безопасность
+cryptography>=41.0.0
+PyJWT>=2.8.0
+
+# Базы данных
+sqlalchemy>=2.0.0
+
+# Docker (для контейнеризации)
+docker>=6.1.0
+
+# Мониторинг
+prometheus-client>=0.17.0
+
+# Конфигурация
+pyyaml>=6.0.0
+configparser>=6.0.0
+
+# Дополнительные утилиты
+python-dotenv>=1.0.0
+click>=8.1.0
+schedule>=1.2.0

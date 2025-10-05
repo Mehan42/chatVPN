@@ -1,0 +1,50 @@
+# XVPN Client Dependencies
+# Зависимости для клиентской части XVPN
+
+# GUI библиотеки
+Pillow>=10.0.0
+pystray>=0.19.4
+tkinter  # Встроен в Python, но указан для ясности
+
+# Сетевые библиотеки
+requests>=2.31.0
+urllib3>=2.0.0
+websockets>=11.0.0
+pysocks>=1.7.1
+
+# Системные библиотеки
+psutil>=5.9.0
+asyncio-mqtt>=0.16.1
+
+# Безопасность
+cryptography>=41.0.0
+PyJWT>=2.8.0
+
+# Логирование (встроен в Python, но указан зависимости если используются расширения)
+# logging встроен в Python
+
+# Конфигурация
+pyyaml>=6.0.0
+configparser>=6.0.0
+
+# Дополнительные утилиты
+python-dotenv>=1.0.0
+click>=8.1.0
+rich>=13.0.0
+
+# Proxy support
+PyOpenSSL>=23.0.0
+
+# Xray support (только Python API если используется)
+# xray устанавливается отдельно как бинарный файл
+
+# Оркестратор ИИ (если используется на клиенте)
+# RAG system - для AI-оркестратора (если используется на клиенте)
+chromadb>=0.4.0
+sentence-transformers>=2.2.0
+faiss-cpu>=1.7.4
+langchain>=0.0.200
+
+# Machine learning
+numpy>=1.24.0
+pandas>=2.0.0

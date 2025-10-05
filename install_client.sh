@@ -11,17 +11,51 @@ if ! command -v python3 &> /dev/null; then
     exit 1
 fi
 
+# Функция установки uv (системно)
+install_uv_system_wide() {
+    echo "📦 Установка uv (менеджер пакетов)..."
+    
+    # Установка uv в системную директорию для доступности всем пользователям
+    if command -v curl &> /dev/null; then
+        curl -LsSf https://astral.sh/uv/install.sh | sh -s -- -p /usr/local/bin
+        # Обновляем PATH для использования uv
+        export PATH="$PATH:/root/.cargo/bin"
+        source "$HOME/.cargo/env" 2>/dev/null || true
+        echo "✅ uv установлен в /usr/local/bin"
+        return 0
+    else
+        echo "❌ curl не найден, невозможно установить uv"
+        return 1
+    fi
+}
+
 # Функция установки зависимостей с резервными вариантами
 install_dependencies() {
     echo "📦 Установка зависимостей для клиента..."
     
-    # Попытка 1: Использовать uv если доступен
-    if command -v uv &> /dev/null; then
+    # Проверяем, установлен ли uv системно
+    if command -v /usr/local/bin/uv &> /dev/null; then
+        echo "✅ Найден системный uv, установка зависимостей через uv..."
+        /usr/local/bin/uv pip install -r requirements_client.txt
+        return 0
+    elif command -v uv &> /dev/null; then
         echo "✅ Найден uv, установка зависимостей через uv..."
         uv pip install -r requirements_client.txt
         return 0
     else
-        echo "⚠️ uv не найден, проверяем pip..."
+        echo "⚠️ uv не найден, устанавливаем..."
+        if install_uv_system_wide; then
+            # Повторная проверка после установки
+            if command -v /usr/local/bin/uv &> /dev/null; then
+                echo "✅ Найден системный uv, установка зависимостей через uv..."
+                /usr/local/bin/uv pip install -r requirements_client.txt
+                return 0
+            else
+                echo "⚠️ uv не доступен после установки, используем pip..."
+            fi
+        else
+            echo "⚠️ Не удалось установить uv, используем pip..."
+        fi
     fi
     
     # Попытка 2: Использовать pip3

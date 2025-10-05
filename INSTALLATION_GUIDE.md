@@ -84,19 +84,32 @@ Modern installations should use `uv` for faster and more reliable dependency man
 
 7. **Install Python dependencies (with automatic uv installation if needed)**
 
-   First, ensure uv is installed (recommended):
+   First, ensure uv is installed system-wide (recommended):
    ```bash
-   # Install uv if not already present
+   # Install uv system-wide so it's available to all users
+   curl -LsSf https://astral.sh/uv/install.sh | sh -s -- -p /usr/local/bin
+   # Add uv to PATH for root user (for use with sudo -u)
+   export PATH="$PATH:/root/.cargo/bin"
+   # Reload shell to make sure uv is available
+   source "$HOME/.cargo/env" 2>/dev/null || true
+   ```
+
+   Alternative: Install uv with fallback to pip
+   ```bash
+   # Install uv if not already present (system-wide)
    if ! command -v uv &> /dev/null; then
-       curl -LsSf https://astral.sh/uv/install.sh | sh
+       curl -LsSf https://astral.sh/uv/install.sh | sh -s -- -p /usr/local/bin
    fi
+   export PATH="$PATH:/root/.cargo/bin"
+   source "$HOME/.cargo/env" 2>/dev/null || true
    ```
 
    For Server (with fallback to pip if uv fails):
    ```bash
-   # Try uv first
+   # Try uv first (check if uv is available system-wide)
    if command -v uv &> /dev/null; then
-       sudo -u xvpn bash -c "cd /opt/xvpn && uv pip install -r requirements_server.txt"
+       # Use uv with path to system installation
+       sudo -u xvpn bash -c "cd /opt/xvpn && /usr/local/bin/uv pip install -r requirements_server.txt"
    else
        # Fallback to pip
        sudo -u xvpn bash -c "cd /opt/xvpn && pip3 install -r requirements_server.txt"
@@ -105,13 +118,22 @@ Modern installations should use `uv` for faster and more reliable dependency man
 
    For Client (with fallback to pip if uv fails):
    ```bash
-   # Try uv first
+   # Try uv first (check if uv is available system-wide)
    if command -v uv &> /dev/null; then
-       sudo -u xvpn bash -c "cd /opt/xvpn && uv pip install -r requirements_client.txt"
+       # Use uv with path to system installation
+       sudo -u xvpn bash -c "cd /opt/xvpn && /usr/local/bin/uv pip install -r requirements_client.txt"
    else
        # Fallback to pip
        sudo -u xvpn bash -c "cd /opt/xvpn && pip3 install -r requirements_client.txt"
    fi
+   ```
+   
+   Alternative method - Install uv in a location accessible to xvpn user:
+   ```bash
+   # Download and install uv to a system location
+   curl -LsSf https://astral.sh/uv/install.sh | sh -s -- -f
+   # Make sure PATH includes uv location
+   sudo -u xvpn bash -c "source \$HOME/.cargo/env 2>/dev/null || true && exec bash -c 'cd /opt/xvpn && uv pip install -r requirements_server.txt'"
    ```
 
 9. **Copy systemd services**
@@ -332,9 +354,10 @@ cd /opt/xvpn
 git pull
 
 # Update dependencies with fallback
-# Try uv first
+# Try uv first (check if uv is available system-wide)
 if command -v uv &> /dev/null; then
-    sudo -u xvpn bash -c "cd /opt/xvpn && uv pip install -r requirements_server.txt --upgrade"  # or requirements_client.txt
+    # Use uv with path to system installation
+    sudo -u xvpn bash -c "cd /opt/xvpn && /usr/local/bin/uv pip install -r requirements_server.txt --upgrade"  # or requirements_client.txt
 else
     # Fallback to pip
     sudo -u xvpn bash -c "cd /opt/xvpn && pip3 install -r requirements_server.txt --upgrade"  # or requirements_client.txt

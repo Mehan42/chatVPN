@@ -189,6 +189,166 @@ def test_connectivity():
     except Exception as e:
         print(f"❌ Ошибка тестирования подключения: {e}")
 
+def test_protocols():
+    """Тестирование доступности различных протоколов"""
+    print("Тестирование доступности протоколов...")
+    try:
+        config = load_client_config()
+        if not config:
+            print("❌ Не найдена конфигурация клиента. Запустите 'xvpn-cli config' для получения конфигурации.")
+            return
+        
+        transports = config.get('transports', [])
+        if not transports:
+            print("❌ В конфигурации клиента не найдены транспорты для тестирования.")
+            return
+        
+        print(f"Найдено транспортов для тестирования: {len(transports)}")
+        
+        results = []
+        for transport in transports:
+            transport_id = transport.get('id')
+            transport_name = transport.get('name')
+            config_data = transport.get('config', {})
+            
+            print(f"\n  Проверка {transport_name} (ID: {transport_id})...")
+            
+            # Проверяем доступность сервера для этого транспорта
+            try:
+                server = config_data.get('server', config.get('server'))
+                port = config_data.get('port', config.get('port', 443))
+                
+                # Пытаемся подключиться к серверу
+                import socket
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sock.settimeout(5)
+                result = sock.connect_ex((server, int(port)))
+                sock.close()
+                
+                if result == 0:
+                    print(f"    ✅ Port {port}: Доступен")
+                    results.append({
+                        "transport_id": transport_id,
+                        "name": transport_name,
+                        "accessible": True,
+                        "port": port
+                    })
+                else:
+                    print(f"    ❌ Port {port}: Недоступен")
+                    results.append({
+                        "transport_id": transport_id,
+                        "name": transport_name,
+                        "accessible": False,
+                        "port": port
+                    })
+            except Exception as e:
+                print(f"    ❌ Ошибка тестирования: {e}")
+                results.append({
+                    "transport_id": transport_id,
+                    "name": transport_name,
+                    "accessible": False,
+                    "port": config_data.get('port'),
+                    "error": str(e)
+                })
+        
+        print(f"\n📋 Результаты тестирования протоколов:")
+        accessible_count = 0
+        for result in results:
+            status = "✅" if result['accessible'] else "❌"
+            print(f"  {status} {result['name']} (ID: {result['transport_id']}) - Port {result['port']}")
+            if result['accessible']:
+                accessible_count += 1
+        
+        print(f"\n📊 {accessible_count}/{len(results)} протоколов доступны для использования")
+        
+        if accessible_count == 0:
+            print("⚠️  Нет доступных протоколов. Возможно, ваш провайдер блокирует подключения.")
+            print("💡 Рекомендуется использовать 'xvpn-cli blocks' для диагностики блокировок.")
+        
+    except Exception as e:
+        print(f"❌ Ошибка тестирования протоколов: {e}")
+
+def detect_blocks():
+    """Диагностика сетевых блокировок"""
+    print("Диагностика сетевых блокировок...")
+    
+    try:
+        # Проверяем стандартные порты VPN
+        blocked_ports = []
+        vpn_ports = [1723, 1194, 500, 4500, 1701]  # PPTP, OpenVPN, IPSec, L2TP
+        
+        print("Тестирование стандартных VPN портов:")
+        for port in vpn_ports:
+            try:
+                import socket
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sock.settimeout(3)
+                result = sock.connect_ex(('8.8.8.8', port))
+                sock.close()
+                
+                if result == 0:
+                    print(f"    ✅ Port {port}: Открыт")
+                else:
+                    print(f"    ❌ Port {port}: Заблокирован")
+                    blocked_ports.append(port)
+            except Exception:
+                print(f"    ❌ Port {port}: Заблокирован")
+                blocked_ports.append(port)
+        
+        print(f"\n📊 Заблокированные VPN порты: {blocked_ports if blocked_ports else 'Нет'}")
+        
+        # Проверяем DNS-блокировки
+        dns_blocks = []
+        dns_servers = ["8.8.8.8", "1.1.1.1", "8.8.4.4"]
+        
+        print("\nТестирование DNS доступа:")
+        for server in dns_servers:
+            try:
+                import socket
+                socket.inet_aton(socket.gethostbyname("google.com"))
+                print(f"    ✅ DNS {server}: Работает")
+            except Exception:
+                print(f"    ❌ DNS {server}: Заблокирован")
+                dns_blocks.append(server)
+        
+        print(f"📊 DNS блокировки: {dns_blocks if dns_blocks else 'Нет'}")
+        
+        # Проверяем HTTPS доступность (для обхода блокировок)
+        print("\nТестирование HTTPS (порт 443) доступности:")
+        https_test = True
+        try:
+            import requests
+            response = requests.get("https://www.google.com", timeout=10)
+            if response.status_code == 200:
+                print("    ✅ HTTPS (порт 443): Доступен")
+            else:
+                print("    ⚠️ HTTPS (порт 443): Ограничен")
+                https_test = False
+        except Exception:
+            print("    ❌ HTTPS (порт 443): Заблокирован")
+            https_test = False
+        
+        print(f"\n📋 Рекомендации:")
+        if https_test and not blocked_ports:
+            print("  • Ваш провайдер не блокирует VPN на уровне портов")
+            print("  • Рекомендуется использовать протоколы через порт 443 (HTTPS)")
+        elif https_test and blocked_ports:
+            print("  • Ваш провайдер блокирует стандартные VPN порты")
+            print("  • Используйте протоколы через порт 443 (HTTPS) для обхода блокировок")
+        else:
+            print("  • Ваш провайдер может применять глубокую проверку трафика (DPI)")
+            print("  • Используйте протоколы с маскировкой под HTTPS (Reality, WebSocket с TLS)")
+        
+        return {
+            "blocked_vpn_ports": blocked_ports,
+            "dns_blocks": dns_blocks,
+            "https_access": https_test
+        }
+        
+    except Exception as e:
+        print(f"❌ Ошибка диагностики блокировок: {e}")
+        return None
+
 def show_logs(lines: int = 20):
     """Показ логов"""
     print(f"Последние {lines} строк логов:")
@@ -261,6 +421,12 @@ def main():
     # Тестирование
     subparsers.add_parser('test', help='Тестирование подключения')
     
+    # Тестирование протоколов
+    subparsers.add_parser('protocols', help='Тестирование доступности протоколов')
+    
+    # Диагностика блокировок
+    subparsers.add_parser('blocks', help='Диагностика сетевых блокировок')
+    
     # Логи
     logs_parser = subparsers.add_parser('logs', help='Показать логи')
     logs_parser.add_argument('-n', '--lines', type=int, default=20, help='Количество строк для показа (по умолчанию: 20)')
@@ -301,6 +467,10 @@ def main():
             switch_transport(args.transport_id)
     elif args.command == 'test':
         test_connectivity()
+    elif args.command == 'protocols':
+        test_protocols()
+    elif args.command == 'blocks':
+        detect_blocks()
     elif args.command == 'logs':
         show_logs(args.lines)
     elif args.command == 'uuid':

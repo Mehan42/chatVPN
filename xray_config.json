@@ -1,0 +1,136 @@
+{
+  "log": {
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log",
+    "loglevel": "info"
+  },
+  "inbounds": [
+    {
+      "port": 443,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "your-uuid-here",
+            "flow": "xtls-rprx-vision"
+          }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "reality",
+        "realitySettings": {
+          "show": false,
+          "dest": "www.google.com:443",
+          "xver": 0,
+          "uot": 1,
+          "tuot": 1,
+          "h3": [],
+          "fingerprint": "chrome",
+          "serverName": "www.google.com",
+          "publicKey": "your-public-key-here",
+          "shortId": "your-short-id-here",
+          "spiderX": ""
+        }
+      }
+    },
+    {
+      "port": 443,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "your-uuid-here",
+            "level": 0,
+            "email": "client@example.com"
+          }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": "tls",
+        "tlsSettings": {
+          "certificates": [
+            {
+              "certificateFile": "/opt/xvpn/tls/cert.pem",
+              "keyFile": "/opt/xvpn/tls/key.pem"
+            }
+          ],
+          "fingerprint": "chrome"
+        },
+        "wsSettings": {
+          "path": "/xvpn"
+        }
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls"
+        ]
+      }
+    },
+    {
+      "port": 443,
+      "protocol": "trojan",
+      "settings": {
+        "clients": [
+          {
+            "password": "your-trojan-password-here",
+            "email": "client@example.com"
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "tls",
+        "tlsSettings": {
+          "certificates": [
+            {
+              "certificateFile": "/opt/xvpn/tls/cert.pem",
+              "keyFile": "/opt/xvpn/tls/key.pem"
+            }
+          ],
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "port": 443,
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "id": "your-vmess-uuid-here",
+            "level": 1,
+            "alterId": 0
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": "tls",
+        "tlsSettings": {
+          "certificates": [
+            {
+              "certificateFile": "/opt/xvpn/tls/cert.pem",
+              "keyFile": "/opt/xvpn/tls/key.pem"
+            }
+          ],
+          "fingerprint": "chrome"
+        },
+        "wsSettings": {
+          "path": "/xvpn"
+        }
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "tag": "direct"
+    }
+  ]
+}

@@ -263,12 +263,27 @@ xvpn-cli transport switch <transport-id>
 # Test connectivity
 xvpn-cli test
 
+# Test protocol availability (for bypassing blocks)
+xvpn-cli protocols
+
+# Detect network blocks (for bypassing blocks)
+xvpn-cli blocks
+
 # View logs
 xvpn-cli logs
 
 # Manage UUID
 xvpn-cli uuid <new-uuid>
 ```
+
+### Block Bypass Commands
+
+XVPN includes special commands for detecting and bypassing network blocks:
+
+- `xvpn-cli protocols` - Test all available protocols to find working ones
+- `xvpn-cli blocks` - Detect which ports and services are blocked by your ISP
+- `xvpn-cli transport list` - List all available transport protocols
+- `xvpn-cli transport switch <transport-id>` - Switch to a working transport protocol
 
 ## 🛡️ Security Features
 

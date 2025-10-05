@@ -1,138 +1,122 @@
 {
-  "uuid": "example-client-uuid",
-  "created_at": "2025-10-04T12:00:00Z",
-  "expires_at": "2026-10-04T12:00:00Z",
-  "name": "Example Client",
-  "description": "Example client configuration for testing",
+  "uuid": "your-client-uuid-here",
+  "server": "your-remote-server.com",
+  "port": 443,
+  "protocol": "vless",
+  "transport": "websocket",
+  "path": "/xvpn",
+  "tls": true,
+  "sni": "your-remote-server.com",
+  "fingerprint": "chrome",
+  "security": "tls",
+  "mux": {
+    "enabled": true,
+    "concurrency": 8
+  },
   "transports": [
     {
-      "id": "vless-reality-1",
-      "name": "VLESS + Reality Transport 1",
-      "type": "vless-reality",
+      "id": "vless-ws-tls",
+      "name": "VLESS WebSocket with TLS",
+      "type": "vless",
       "priority": 1,
-      "ipv6": true,
-      "need_udp": false,
       "config": {
-        "server": "example1.server.com",
+        "server": "your-remote-server.com",
         "port": 443,
-        "protocol": "tcp",
-        "settings": {
-          "vnext": [
-            {
-              "address": "example1.server.com",
-              "port": 443,
-              "users": [
-                {
-                  "id": "example-client-uuid",
-                  "encryption": "none",
-                  "level": 8
-                }
-              ]
-            }
-          ]
-        },
-        "streamSettings": {
-          "network": "tcp",
-          "security": "reality",
-          "realitySettings": {
-            "show": false,
-            "fingerprint": "chrome",
-            "serverName": "example1.server.com",
-            "publicKey": "example-public-key-here",
-            "shortId": "example-short-id"
-          },
-          "tcpSettings": {
-            "header": {
-              "type": "none"
-            }
-          }
-        }
+        "protocol": "vless",
+        "transport": "websocket",
+        "path": "/xvpn",
+        "host": "your-remote-server.com",
+        "tls": true,
+        "sni": "your-remote-server.com",
+        "fingerprint": "chrome",
+        "security": "tls"
       }
     },
     {
-      "id": "vmess-ws-1",
-      "name": "VMess + WebSocket Transport 1",
-      "type": "vmess-ws",
+      "id": "vless-reality",
+      "name": "VLESS with Reality",
+      "type": "vless",
       "priority": 2,
-      "ipv6": true,
-      "need_udp": false,
       "config": {
-        "server": "example2.server.com",
+        "server": "your-remote-server.com",
         "port": 443,
-        "protocol": "vmess",
-        "settings": {
-          "vnext": [
-            {
-              "address": "example2.server.com",
-              "port": 443,
-              "users": [
-                {
-                  "id": "example-client-uuid",
-                  "alterId": 0,
-                  "security": "auto",
-                  "level": 8
-                }
-              ]
-            }
-          ]
-        },
-        "streamSettings": {
-          "network": "ws",
-          "security": "tls",
-          "tlsSettings": {
-            "serverName": "example2.server.com",
-            "allowInsecure": false
-          },
-          "wsSettings": {
-            "path": "/websocket",
-            "headers": {
-              "Host": "example2.server.com"
-            }
-          }
-        }
+        "protocol": "vless",
+        "flow": "xtls-rprx-vision",
+        "tls": true,
+        "sni": "www.google.com",
+        "fingerprint": "chrome",
+        "security": "reality",
+        "pbk": "your-pbk-here",
+        "sid": "your-sid-here",
+        "spiderx": ""
       }
     },
     {
-      "id": "trojan-tcp-1",
-      "name": "Trojan + TCP Transport 1",
-      "type": "trojan-tcp",
+      "id": "trojan-tcp-tls",
+      "name": "Trojan TCP with TLS",
+      "type": "trojan",
       "priority": 3,
-      "ipv6": true,
-      "need_udp": false,
       "config": {
-        "server": "example3.server.com",
+        "server": "your-remote-server.com",
         "port": 443,
         "protocol": "trojan",
-        "settings": {
-          "servers": [
-            {
-              "address": "example3.server.com",
-              "port": 443,
-              "password": "example-password-here",
-              "level": 8
-            }
-          ]
-        },
-        "streamSettings": {
-          "network": "tcp",
-          "security": "tls",
-          "tlsSettings": {
-            "serverName": "example3.server.com",
-            "allowInsecure": false
-          }
-        }
+        "password": "your-password-here",
+        "tls": true,
+        "sni": "your-remote-server.com",
+        "fingerprint": "chrome",
+        "security": "tls"
+      }
+    },
+    {
+      "id": "vmess-ws-tls",
+      "name": "VMess WebSocket with TLS",
+      "type": "vmess",
+      "priority": 4,
+      "config": {
+        "server": "your-remote-server.com",
+        "port": 443,
+        "protocol": "vmess",
+        "uuid": "your-vmess-uuid-here",
+        "transport": "websocket",
+        "path": "/xvpn",
+        "host": "your-remote-server.com",
+        "tls": true,
+        "sni": "your-remote-server.com",
+        "fingerprint": "chrome",
+        "security": "tls"
+      }
+    },
+    {
+      "id": "shadowsocks-tls",
+      "name": "Shadowsocks with TLS",
+      "type": "shadowsocks",
+      "priority": 5,
+      "config": {
+        "server": "your-remote-server.com",
+        "port": 443,
+        "protocol": "shadowsocks",
+        "method": "2022-blake3-aes-128-gcm",
+        "password": "your-shadowsocks-password-here",
+        "tls": true,
+        "sni": "your-remote-server.com",
+        "fingerprint": "chrome",
+        "security": "tls"
+      }
+    },
+    {
+      "id": "hysteria2",
+      "name": "Hysteria2",
+      "type": "hysteria2",
+      "priority": 6,
+      "config": {
+        "server": "your-remote-server.com",
+        "port": 443,
+        "protocol": "hysteria2",
+        "password": "your-hysteria-password-here",
+        "tls": true,
+        "sni": "your-remote-server.com",
+        "fingerprint": "chrome"
       }
     }
-  ],
-  "settings": {
-    "auto_connect": true,
-    "auto_transport_switch": true,
-    "transport_switch_threshold": 3,
-    "health_check_interval": 30,
-    "proxy_mode": "tun",
-    "ipv6_enabled": true,
-    "kill_switch": true,
-    "dns_leak_protection": true,
-    "log_level": "INFO"
-  }
+  ]
 }

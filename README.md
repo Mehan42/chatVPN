@@ -82,6 +82,9 @@ cd chatVPN
 
 # Install server components
 sudo ./install_server.sh
+
+# Run post-installation setup
+sudo ./post_install_setup.sh
 ```
 
 ### Client Installation

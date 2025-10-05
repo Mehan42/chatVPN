@@ -8,11 +8,13 @@ User=xvpn
 Group=xvpn
 WorkingDirectory=/opt/xvpn
 Environment=PATH=/opt/xvpn/venv/bin
+Environment=XVPN_API_PORT=8443
+Environment=FLASK_APP=app.py
+Environment=FLASK_ENV=production
+Environment=PYTHONPATH=/opt/xvpn
 ExecStart=/opt/xvpn/venv/bin/python3 /opt/xvpn/server/api/app.py
 Restart=always
 RestartSec=5
-Environment=FLASK_ENV=production
-Environment=PYTHONPATH=/opt/xvpn
 
 [Install]
 WantedBy=multi-user.target

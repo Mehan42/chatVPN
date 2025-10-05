@@ -110,6 +110,17 @@ if ! command -v xray &> /dev/null; then
     bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
 fi
 
+# Настройка фаервола (если используется ufw)
+echo "🛡️ Настройка фаервола..."
+if command -v ufw &> /dev/null; then
+    echo "  Открытие портов в фаерволе..."
+    # Порт 443 для XRay (VPN трафик)
+    sudo ufw allow 443/tcp
+    # Порт 8443 для MCP/API (управление)
+    sudo ufw allow 8443/tcp
+    echo "  Порты 443 и 8443 открыты в фаерволе"
+fi
+
 # Установка systemd сервисов (если на Linux)
 if command -v systemctl &> /dev/null; then
     echo "⚙️ Установка systemd сервисов..."

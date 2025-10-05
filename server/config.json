@@ -1,44 +1,10 @@
 {
-  "api": {
-    "host": "0.0.0.0",
-    "port": 5000,
-    "debug": false,
-    "secret_key": "your-secret-key-here"
-  },
-  "database": {
-    "type": "sqlite",
-    "path": "xvpn.db",
-    "backup_enabled": true,
-    "backup_interval": "24h"
-  },
-  "security": {
-    "jwt_expiration": "24h",
-    "max_login_attempts": 5,
-    "lockout_duration": "15m",
-    "password_min_length": 8
-  },
-  "vpn": {
-    "xray_config": "config/xray.json",
-    "default_transport": "ws",
-    "health_check_interval": 30,
-    "retry_attempts": 3,
-    "timeout": 10
-  },
-  "logging": {
-    "level": "INFO",
-    "file": "logs/xvpn.log",
-    "max_size": "50MB",
-    "backup_count": 10
-  },
-  "monitoring": {
-    "enabled": true,
-    "metrics_port": 9090,
-    "health_check_port": 8080
-  },
-  "features": {
-    "ipv6_enabled": true,
-    "proxy_modes_enabled": true,
-    "auto_switch_enabled": true,
-    "analytics_enabled": false
-  }
+  "api_server": "https://yourdomain.com:443",
+  "api_port": 443,
+  "webhook_enabled": false,
+  "log_level": "INFO",
+  "ssl_enabled": true,
+  "ssl_cert_path": "/opt/xvpn/tls/cert.pem",
+  "ssl_key_path": "/opt/xvpn/tls/key.pem",
+  "database_url": "sqlite:////opt/xvpn/data/xvpn.db"
 }

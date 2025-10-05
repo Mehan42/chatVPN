@@ -321,9 +321,12 @@ def get_client_config(uuid):
 
 def main():
     """Основная функция запуска API сервера"""
+    # Используем порт 443 для продакшена, если доступен, иначе 8443
+    port = int(os.getenv("XVPN_API_PORT", 443 if os.getenv("FLASK_ENV") != "development" else 8443))
+    
     app.run(
         host="0.0.0.0",
-        port=8443,
+        port=port,
         debug=False,
         ssl_context=(
             "/opt/xvpn/tls/cert.pem",  # Путь к SSL сертификату
@@ -331,7 +334,7 @@ def main():
         ) if os.path.exists("/opt/xvpn/tls/cert.pem") else None
     ) if os.getenv("FLASK_ENV") != "development" else app.run(
         host="0.0.0.0",
-        port=8443,
+        port=port,
         debug=True
     )
 

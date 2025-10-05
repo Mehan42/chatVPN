@@ -1,0 +1,506 @@
+# XVPN Jaeger Configuration
+# Конфигурация системы распределённого трассирования Jaeger
+
+# === Global Configuration ===
+global:
+  # Check for new version
+  check_new_version: true
+  
+  # Send anonymous usage data
+  send_anonymous_usage: false
+
+# === Server Configuration ===
+server:
+  # HTTP server listen port
+  http_port: 16686
+  
+  # gRPC server listen port
+  grpc_port: 16687
+  
+  # Server graceful shutdown timeout
+  graceful_shutdown_timeout: 30s
+
+# === Collector Configuration ===
+collector:
+  # Collector zipkin HTTP port
+  zipkin_http_port: 9411
+  
+  # Collector HTTP port
+  http_port: 14268
+  
+  # Collector gRPC port
+  grpc_port: 14250
+  
+  # Collector health check HTTP port
+  health_check_http_port: 14269
+  
+  # Collector queue size
+  queue_size: 2000
+  
+  # Collector number of workers
+  num_workers: 50
+  
+  # Collector max packet size
+  max_packet_size: 65000
+
+# === Agent Configuration ===
+agent:
+  # Agent reporting host port
+  reporter:
+    # Agent reporter type
+    type: grpc
+    
+    # Agent reporter host port
+    host_port: jaeger-collector:14250
+    
+    # Agent reporter queue size
+    queue_size: 1000
+    
+    # Agent reporter max packet size
+    max_packet_size: 65000
+    
+    # Agent reporter flush interval
+    flush_interval: 1s
+    
+    # Agent reporter log spam
+    log_spam: false
+
+# === Query Configuration ===
+query:
+  # Query grpc host port
+  grpc_host_port: jaeger-query:16687
+  
+  # Query health check HTTP port
+  health_check_http_port: 16687
+  
+  # Query base path
+  base_path: /
+  
+  # Query static files
+  static_files: /go/bin/query-static
+
+# === Storage Configuration ===
+storage:
+  # Storage type
+  type: badger
+  
+  # Badger storage configuration
+  badger:
+    # Badger ephemeral (in-memory storage)
+    ephemeral: false
+    
+    # Badger directory for data
+    directory_value: /badger/data
+    
+    # Badger directory for keys
+    directory_key: /badger/key
+    
+    # Badger read only mode
+    read_only: false
+    
+    # Badger truncate corrupted data
+    truncate: true
+    
+    # Badger sync writes
+    sync_writes: true
+    
+    # Badger compression
+    compression: snappy
+    
+    # Badger encryption key
+    encryption_key: ""
+    
+    # Badger block cache size
+    block_cache_size: 0
+    
+    # Badger index cache size
+    index_cache_size: 0
+    
+    # Badger namespace mode
+    namespace_mode: ""
+    
+    # Badger namespace permissions
+    namespace_permissions: ""
+    
+    # Badger memory map
+    memory_map: true
+    
+    # Badger num level zero tables
+    num_level_zero_tables: 5
+    
+    # Badger num level zero tables stale
+    num_level_zero_tables_stale: 10
+    
+    # Badger level size multiplier
+    level_size_multiplier: 10
+    
+    # Badger max levels
+    max_levels: 7
+    
+    # Badger value threshold
+    value_threshold: 1048576
+    
+    # Badger num memtables
+    num_memtables: 5
+    
+    # Badger bloom false positive rate
+    bloom_false_positive: 0.01
+    
+    # Badger block size
+    block_size: 4096
+    
+    # Badger sync writes
+    sync_writes: true
+    
+    # Badger num go routines
+    num_go_routines: 8
+    
+    # Badger ratio zlib compression
+    ratio_zstd_compression: 0
+    
+    # Badger discard ratio
+    discard_ratio: 0.95
+    
+    # Badger read only
+    read_only: false
+    
+    # Badger truncate
+    truncate: true
+    
+    # Badger in memory
+    in_memory: false
+    
+    # Badger metrics enabled
+    metrics_enabled: true
+    
+    # Badger logging level
+    logging_level: info
+    
+    # Badger cache size
+    cache_size: 0
+    
+    # Badger index cache size
+    index_cache_size: 0
+
+# === Cassandra Storage Configuration ===
+cassandra:
+  # Cassandra servers
+  servers: cassandra:9042
+  
+  # Cassandra keyspace
+  keyspace: jaeger_v1_dc1
+  
+  # Cassandra username
+  username: ""
+  
+  # Cassandra password
+  password: ""
+  
+  # Cassandra TLS configuration
+  tls:
+    # Enable TLS
+    enabled: false
+    
+    # Skip TLS verification
+    skip_host_verify: false
+    
+    # Certificate authority file
+    ca_file: ""
+    
+    # Certificate file
+    cert_file: ""
+    
+    # Key file
+    key_file: ""
+    
+    # Server name
+    server_name: ""
+    
+    # Cipher suites
+    cipher_suites: []
+    
+    # Minimum TLS version
+    min_version: ""
+    
+    # Maximum TLS version
+    max_version: ""
+    
+    # Prefer server cipher suites
+    prefer_server_cipher_suites: false
+    
+    # Session tickets
+    session_tickets: true
+
+# === Elasticsearch Storage Configuration ===
+elasticsearch:
+  # Elasticsearch servers
+  server_urls: http://elasticsearch:9200
+  
+  # Elasticsearch username
+  username: ""
+  
+  # Elasticsearch password
+  password: ""
+  
+  # Elasticsearch token
+  token: ""
+  
+  # Elasticsearch TLS configuration
+  tls:
+    # Enable TLS
+    enabled: false
+    
+    # Skip TLS verification
+    skip_host_verify: false
+    
+    # Certificate authority file
+    ca_file: ""
+    
+    # Certificate file
+    cert_file: ""
+    
+    # Key file
+    key_file: ""
+    
+    # Server name
+    server_name: ""
+    
+    # Cipher suites
+    cipher_suites: []
+    
+    # Minimum TLS version
+    min_version: ""
+    
+    # Maximum TLS version
+    max_version: ""
+    
+    # Prefer server cipher suites
+    prefer_server_cipher_suites: false
+    
+    # Session tickets
+    session_tickets: true
+
+# === Kafka Storage Configuration ===
+kafka:
+  # Kafka brokers
+  brokers: kafka:9092
+  
+  # Kafka topic
+  topic: jaeger-spans
+  
+  # Kafka producer configuration
+  producer:
+    # Producer TLS configuration
+    tls:
+      # Enable TLS
+      enabled: false
+      
+      # Skip TLS verification
+      skip_host_verify: false
+      
+      # Certificate authority file
+      ca_file: ""
+      
+      # Certificate file
+      cert_file: ""
+      
+      # Key file
+      key_file: ""
+      
+      # Server name
+      server_name: ""
+      
+      # Cipher suites
+      cipher_suites: []
+      
+      # Minimum TLS version
+      min_version: ""
+      
+      # Maximum TLS version
+      max_version: ""
+      
+      # Prefer server cipher suites
+      prefer_server_cipher_suites: false
+      
+      # Session tickets
+      session_tickets: true
+
+# === Sampling Configuration ===
+sampling:
+  # Sampling strategies file
+  strategies_file: /etc/jaeger/sampling.json
+  
+  # Sampling refresh interval
+  refresh_interval: 5s
+
+# === Metrics Configuration ===
+metrics:
+  # Metrics backend
+  backend: prometheus
+  
+  # Metrics HTTP route
+  http_route: /metrics
+  
+  # Metrics HTTP port
+  http_port: 14269
+
+# === Tracing Configuration ===
+tracing:
+  # Enable tracing
+  enabled: true
+  
+  # Tracing provider
+  provider: jaeger
+  
+  # Jaeger configuration
+  jaeger:
+    # Sampling server URL
+    sampling_server_url: http://jaeger:5778/sampling
+    
+    # Local agent host port
+    local_agent_host_port: jaeger:6831
+    
+    # Service name
+    service_name: jaeger
+
+# === Logging Configuration ===
+log:
+  # Log level
+  level: info
+  
+  # Log format
+  format: logfmt
+  
+  # Log file
+  file: /var/log/jaeger/jaeger.log
+
+# === UI Configuration ===
+ui:
+  # Base path for UI
+  base_path: /
+  
+  # Static files path
+  static_files: /go/bin/query-static
+
+# === Health Check Configuration ===
+health_check:
+  # Health check HTTP port
+  http_port: 14269
+
+# === Additional Configuration ===
+additional_arguments:
+  # Additional command line arguments
+  - "--global.check-new-version=true"
+  - "--global.send-anonymous-usage=false"
+  - "--server.http-port=16686"
+  - "--server.grpc-port=16687"
+  - "--server.graceful-shutdown-timeout=30s"
+  - "--collector.zipkin.http-port=9411"
+  - "--collector.http-port=14268"
+  - "--collector.grpc-port=14250"
+  - "--collector.health-check-http-port=14269"
+  - "--collector.queue-size=2000"
+  - "--collector.num-workers=50"
+  - "--collector.max-packet-size=65000"
+  - "--agent.reporter.type=grpc"
+  - "--agent.reporter.host-port=jaeger-collector:14250"
+  - "--agent.reporter.queue-size=1000"
+  - "--agent.reporter.max-packet-size=65000"
+  - "--agent.reporter.flush-interval=1s"
+  - "--agent.reporter.log-spam=false"
+  - "--query.grpc.host-port=jaeger-query:16687"
+  - "--query.health-check-http-port=16687"
+  - "--query.base-path=/"
+  - "--query.static-files=/go/bin/query-static"
+  - "--storage.type=badger"
+  - "--storage.badger.ephemeral=false"
+  - "--storage.badger.directory-value=/badger/data"
+  - "--storage.badger.directory-key=/badger/key"
+  - "--storage.badger.read-only=false"
+  - "--storage.badger.truncate=true"
+  - "--storage.badger.sync-writes=true"
+  - "--storage.badger.compression=snappy"
+  - "--storage.badger.encryption-key="
+  - "--storage.badger.block-cache-size=0"
+  - "--storage.badger.index-cache-size=0"
+  - "--storage.badger.namespace-mode="
+  - "--storage.badger.namespace-permissions="
+  - "--storage.badger.memory-map=true"
+  - "--storage.badger.num-level-zero-tables=5"
+  - "--storage.badger.num-level-zero-tables-stale=10"
+  - "--storage.badger.level-size-multiplier=10"
+  - "--storage.badger.max-levels=7"
+  - "--storage.badger.value-threshold=1048576"
+  - "--storage.badger.num-memtables=5"
+  - "--storage.badger.bloom-false-positive=0.01"
+  - "--storage.badger.block-size=4096"
+  - "--storage.badger.sync-writes=true"
+  - "--storage.badger.num-go-routines=8"
+  - "--storage.badger.ratio-zstd-compression=0"
+  - "--storage.badger.discard-ratio=0.95"
+  - "--storage.badger.read-only=false"
+  - "--storage.badger.truncate=true"
+  - "--storage.badger.in-memory=false"
+  - "--storage.badger.metrics-enabled=true"
+  - "--storage.badger.logging-level=info"
+  - "--storage.badger.cache-size=0"
+  - "--storage.badger.index-cache-size=0"
+  - "--cassandra.servers=cassandra:9042"
+  - "--cassandra.keyspace=jaeger_v1_dc1"
+  - "--cassandra.username="
+  - "--cassandra.password="
+  - "--cassandra.tls.enabled=false"
+  - "--cassandra.tls.skip-host-verify=false"
+  - "--cassandra.tls.ca-file="
+  - "--cassandra.tls.cert-file="
+  - "--cassandra.tls.key-file="
+  - "--cassandra.tls.server-name="
+  - "--cassandra.tls.cipher-suites=[]"
+  - "--cassandra.tls.min-version="
+  - "--cassandra.tls.max-version="
+  - "--cassandra.tls.prefer-server-cipher-suites=false"
+  - "--cassandra.tls.session-tickets=true"
+  - "--elasticsearch.server-urls=http://elasticsearch:9200"
+  - "--elasticsearch.username="
+  - "--elasticsearch.password="
+  - "--elasticsearch.token="
+  - "--elasticsearch.tls.enabled=false"
+  - "--elasticsearch.tls.skip-host-verify=false"
+  - "--elasticsearch.tls.ca-file="
+  - "--elasticsearch.tls.cert-file="
+  - "--elasticsearch.tls.key-file="
+  - "--elasticsearch.tls.server-name="
+  - "--elasticsearch.tls.cipher-suites=[]"
+  - "--elasticsearch.tls.min-version="
+  - "--elasticsearch.tls.max-version="
+  - "--elasticsearch.tls.prefer-server-cipher-suites=false"
+  - "--elasticsearch.tls.session-tickets=true"
+  - "--kafka.brokers=kafka:9092"
+  - "--kafka.topic=jaeger-spans"
+  - "--kafka.producer.tls.enabled=false"
+  - "--kafka.producer.tls.skip-host-verify=false"
+  - "--kafka.producer.tls.ca-file="
+  - "--kafka.producer.tls.cert-file="
+  - "--kafka.producer.tls.key-file="
+  - "--kafka.producer.tls.server-name="
+  - "--kafka.producer.tls.cipher-suites=[]"
+  - "--kafka.producer.tls.min-version="
+  - "--kafka.producer.tls.max-version="
+  - "--kafka.producer.tls.prefer-server-cipher-suites=false"
+  - "--kafka.producer.tls.session-tickets=true"
+  - "--sampling.strategies-file=/etc/jaeger/sampling.json"
+  - "--sampling.refresh-interval=5s"
+  - "--metrics.backend=prometheus"
+  - "--metrics.http-route=/metrics"
+  - "--metrics.http-port=14269"
+  - "--tracing.enabled=true"
+  - "--tracing.provider=jaeger"
+  - "--tracing.jaeger.sampling-server-url=http://jaeger:5778/sampling"
+  - "--tracing.jaeger.local-agent-host-port=jaeger:6831"
+  - "--tracing.jaeger.service-name=jaeger"
+  - "--log.level=info"
+  - "--log.format=logfmt"
+  - "--log.file=/var/log/jaeger/jaeger.log"
+  - "--ui.base-path=/"
+  - "--ui.static-files=/go/bin/query-static"
+  - "--health-check.http-port=14269"

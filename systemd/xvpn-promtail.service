@@ -1,0 +1,56 @@
+# XVPN Promtail Service
+# Сервис сбора логов Promtail для XVPN
+
+[Unit]
+Description=XVPN Promtail Service
+After=network.target loki.service
+Wants=network.target loki.service
+Requires=network.target loki.service
+
+[Service]
+Type=simple
+User=promtail
+Group=promtail
+WorkingDirectory=/opt/xvpn/server/promtail
+ExecStart=/usr/bin/promtail \
+  -config.file=/opt/xvpn/server/promtail/promtail.yml \
+  -log.level=info \
+  -log.format=logfmt \
+  -log.file=/var/log/promtail/promtail.log
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=xvpn-promtail
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/xvpn/server/promtail /var/log/promtail /opt/xvpn/data /tmp /var/log/xvpn
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictSUIDSGID=true
+RemoveIPC=true
+PrivateUsers=true
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+MemoryMax=256M
+CPUQuota=10%
+TasksMax=128
+
+# Environment
+Environment=PYTHONPATH=/opt/xvpn/server/promtail
+Environment=LOG_DIR=/var/log/promtail
+Environment=PROMTAIL_DIR=/opt/xvpn/server/promtail
+Environment=INTERVAL=60
+
+[Install]
+WantedBy=multi-user.target

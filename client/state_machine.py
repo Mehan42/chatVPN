@@ -11,10 +11,7 @@ import uuid
 from enum import Enum
 from typing import Dict, List, Optional, Any, Callable
 from pathlib import Path
-from dataclasses import dataclass, asdict
-from transport_manager import get_transport_manager
-from health import get_mask_score, get_network_info
-from chatvpn_backend import start_xray, stop_xray, get_status, load_config_from_server
+from dataclasses import dataclass, asdict, field
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
@@ -72,13 +69,7 @@ class Context:
     last_health_check: float = 0
     health_check_interval: int = 30
     # Добавленные поля для обработки транспортов
-    fallback_transports: List[Dict] = None
-    
-    def __post_init__(self):
-        if self.transport_manager is None:
-            self.transport_manager = get_transport_manager(self.client_uuid)
-        if self.fallback_transports is None:
-            self.fallback_transports = []
+    fallback_transports: List[Dict] = field(default_factory=list)
 
 @dataclass
 class Transition:
@@ -274,7 +265,8 @@ class VPNStateMachine:
             with open(config_path, 'r') as f:
                 context.config_data = json.load(f)
         
-        # Получение сетевой информации
+        # Получение сетевой информации (ленивый импорт)
+        from .health import get_network_info
         context.network_info = get_network_info()
         
         # Переходим к загрузке конфигурации
@@ -292,6 +284,8 @@ class VPNStateMachine:
         logger.info("Fetching configuration from server...")
         
         try:
+            # Ленивый импорт функции загрузки конфигурации
+            from .chatvpn_backend import load_config_from_server
             success = load_config_from_server()
             if success:
                 # Загружаем конфигурацию 
@@ -359,6 +353,8 @@ class VPNStateMachine:
         logger.info("Starting VPN...")
         
         try:
+            # Ленивый импорт функции запуска XRay
+            from .chatvpn_backend import start_xray
             if start_xray():
                 self.trigger_event(Event.START_SUCCESS)
             else:
@@ -376,6 +372,7 @@ class VPNStateMachine:
         self._start_health_monitoring()
         
         # Обновление информации о сети
+        from .health import get_network_info, get_mask_score
         context.network_info = get_network_info()
         context.health_score = get_mask_score()
         
@@ -394,6 +391,8 @@ class VPNStateMachine:
         logger.info("Performing health check...")
         
         try:
+            # Ленивый импорт функции оценки маскировки
+            from .health import get_mask_score
             health_score = get_mask_score()
             logger.info(f"Current health score: {health_score}")
             
@@ -455,6 +454,8 @@ class VPNStateMachine:
         logger.info("Stopping VPN...")
         
         try:
+            # Ленивый импорт функции остановки XRay
+            from .chatvpn_backend import stop_xray
             stop_xray()
             self.trigger_event(Event.STOP_REQUESTED)
         except Exception as e:
@@ -483,6 +484,9 @@ class VPNStateMachine:
         logger.info("Attempting recovery...")
         
         try:
+            # Ленивые импорты функций управления XRay
+            from .chatvpn_backend import stop_xray, start_xray
+            
             # Перезапуск VPN
             stop_xray()
             time.sleep(2)
@@ -516,6 +520,8 @@ class VPNStateMachine:
             while self.running and self.context.current_state == State.RUNNING:
                 try:
                     time.sleep(self.context.health_check_interval)
+                    # Ленивый импорт функции оценки маскировки
+                    from .health import get_mask_score
                     health_score = get_mask_score()
                     
                     # Обновляем информацию о здоровье

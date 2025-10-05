@@ -1,0 +1,293 @@
+# XVPN Grafana Dashboards Provisioning
+# Конфигурация автоматической загрузки дашбордов Grafana
+
+apiVersion: 1
+
+# === Providers ===
+providers:
+  # === XVPN Dashboards Provider ===
+  - name: "XVPN Dashboards"
+    orgId: 1
+    folder: "XVPN"
+    type: file
+    disableDeletion: false
+    editable: true
+    updateIntervalSeconds: 10
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/provisioning/dashboards
+      foldersFromFilesStructure: true
+
+# === Dashboard Configuration ===
+dashboards:
+  # === XVPN Overview Dashboard ===
+  - name: "XVPN Overview"
+    folder: "XVPN"
+    type: file
+    options:
+      path: /etc/grafana/provisioning/dashboards/xvpn-overview.json
+
+  # === XVPN API Dashboard ===
+  - name: "XVPN API"
+    folder: "XVPN/API"
+    type: file
+    options:
+      path: /etc/grafana/provisioning/dashboards/xvpn-api.json
+
+  # === XVPN Agent Dashboard ===
+  - name: "XVPN Agent"
+    folder: "XVPN/Agent"
+    type: file
+    options:
+      path: /etc/grafana/provisioning/dashboards/xvpn-agent.json
+
+  # === XVPN Bot Dashboard ===
+  - name: "XVPN Bot"
+    folder: "XVPN/Bot"
+    type: file
+    options:
+      path: /etc/grafana/provisioning/dashboards/xvpn-bot.json
+
+  # === XVPN Worker Dashboard ===
+  - name: "XVPN Worker"
+    folder: "XVPN/Worker"
+    type: file
+    options:
+      path: /etc/grafana/provisioning/dashboards/xvpn-worker.json
+
+  # === XVPN Orchestrator Dashboard ===
+  - name: "XVPN Orchestrator"
+    folder: "XVPN/Orchestrator"
+    type: file
+    options:
+      path: /etc/grafana/provisioning/dashboards/xvpn-orchestrator.json
+
+  # === System Dashboard ===
+  - name: "System Metrics"
+    folder: "System"
+    type: file
+    options:
+      path: /etc/grafana/provisioning/dashboards/system-metrics.json
+
+  # === Network Dashboard ===
+  - name: "Network Overview"
+    folder: "Network"
+    type: file
+    options:
+      path: /etc/grafana/provisioning/dashboards/network-overview.json
+
+  # === Security Dashboard ===
+  - name: "Security Metrics"
+    folder: "Security"
+    type: file
+    options:
+      path: /etc/grafana/provisioning/dashboards/security-metrics.json
+
+  # === Performance Dashboard ===
+  - name: "Performance Metrics"
+    folder: "Performance"
+    type: file
+    options:
+      path: /etc/grafana/provisioning/dashboards/performance-metrics.json
+
+  # === Health Dashboard ===
+  - name: "Health Monitoring"
+    folder: "Health"
+    type: file
+    options:
+      path: /etc/grafana/provisioning/dashboards/health-monitoring.json
+
+  # === Transport Dashboard ===
+  - name: "Transport Analysis"
+    folder: "Transport"
+    type: file
+    options:
+      path: /etc/grafana/provisioning/dashboards/transport-analysis.json
+
+  # === Proxy Dashboard ===
+  - name: "Proxy Modes"
+    folder: "Proxy"
+    type: file
+    options:
+      path: /etc/grafana/provisioning/dashboards/proxy-modes.json
+
+  # === IPv6 Dashboard ===
+  - name: "IPv6 Support"
+    folder: "IPv6"
+    type: file
+    options:
+      path: /etc/grafana/provisioning/dashboards/ipv6-support.json
+
+# === Folder Configuration ===
+folders:
+  # === XVPN Root Folder ===
+  - name: "XVPN"
+    uid: "xvpn"
+    title: "XVPN Dashboards"
+
+  # === XVPN Subfolders ===
+  - name: "XVPN/API"
+    uid: "xvpn-api"
+    title: "API Metrics"
+    parentUid: "xvpn"
+
+  - name: "XVPN/Agent"
+    uid: "xvpn-agent"
+    title: "Agent Metrics"
+    parentUid: "xvpn"
+
+  - name: "XVPN/Bot"
+    uid: "xvpn-bot"
+    title: "Bot Metrics"
+    parentUid: "xvpn"
+
+  - name: "XVPN/Worker"
+    uid: "xvpn-worker"
+    title: "Worker Metrics"
+    parentUid: "xvpn"
+
+  - name: "XVPN/Orchestrator"
+    uid: "xvpn-orchestrator"
+    title: "Orchestrator Metrics"
+    parentUid: "xvpn"
+
+  # === System Folders ===
+  - name: "System"
+    uid: "system"
+    title: "System Metrics"
+
+  - name: "Network"
+    uid: "network"
+    title: "Network Metrics"
+
+  - name: "Security"
+    uid: "security"
+    title: "Security Metrics"
+
+  - name: "Performance"
+    uid: "performance"
+    title: "Performance Metrics"
+
+  - name: "Health"
+    uid: "health"
+    title: "Health Monitoring"
+
+  - name: "Transport"
+    uid: "transport"
+    title: "Transport Analysis"
+
+  - name: "Proxy"
+    uid: "proxy"
+    title: "Proxy Modes"
+
+  - name: "IPv6"
+    uid: "ipv6"
+    title: "IPv6 Support"
+
+# === Dashboard Templates ===
+templates:
+  # === XVPN Overview Template ===
+  - name: "xvpn-overview"
+    path: /etc/grafana/provisioning/dashboards/xvpn-overview.json
+    folder: "XVPN"
+
+  # === XVPN API Template ===
+  - name: "xvpn-api"
+    path: /etc/grafana/provisioning/dashboards/xvpn-api.json
+    folder: "XVPN/API"
+
+  # === XVPN Agent Template ===
+  - name: "xvpn-agent"
+    path: /etc/grafana/provisioning/dashboards/xvpn-agent.json
+    folder: "XVPN/Agent"
+
+  # === XVPN Bot Template ===
+  - name: "xvpn-bot"
+    path: /etc/grafana/provisioning/dashboards/xvpn-bot.json
+    folder: "XVPN/Bot"
+
+  # === XVPN Worker Template ===
+  - name: "xvpn-worker"
+    path: /etc/grafana/provisioning/dashboards/xvpn-worker.json
+    folder: "XVPN/Worker"
+
+  # === XVPN Orchestrator Template ===
+  - name: "xvpn-orchestrator"
+    path: /etc/grafana/provisioning/dashboards/xvpn-orchestrator.json
+    folder: "XVPN/Orchestrator"
+
+  # === System Template ===
+  - name: "system-metrics"
+    path: /etc/grafana/provisioning/dashboards/system-metrics.json
+    folder: "System"
+
+  # === Network Template ===
+  - name: "network-overview"
+    path: /etc/grafana/provisioning/dashboards/network-overview.json
+    folder: "Network"
+
+  # === Security Template ===
+  - name: "security-metrics"
+    path: /etc/grafana/provisioning/dashboards/security-metrics.json
+    folder: "Security"
+
+  # === Performance Template ===
+  - name: "performance-metrics"
+    path: /etc/grafana/provisioning/dashboards/performance-metrics.json
+    folder: "Performance"
+
+  # === Health Template ===
+  - name: "health-monitoring"
+    path: /etc/grafana/provisioning/dashboards/health-monitoring.json
+    folder: "Health"
+
+  # === Transport Template ===
+  - name: "transport-analysis"
+    path: /etc/grafana/provisioning/dashboards/transport-analysis.json
+    folder: "Transport"
+
+  # === Proxy Template ===
+  - name: "proxy-modes"
+    path: /etc/grafana/provisioning/dashboards/proxy-modes.json
+    folder: "Proxy"
+
+  # === IPv6 Template ===
+  - name: "ipv6-support"
+    path: /etc/grafana/provisioning/dashboards/ipv6-support.json
+    folder: "IPv6"
+
+# === Additional Configuration ===
+additionalConfiguration:
+  # === Update Interval ===
+  updateIntervalSeconds: 10
+
+  # === Allow UI Updates ===
+  allowUiUpdates: true
+
+  # === Disable Deletion ===
+  disableDeletion: false
+
+  # === Editable ===
+  editable: true
+
+  # === Folders From Files Structure ===
+  foldersFromFilesStructure: true
+
+# === Environment Variables ===
+# Следующие переменные могут быть установлены в настройках Grafana:
+# - GF_PROVISIONING_PATH: путь к директории provisioning (по умолчанию /etc/grafana/provisioning)
+# - GF_DASHBOARDS_PATH: путь к директории dashboards (по умолчанию /etc/grafana/provisioning/dashboards)
+# - GF_DATASOURCES_PATH: путь к директории datasources (по умолчанию /etc/grafana/provisioning/datasources)
+# - GF_NOTIFIERS_PATH: путь к директории notifiers (по умолчанию /etc/grafana/provisioning/notifiers)
+# - GF_PLUGINS_PATH: путь к директории plugins (по умолчанию /etc/grafana/provisioning/plugins)
+# - GF_ALERTING_PATH: путь к директории alerting (по умолчанию /etc/grafana/provisioning/alerting)
+# - GF_AUTH_PATH: путь к директории auth (по умолчанию /etc/grafana/provisioning/auth)
+# - GF_USERS_PATH: путь к директории users (по умолчанию /etc/grafana/provisioning/users)
+# - GF_ORG_PATH: путь к директории org (по умолчанию /etc/grafana/provisioning/org)
+# - GF_TEAMS_PATH: путь к директории teams (по умолчанию /etc/grafana/provisioning/teams)
+# - GF_PREFERENCES_PATH: путь к директории preferences (по умолчанию /etc/grafana/provisioning/preferences)
+# - GF_SNAPSHOTS_PATH: путь к директории snapshots (по умолчанию /etc/grafana/provisioning/snapshots)
+# - GF_APPS_PATH: путь к директории apps (по умолчанию /etc/grafana/provisioning/apps)
+# - GF_PLUGINS_APPS_PATH: путь к директории plugins/apps (по умолчанию /etc/grafana/provisioning/plugins/apps)
+# - GF_PLUGINS_DATASOURCES_PATH: путь к директории plugins/datasources (по умолчанию /etc/grafana/provisioning/plugins/datasources)
+# - GF_PLUGINS_PANELS_PATH: путь к директории plugins/panels (по умолчанию /etc/grafana/provisioning/plugins/panels)

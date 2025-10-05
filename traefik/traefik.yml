@@ -1,175 +1,211 @@
-# XVPN Traefik Configuration for Development
-# Конфигурация Traefik для локальной разработки
+# XVPN Traefik Configuration
+# Конфигурация Traefik для reverse proxy и load balancer
 
 # === Global Configuration ===
 global:
   checkNewVersion: true
   sendAnonymousUsage: false
 
-# === Entry Points ===
+# === Entry Points Configuration ===
 entryPoints:
+  # === Web Entry Point (HTTP) ===
   web:
     address: ":80"
-    # Redirect all HTTP to HTTPS
     http:
+      # Redirect all HTTP traffic to HTTPS
       redirections:
         entryPoint:
           to: websecure
           scheme: https
           permanent: true
+          
+  # === Web Secure Entry Point (HTTPS) ===
   websecure:
     address: ":443"
-    # TLS configuration
     http:
+      # TLS configuration
       tls:
-        # Use Let's Encrypt for production
-        # For development, use self-signed certificates
-        certResolver: myresolver
+        # Enable TLS
+        enabled: true
+        
+        # Certificate resolver
+        certResolver: le
+        
+        # TLS options
+        options: 
+          minVersion: VersionTLS13
+          cipherSuites:
+            - TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+            - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+            - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+            - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+            - TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
+            - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305
+          curvePreferences:
+            - CurveP521
+            - CurveP384
+            - CurveP256
+          preferServerCipherSuites: true
+          sessionTickets:
+            enabled: true
+          alpnProtocols:
+            - h2
+            - http/1.1
+          renegotiationSupport: NoRenegotiation
+          
+      # Middlewares
+      middlewares:
+        - security-headers
+        - rate-limit
+        - compress
+        
+  # === XVPN API Entry Point ===
   xvpn:
     address: ":8443"
-    # XVPN API endpoint
     http:
+      # TLS configuration
       tls:
-        certResolver: myresolver
+        # Enable TLS
+        enabled: true
+        
+        # Certificate resolver
+        certResolver: le
+        
+        # TLS options
+        options: 
+          minVersion: VersionTLS13
+          cipherSuites:
+            - TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+            - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+            - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+            - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+            - TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
+            - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305
+          curvePreferences:
+            - CurveP521
+            - CurveP384
+            - CurveP256
+          preferServerCipherSuites: true
+          sessionTickets:
+            enabled: true
+          alpnProtocols:
+            - h2
+            - http/1.1
+          renegotiationSupport: NoRenegotiation
+          
+      # Middlewares
+      middlewares:
+        - security-headers
+        - rate-limit
+        - compress
+        
+  # === Traefik Dashboard Entry Point ===
+  traefik:
+    address: ":8080"
+    http:
+      # Middlewares
+      middlewares:
+        - auth
+        - security-headers
 
 # === Providers Configuration ===
 providers:
-  # Docker provider for automatic service discovery
+  # === Docker Provider ===
   docker:
     endpoint: "unix:///var/run/docker.sock"
     exposedByDefault: false
-    # Watch for Docker events
     watch: true
-    # Network to use for container IP resolution
-    network: xvpn-dev-network
-    # Constraints for service discovery
+    network: xvpn-network
     constraints: 
       - "Label(`traefik.enable`, `true`)"
-  
-  # File provider for static routes
+      
+  # === File Provider ===
   file:
-    # Watch for file changes
     watch: true
-    # Directory to watch for dynamic configuration files
     directory: /etc/traefik/dynamic
-    # Filename for static configuration
     filename: /etc/traefik/tls.yml
 
-# === API and Dashboard ===
+# === API Configuration ===
 api:
-  # Enable dashboard
   dashboard: true
-  # Enable API
-  insecure: true
-  # Debug mode
-  debug: true
+  insecure: false
+  debug: false
 
 # === Logging Configuration ===
 log:
-  # Log level
-  level: DEBUG
-  # Log format
+  level: INFO
   format: json
-  # Log file path
   filePath: /var/log/traefik/traefik.log
 
-# === Access Logs ===
+# === Access Logs Configuration ===
 accessLog:
-  # Enable access logs
   enabled: true
-  # Log format
   format: json
-  # Log file path
   filePath: /var/log/traefik/access.log
-  # Buffering
   bufferingSize: 100
-  # Filtering
   filters:
-    # Don't log health checks
     statusCodes:
       - "200"
       - "404"
       - "500"
       - "502"
       - "503"
+      - "504"
 
 # === Tracing Configuration ===
 tracing:
-  # Jaeger tracing
   jaeger:
-    # Sampling server URL
     samplingServerURL: http://jaeger:5778/sampling
-    # Local agent host port
     localAgentHostPort: jaeger:6831
-    # Service name
     serviceName: traefik
 
 # === Metrics Configuration ===
 metrics:
-  # Prometheus metrics
   prometheus:
-    # Enable metrics
     enable: true
-    # Metrics entry point
     entryPoint: metrics
-    # Buckets for histogram
     buckets:
       - 0.1
       - 0.3
       - 1.2
       - 5.0
 
-# === Certificate Resolvers ===
+# === Certificate Resolvers Configuration ===
 certificatesResolvers:
-  # Let's Encrypt resolver
-  myresolver:
-    # ACME configuration
+  # === Let's Encrypt Resolver ===
+  le:
     acme:
-      # Email for Let's Encrypt
       email: admin@xvpn.local
-      # Storage for certificates
       storage: /letsencrypt/acme.json
-      # TLS challenge
       tlsChallenge: {}
-      # HTTP challenge
       httpChallenge:
-        # Entry point for HTTP challenge
         entryPoint: web
-      # DNS challenge (for wildcard certificates)
       dnsChallenge:
-        # Provider for DNS challenge
         provider: cloudflare
-        # Delay before DNS propagation check
         delayBeforeCheck: 0
-        # Disable propagation check
         disablePropagationCheck: false
-        # Resolvers to use for DNS propagation check
         resolvers:
           - "1.1.1.1:53"
           - "8.8.8.8:53"
 
 # === Pilot Configuration ===
 pilot:
-  # Token for Traefik Pilot
   token: your-traefik-pilot-token
 
-# === Experimental Features ===
+# === Experimental Features Configuration ===
 experimental:
-  # Enable plugins
   plugins:
     enabled: true
-  # Enable HTTP/3
   http3:
     enabled: true
 
-# === Additional Configuration ===
-# Additional configuration files
+# === Additional Arguments Configuration ===
 additionalArguments:
   - "--providers.docker.constraints=Label(`traefik.constraint-label`,`xvpn`)"
   - "--providers.docker.watch=true"
   - "--providers.file.directory=/etc/traefik/dynamic"
   - "--providers.file.watch=true"
-  - "--log.level=DEBUG"
+  - "--log.level=INFO"
   - "--accesslog=true"
   - "--accesslog.format=json"
   - "--accesslog.filepath=/var/log/traefik/access.log"
@@ -179,10 +215,20 @@ additionalArguments:
   - "--tracing.jaeger.serviceName=traefik"
   - "--metrics.prometheus=true"
   - "--metrics.prometheus.entryPoint=metrics"
-  - "--certificatesresolvers.myresolver.acme.email=admin@xvpn.local"
-  - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
-  - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
-  - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+  - "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0"
+  - "--certificatesresolvers.le.acme.tlschallenge=true"
+  - "--certificatesresolvers.le.acme.httpchallenge.entrypoint=web"
+  - "--certificatesresolvers.le.acme.dnschallenge.provider=cloudflare"
+  - "--certificatesresolvers.le.acme.dnschallenge.delayBeforeCheck=0"
+  - "--certificatesresolvers.le.acme.dnschallenge.disablePropagationCheck=false"
+  - "--certificatesresolvers.le.acme.dnschallenge.resolvers=1.1.1.1:53,8.8.8.8:53"
   - "--pilot.token=your-traefik-pilot-token"
   - "--experimental.plugins.enabled=true"
   - "--experimental.http3.enabled=true"
+  - "--api.dashboard=true"
+  - "--api.insecure=false"
+  - "--api.debug=false"
+  - "--log.format=json"
+  - "--log.filepath=/var/log/traefik/traefik.log"
+  - "--accesslog.bufferingsize=100"
+  - "--accesslog.filters.statuscodes=200,404,500,502,503,504"

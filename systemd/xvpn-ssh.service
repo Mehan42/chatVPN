@@ -1,0 +1,99 @@
+# XVPN SSH Service
+# Сервис SSH для удаленного управления XVPN
+
+[Unit]
+Description=XVPN SSH Service
+After=network.target
+Wants=network.target
+Requires=network.target
+
+[Service]
+Type=notify
+User=root
+Group=root
+WorkingDirectory=/opt/xvpn/server/ssh
+ExecStart=/usr/sbin/sshd \
+  -D \
+  -e \
+  -f /opt/xvpn/server/ssh/sshd_config \
+  -o PidFile=/var/run/sshd.pid \
+  -o UsePrivilegeSeparation=yes \
+  -o PermitRootLogin=no \
+  -o PasswordAuthentication=no \
+  -o PubkeyAuthentication=yes \
+  -o AuthorizedKeysFile=/opt/xvpn/server/ssh/authorized_keys \
+  -o ChallengeResponseAuthentication=no \
+  -o UsePAM=yes \
+  -o X11Forwarding=no \
+  -o PrintMotd=no \
+  -o AcceptEnv=LANG LC_* \
+  -o Subsystem="sftp /usr/lib/openssh/sftp-server" \
+  -o LogLevel=INFO \
+  -o LoginGraceTime=60 \
+  -o PermitEmptyPasswords=no \
+  -o PermitUserEnvironment=no \
+  -o StrictModes=yes \
+  -o RSAAuthentication=yes \
+  -o RhostsRSAAuthentication=no \
+  -o HostbasedAuthentication=no \
+  -o IgnoreRhosts=yes \
+  -o IgnoreUserKnownHosts=no \
+  -o RhostsAuthentication=no \
+  -o KerberosAuthentication=no \
+  -o KerberosOrLocalPasswd=yes \
+  -o KerberosTicketCleanup=yes \
+  -o GSSAPIAuthentication=yes \
+  -o GSSAPICleanupCredentials=yes \
+  -o AllowTcpForwarding=yes \
+  -o GatewayPorts=no \
+  -o X11UseLocalhost=yes \
+  -o PermitTTY=yes \
+  -o PrintLastLog=yes \
+  -o TCPKeepAlive=yes \
+  -o UseLogin=no \
+  -o Banner=/opt/xvpn/server/ssh/banner.txt \
+  -o ClientAliveInterval=300 \
+  -o ClientAliveCountMax=3 \
+  -o MaxAuthTries=3 \
+  -o MaxSessions=10 \
+  -o Ciphers=chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr \
+  -o MACs=hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-256,hmac-sha2-512,umac-128@openssh.com \
+  -o KexAlgorithms=curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256 \
+  -o HostKeyAlgorithms=ssh-ed25519,ssh-rsa \
+  -o PubkeyAcceptedKeyTypes=ssh-ed25519,ssh-rsa \
+  -o CASignatureAlgorithms=ssh-ed25519,ssh-rsa-sha2-256,ssh-rsa-sha2-512
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=xvpn-ssh
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/xvpn/server/ssh /var/log/ssh /opt/xvpn/data /tmp /var/run
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE CAP_SETGID CAP_SETUID
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE CAP_SETGID CAP_SETUID
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictSUIDSGID=true
+RemoveIPC=true
+PrivateUsers=true
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+MemoryMax=256M
+CPUQuota=10%
+TasksMax=128
+
+# Environment
+Environment=PYTHONPATH=/opt/xvpn/server/ssh
+Environment=LOG_DIR=/var/log/ssh
+Environment=SSH_DIR=/opt/xvpn/server/ssh
+Environment=INTERVAL=60
+
+[Install]
+WantedBy=multi-user.target

@@ -1,19 +1,19 @@
 # XVPN API Service
-# Служба XVPN API
+# Сервис API для XVPN
 
 [Unit]
 Description=XVPN API Service
 After=network.target docker.service
 Wants=network.target docker.service
-Requires=docker.service
+Requires=network.target docker.service
 
 [Service]
 Type=simple
-User=uss
-Group=uss
-WorkingDirectory=/home/uss/chatvpn/server/api
-Environment=PYTHONPATH=/home/uss/chatvpn/server/api
-ExecStart=/usr/bin/python3 /home/uss/chatvpn/server/api/app.py
+User=xvpn
+Group=xvpn
+WorkingDirectory=/opt/xvpn/server/api
+Environment=PYTHONPATH=/opt/xvpn/server/api
+ExecStart=/usr/bin/python3 /opt/xvpn/server/api/app.py
 Restart=always
 RestartSec=5
 StandardOutput=journal
@@ -25,7 +25,7 @@ NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=true
-ReadWritePaths=/home/uss/chatvpn/server/api /var/log/xvpn /opt/xvpn/data
+ReadWritePaths=/opt/xvpn/server/api /var/log/xvpn /opt/xvpn/data
 CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 ProtectKernelTunables=true

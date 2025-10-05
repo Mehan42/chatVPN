@@ -1,0 +1,842 @@
+# XVPN Security Monitoring Configuration
+# Конфигурация автоматического мониторинга безопасности
+
+# === Global Configuration ===
+global:
+  # Enable global security monitoring
+  enabled: true
+  
+  # Security monitoring interval
+  interval: 60s
+  
+  # Security monitoring timeout
+  timeout: 30s
+  
+  # Security monitoring retries
+  retries: 3
+  
+  # Security monitoring path
+  path: /security
+  
+  # Security monitoring format
+  format: json
+  
+  # Security monitoring file
+  file: /var/log/xvpn/security/security.log
+  
+  # Security monitoring retention
+  retention: 30d
+  
+  # Security monitoring aggregation
+  aggregation: true
+  
+  # Security monitoring alerting
+  alerting: true
+
+# === Vulnerability Scanning ===
+vulnerability_scanning:
+  # Enable vulnerability scanning
+  enabled: true
+  
+  # Vulnerability scanning interval
+  interval: 24h
+  
+  # Vulnerability scanning timeout
+  timeout: 60s
+  
+  # Vulnerability scanning retries
+  retries: 3
+  
+  # Vulnerability scanning path
+  path: /security/vulnerability
+  
+  # Vulnerability scanning format
+  format: json
+  
+  # Vulnerability scanning file
+  file: /var/log/xvpn/security/vulnerability.log
+  
+  # Vulnerability scanning retention
+  retention: 30d
+  
+  # Vulnerability scanning aggregation
+  aggregation: true
+  
+  # Vulnerability scanning alerting
+  alerting: true
+  
+  # Vulnerability scanning thresholds
+  thresholds:
+    # Critical vulnerability threshold
+    critical: 0
+    
+    # High vulnerability threshold
+    high: 5
+    
+    # Medium vulnerability threshold
+    medium: 20
+    
+    # Low vulnerability threshold
+    low: 50
+    
+    # Unknown vulnerability threshold
+    unknown: 100
+
+# === Dependency Security ===
+dependency_security:
+  # Enable dependency security monitoring
+  enabled: true
+  
+  # Dependency security monitoring interval
+  interval: 24h
+  
+  # Dependency security monitoring timeout
+  timeout: 60s
+  
+  # Dependency security monitoring retries
+  retries: 3
+  
+  # Dependency security monitoring path
+  path: /security/dependency
+  
+  # Dependency security monitoring format
+  format: json
+  
+  # Dependency security monitoring file
+  file: /var/log/xvpn/security/dependency.log
+  
+  # Dependency security monitoring retention
+  retention: 30d
+  
+  # Dependency security monitoring aggregation
+  aggregation: true
+  
+  # Dependency security monitoring alerting
+  alerting: true
+  
+  # Dependency security monitoring thresholds
+  thresholds:
+    # Critical dependency vulnerability threshold
+    critical: 0
+    
+    # High dependency vulnerability threshold
+    high: 5
+    
+    # Medium dependency vulnerability threshold
+    medium: 20
+    
+    # Low dependency vulnerability threshold
+    low: 50
+    
+    # Unknown dependency vulnerability threshold
+    unknown: 100
+
+# === Certificate Monitoring ===
+certificate_monitoring:
+  # Enable certificate monitoring
+  enabled: true
+  
+  # Certificate monitoring interval
+  interval: 24h
+  
+  # Certificate monitoring timeout
+  timeout: 60s
+  
+  # Certificate monitoring retries
+  retries: 3
+  
+  # Certificate monitoring path
+  path: /security/certificate
+  
+  # Certificate monitoring format
+  format: json
+  
+  # Certificate monitoring file
+  file: /var/log/xvpn/security/certificate.log
+  
+  # Certificate monitoring retention
+  retention: 30d
+  
+  # Certificate monitoring aggregation
+  aggregation: true
+  
+  # Certificate monitoring alerting
+  alerting: true
+  
+  # Certificate monitoring thresholds
+  thresholds:
+    # Certificate expiration threshold
+    expiration: 30  # days
+    
+    # Certificate revoked threshold
+    revoked: 1
+    
+    # Certificate mismatch threshold
+    mismatch: 1
+    
+    # Certificate weak algorithm threshold
+    weak_algorithm: 5
+    
+    # Certificate weak key threshold
+    weak_key: 5
+    
+    # Certificate self-signed threshold
+    self_signed: 10
+    
+    # Certificate untrusted CA threshold
+    untrusted_ca: 5
+
+# === Network Security ===
+network_security:
+  # Enable network security monitoring
+  enabled: true
+  
+  # Network security monitoring interval
+  interval: 60s
+  
+  # Network security monitoring timeout
+  timeout: 30s
+  
+  # Network security monitoring retries
+  retries: 3
+  
+  # Network security monitoring path
+  path: /security/network
+  
+  # Network security monitoring format
+  format: json
+  
+  # Network security monitoring file
+  file: /var/log/xvpn/security/network.log
+  
+  # Network security monitoring retention
+  retention: 7d
+  
+  # Network security monitoring aggregation
+  aggregation: true
+  
+  # Network security monitoring alerting
+  alerting: true
+  
+  # Network security monitoring thresholds
+  thresholds:
+    # Network port scan threshold
+    port_scan: 100  # connections/minute
+    
+    # Network DDoS threshold
+    ddos: 1000  # requests/second
+    
+    # Network brute force threshold
+    brute_force: 10  # attempts/minute
+    
+    # Network credential stuffing threshold
+    credential_stuffing: 10  # attempts/minute
+    
+    # Network session hijacking threshold
+    session_hijacking: 1  # attempt
+    
+    # Network man-in-the-middle threshold
+    man_in_the_middle: 1  # attempt
+    
+    # Network SQL injection threshold
+    sql_injection: 1  # attempt
+    
+    # Network cross-site scripting threshold
+    cross_site_scripting: 1  # attempt
+    
+    # Network cross-site request forgery threshold
+    cross_site_request_forgery: 1  # attempt
+    
+    # Network buffer overflow threshold
+    buffer_overflow: 1  # attempt
+    
+    # Network integer overflow threshold
+    integer_overflow: 1  # attempt
+    
+    # Network format string threshold
+    format_string: 1  # attempt
+    
+    # Network privilege escalation threshold
+    privilege_escalation: 1  # attempt
+    
+    # Network directory traversal threshold
+    directory_traversal: 1  # attempt
+    
+    # Network command injection threshold
+    command_injection: 1  # attempt
+    
+    # Network file inclusion threshold
+    file_inclusion: 1  # attempt
+    
+    # Network remote code execution threshold
+    remote_code_execution: 1  # attempt
+    
+    # Network remote file inclusion threshold
+    remote_file_inclusion: 1  # attempt
+    
+    # Network local file inclusion threshold
+    local_file_inclusion: 1  # attempt
+
+# === Access Control ===
+access_control:
+  # Enable access control monitoring
+  enabled: true
+  
+  # Access control monitoring interval
+  interval: 30s
+  
+  # Access control monitoring timeout
+  timeout: 15s
+  
+  # Access control monitoring retries
+  retries: 3
+  
+  # Access control monitoring path
+  path: /security/access
+  
+  # Access control monitoring format
+  format: json
+  
+  # Access control monitoring file
+  file: /var/log/xvpn/security/access.log
+  
+  # Access control monitoring retention
+  retention: 30d
+  
+  # Access control monitoring aggregation
+  aggregation: true
+  
+  # Access control monitoring alerting
+  alerting: true
+  
+  # Access control monitoring thresholds
+  thresholds:
+    # Access control unauthorized access threshold
+    unauthorized_access: 1  # attempt
+    
+    # Access control failed login threshold
+    failed_login: 5  # attempts/minute
+    
+    # Access control suspicious activity threshold
+    suspicious_activity: 10  # activities/minute
+    
+    # Access control privilege abuse threshold
+    privilege_abuse: 1  # attempt
+    
+    # Access control anomalous behavior threshold
+    anomalous_behavior: 5  # behaviors/minute
+    
+    # Access control data exfiltration threshold
+    data_exfiltration: 1  # attempt
+    
+    # Access control insider threat threshold
+    insider_threat: 1  # attempt
+    
+    # Access control compliance violation threshold
+    compliance_violation: 1  # violation
+    
+    # Access control policy violation threshold
+    policy_violation: 1  # violation
+    
+    # Access control configuration drift threshold
+    configuration_drift: 1  # drift
+
+# === Data Protection ===
+data_protection:
+  # Enable data protection monitoring
+  enabled: true
+  
+  # Data protection monitoring interval
+  interval: 60s
+  
+  # Data protection monitoring timeout
+  timeout: 30s
+  
+  # Data protection monitoring retries
+  retries: 3
+  
+  # Data protection monitoring path
+  path: /security/data
+  
+  # Data protection monitoring format
+  format: json
+  
+  # Data protection monitoring file
+  file: /var/log/xvpn/security/data.log
+  
+  # Data protection monitoring retention
+  retention: 30d
+  
+  # Data protection monitoring aggregation
+  aggregation: true
+  
+  # Data protection monitoring alerting
+  alerting: true
+  
+  # Data protection monitoring thresholds
+  thresholds:
+    # Data protection data leak threshold
+    data_leak: 1  # leak
+    
+    # Data protection data breach threshold
+    data_breach: 1  # breach
+    
+    # Data protection data corruption threshold
+    data_corruption: 1  # corruption
+    
+    # Data protection data loss threshold
+    data_loss: 1  # loss
+    
+    # Data protection data theft threshold
+    data_theft: 1  # theft
+    
+    # Data protection data tampering threshold
+    data_tampering: 1  # tampering
+    
+    # Data protection data exposure threshold
+    data_exposure: 1  # exposure
+    
+    # Data protection data misuse threshold
+    data_misuse: 1  # misuse
+    
+    # Data protection data retention violation threshold
+    data_retention_violation: 1  # violation
+    
+    # Data protection data privacy violation threshold
+    data_privacy_violation: 1  # violation
+
+# === Compliance Monitoring ===
+compliance_monitoring:
+  # Enable compliance monitoring
+  enabled: true
+  
+  # Compliance monitoring interval
+  interval: 24h
+  
+  # Compliance monitoring timeout
+  timeout: 60s
+  
+  # Compliance monitoring retries
+  retries: 3
+  
+  # Compliance monitoring path
+  path: /security/compliance
+  
+  # Compliance monitoring format
+  format: json
+  
+  # Compliance monitoring file
+  file: /var/log/xvpn/security/compliance.log
+  
+  # Compliance monitoring retention
+  retention: 90d
+  
+  # Compliance monitoring aggregation
+  aggregation: true
+  
+  # Compliance monitoring alerting
+  alerting: true
+  
+  # Compliance monitoring thresholds
+  thresholds:
+    # Compliance monitoring violation threshold
+    violation: 1  # violation
+    
+    # Compliance monitoring audit failure threshold
+    audit_failure: 5  # failures/day
+    
+    # Compliance monitoring policy non-compliance threshold
+    policy_non_compliance: 1  # non-compliance
+    
+    # Compliance monitoring regulatory violation threshold
+    regulatory_violation: 1  # violation
+    
+    # Compliance monitoring standard deviation threshold
+    standard_deviation: 1  # deviation
+    
+    # Compliance monitoring benchmark deviation threshold
+    benchmark_deviation: 1  # deviation
+    
+    # Compliance monitoring baseline deviation threshold
+    baseline_deviation: 1  # deviation
+    
+    # Compliance monitoring control failure threshold
+    control_failure: 1  # failure
+    
+    # Compliance monitoring framework deviation threshold
+    framework_deviation: 1  # deviation
+    
+    # Compliance monitoring guideline deviation threshold
+    guideline_deviation: 1  # deviation
+
+# === Incident Response ===
+incident_response:
+  # Enable incident response
+  enabled: true
+  
+  # Incident response interval
+  interval: 1s  # Immediate response
+  
+  # Incident response timeout
+  timeout: 60s
+  
+  # Incident response retries
+  retries: 3
+  
+  # Incident response path
+  path: /security/incident
+  
+  # Incident response format
+  format: json
+  
+  # Incident response file
+  file: /var/log/xvpn/security/incident.log
+  
+  # Incident response retention
+  retention: 365d
+  
+  # Incident response aggregation
+  aggregation: true
+  
+  # Incident response alerting
+  alerting: true
+  
+  # Incident response thresholds
+  thresholds:
+    # Incident response critical threshold
+    critical: 1  # incident
+    
+    # Incident response high threshold
+    high: 5  # incidents
+    
+    # Incident response medium threshold
+    medium: 20  # incidents
+    
+    # Incident response low threshold
+    low: 50  # incidents
+    
+    # Incident response informational threshold
+    informational: 100  # incidents
+    
+    # Incident response unknown threshold
+    unknown: 1000  # incidents
+
+# === Threat Intelligence ===
+threat_intelligence:
+  # Enable threat intelligence
+  enabled: true
+  
+  # Threat intelligence interval
+  interval: 60s
+  
+  # Threat intelligence timeout
+  timeout: 30s
+  
+  # Threat intelligence retries
+  retries: 3
+  
+  # Threat intelligence path
+  path: /security/threat
+  
+  # Threat intelligence format
+  format: json
+  
+  # Threat intelligence file
+  file: /var/log/xvpn/security/threat.log
+  
+  # Threat intelligence retention
+  retention: 30d
+  
+  # Threat intelligence aggregation
+  aggregation: true
+  
+  # Threat intelligence alerting
+  alerting: true
+  
+  # Threat intelligence thresholds
+  thresholds:
+    # Threat intelligence malicious IP threshold
+    malicious_ip: 1  # IP
+    
+    # Threat intelligence malicious domain threshold
+    malicious_domain: 1  # domain
+    
+    # Threat intelligence malicious URL threshold
+    malicious_url: 1  # URL
+    
+    # Threat intelligence malicious file threshold
+    malicious_file: 1  # file
+    
+    # Threat intelligence malicious process threshold
+    malicious_process: 1  # process
+    
+    # Threat intelligence malicious user threshold
+    malicious_user: 1  # user
+    
+    # Threat intelligence malicious service threshold
+    malicious_service: 1  # service
+    
+    # Threat intelligence malicious application threshold
+    malicious_application: 1  # application
+    
+    # Threat intelligence malicious registry threshold
+    malicious_registry: 1  # registry
+    
+    # Threat intelligence malicious certificate threshold
+    malicious_certificate: 1  # certificate
+
+# === Security Analytics ===
+security_analytics:
+  # Enable security analytics
+  enabled: true
+  
+  # Security analytics interval
+  interval: 300s  # 5 minutes
+  
+  # Security analytics timeout
+  timeout: 60s
+  
+  # Security analytics retries
+  retries: 3
+  
+  # Security analytics path
+  path: /security/analytics
+  
+  # Security analytics format
+  format: json
+  
+  # Security analytics file
+  file: /var/log/xvpn/security/analytics.log
+  
+  # Security analytics retention
+  retention: 365d
+  
+  # Security analytics aggregation
+  aggregation: true
+  
+  # Security analytics alerting
+  alerting: true
+  
+  # Security analytics thresholds
+  thresholds:
+    # Security analytics anomaly threshold
+    anomaly: 5  # anomalies/hour
+    
+    # Security analytics correlation threshold
+    correlation: 10  # correlations/hour
+    
+    # Security analytics pattern threshold
+    pattern: 20  # patterns/hour
+    
+    # Security analytics trend threshold
+    trend: 50  # trends/hour
+    
+    # Security analytics forecast threshold
+    forecast: 100  # forecasts/hour
+    
+    # Security analytics prediction threshold
+    prediction: 200  # predictions/hour
+    
+    # Security analytics insight threshold
+    insight: 500  # insights/hour
+    
+    # Security analytics recommendation threshold
+    recommendation: 1000  # recommendations/hour
+    
+    # Security analytics optimization threshold
+    optimization: 2000  # optimizations/hour
+    
+    # Security analytics innovation threshold
+    innovation: 5000  # innovations/hour
+
+# === Security Reporting ===
+security_reporting:
+  # Enable security reporting
+  enabled: true
+  
+  # Security reporting interval
+  interval: 86400s  # 24 hours
+  
+  # Security reporting timeout
+  timeout: 300s  # 5 minutes
+  
+  # Security reporting retries
+  retries: 3
+  
+  # Security reporting path
+  path: /security/report
+  
+  # Security reporting format
+  format: json
+  
+  # Security reporting file
+  file: /var/log/xvpn/security/report.log
+  
+  # Security reporting retention
+  retention: 1095d  # 3 years
+  
+  # Security reporting aggregation
+  aggregation: true
+  
+  # Security reporting alerting
+  alerting: true
+  
+  # Security reporting thresholds
+  thresholds:
+    # Security reporting executive summary threshold
+    executive_summary: 1  # report
+    
+    # Security reporting technical analysis threshold
+    technical_analysis: 1  # report
+    
+    # Security reporting compliance assessment threshold
+    compliance_assessment: 1  # report
+    
+    # Security reporting risk evaluation threshold
+    risk_evaluation: 1  # report
+    
+    # Security reporting remediation plan threshold
+    remediation_plan: 1  # report
+    
+    # Security reporting incident timeline threshold
+    incident_timeline: 1  # report
+    
+    # Security reporting forensic analysis threshold
+    forensic_analysis: 1  # report
+    
+    # Security reporting threat landscape threshold
+    threat_landscape: 1  # report
+    
+    # Security reporting industry comparison threshold
+    industry_comparison: 1  # report
+    
+    # Security reporting benchmark analysis threshold
+    benchmark_analysis: 1  # report
+
+# === Security Automation ===
+security_automation:
+  # Enable security automation
+  enabled: true
+  
+  # Security automation interval
+  interval: 1s  # Immediate automation
+  
+  # Security automation timeout
+  timeout: 60s
+  
+  # Security automation retries
+  retries: 3
+  
+  # Security automation path
+  path: /security/automation
+  
+  # Security automation format
+  format: json
+  
+  # Security automation file
+  file: /var/log/xvpn/security/automation.log
+  
+  # Security automation retention
+  retention: 30d
+  
+  # Security automation aggregation
+  aggregation: true
+  
+  # Security automation alerting
+  alerting: true
+  
+  # Security automation thresholds
+  thresholds:
+    # Security automation remediation threshold
+    remediation: 1  # action
+    
+    # Security automation mitigation threshold
+    mitigation: 1  # action
+    
+    # Security automation containment threshold
+    containment: 1  # action
+    
+    # Security automation eradication threshold
+    eradication: 1  # action
+    
+    # Security automation recovery threshold
+    recovery: 1  # action
+    
+    # Security automation validation threshold
+    validation: 1  # action
+    
+    # Security automation restoration threshold
+    restoration: 1  # action
+    
+    # Security automation hardening threshold
+    hardening: 1  # action
+    
+    # Security automation patching threshold
+    patching: 1  # action
+    
+    # Security automation updating threshold
+    updating: 1  # action
+
+# === Security Orchestration ===
+security_orchestration:
+  # Enable security orchestration
+  enabled: true
+  
+  # Security orchestration interval
+  interval: 1s  # Immediate orchestration
+  
+  # Security orchestration timeout
+  timeout: 60s
+  
+  # Security orchestration retries
+  retries: 3
+  
+  # Security orchestration path
+  path: /security/orchestration
+  
+  # Security orchestration format
+  format: json
+  
+  # Security orchestration file
+  file: /var/log/xvpn/security/orchestration.log
+  
+  # Security orchestration retention
+  retention: 30d
+  
+  # Security orchestration aggregation
+  aggregation: true
+  
+  # Security orchestration alerting
+  alerting: true
+  
+  # Security orchestration thresholds
+  thresholds:
+    # Security orchestration workflow threshold
+    workflow: 1  # workflow
+    
+    # Security orchestration process threshold
+    process: 1  # process
+    
+    # Security orchestration procedure threshold
+    procedure: 1  # procedure
+    
+    # Security orchestration policy threshold
+    policy: 1  # policy
+    
+    # Security orchestration standard threshold
+    standard: 1  # standard
+    
+    # Security orchestration guideline threshold
+    guideline: 1  # guideline
+    
+    # Security orchestration framework threshold
+    framework: 1  # framework
+    
+    # Security orchestration regulation threshold
+    regulation: 1  # regulation
+    
+    # Security orchestration compliance threshold
+    compliance: 1  # compliance
+    
+    # Security orchestration governance threshold
+    governance: 1  # governance

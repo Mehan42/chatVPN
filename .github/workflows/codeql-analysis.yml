@@ -107,7 +107,6 @@ jobs:
         # Установка дополнительных CodeQL packs
         packs: |
           codeql/python-queries
-          codeql/javascript-queries
           github/security-extended
           github/security-experimental
 

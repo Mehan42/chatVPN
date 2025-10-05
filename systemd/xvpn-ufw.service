@@ -1,0 +1,51 @@
+# XVPN UFW Service
+# Сервис фаервола UFW для XVPN
+
+[Unit]
+Description=XVPN UFW Service
+After=network.target
+Wants=network.target
+Requires=network.target
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+WorkingDirectory=/opt/xvpn/server/ufw
+ExecStart=/usr/bin/ufw --force enable
+RemainAfterExit=yes
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=xvpn-ufw
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/xvpn/server/ufw /var/log/ufw /opt/xvpn/data /tmp
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictSUIDSGID=true
+RemoveIPC=true
+PrivateUsers=true
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+MemoryMax=128M
+CPUQuota=5%
+TasksMax=64
+
+# Environment
+Environment=PYTHONPATH=/opt/xvpn/server/ufw
+Environment=LOG_DIR=/var/log/ufw
+Environment=UFW_DIR=/opt/xvpn/server/ufw
+Environment=INTERVAL=300
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,17 @@
+# XVPN Backup Timer
+# Таймер резервного копирования XVPN
+
+[Unit]
+Description=XVPN Backup Timer
+After=network.target
+Wants=network.target
+Requires=network.target
+
+[Timer]
+# Запускать ежедневно в 2:00
+OnCalendar=daily
+# Сохранять состояние таймера между перезагрузками
+Persistent=true
+
+[Install]
+WantedBy=timers.target

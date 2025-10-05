@@ -1,0 +1,187 @@
+# XVPN Grafana Datasources Configuration
+# Конфигурация источников данных Grafana
+
+apiVersion: 1
+
+# === Datasources ===
+datasources:
+  # === Prometheus Datasource ===
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    jsonData:
+      timeInterval: "15s"
+      httpMethod: "GET"
+      exemplarTraceIdDestinations:
+        - datasourceUid: jaeger
+          name: traceID
+    editable: true
+
+  # === Loki Datasource ===
+  - name: Loki
+    type: loki
+    access: proxy
+    url: http://loki:3100
+    jsonData:
+      maxLines: 1000
+      derivedFields:
+        - datasourceUid: jaeger
+          matcherRegex: "traceID=(\\w+)"
+          name: TraceID
+          url: $${__value.raw}
+    editable: true
+
+  # === Jaeger Datasource ===
+  - name: Jaeger
+    type: jaeger
+    access: proxy
+    url: http://jaeger:16686
+    jsonData:
+      tracesToLogs:
+        datasourceUid: loki
+        tags: ["job", "instance", "pod"]
+        mappedTags: [{"key": "service.name", "value": "job"}]
+        mapTagNamesEnabled: false
+        spanStartTimeShift: "1h"
+        spanEndTimeShift: "1h"
+        filterByTraceID: false
+        filterBySpanID: false
+      tracesToMetrics:
+        datasourceUid: prometheus
+        spanKVPairs: ["job", "instance", "pod", "service.name"]
+        tags: [{"key": "service.name", "value": "job"}]
+        mapTagNamesEnabled: false
+      serviceMap:
+        datasourceUid: prometheus
+      search:
+        hide: false
+      nodeGraph:
+        enabled: true
+    editable: true
+
+  # === PostgreSQL Datasource ===
+  - name: PostgreSQL
+    type: postgres
+    access: proxy
+    url: postgres:5432
+    user: xvpn
+    database: xvpn
+    jsonData:
+      sslmode: "disable"
+      postgresVersion: 1500
+      timescaledb: false
+    secureJsonData:
+      password: "${POSTGRES_PASSWORD}"
+    editable: true
+
+  # === Redis Datasource ===
+  - name: Redis
+    type: redis-datasource
+    access: proxy
+    url: redis://redis:6379
+    jsonData:
+      poolSize: 5
+      timeout: 10
+      pingInterval: 0
+      pipelineWindow: 0
+    editable: true
+
+# === Alerting Datasources ===
+alerting:
+  # === Alertmanager Datasource ===
+  - name: Alertmanager
+    type: alertmanager
+    access: proxy
+    url: http://alertmanager:9093
+    jsonData:
+      implementation: "prometheus"
+    editable: true
+
+# === Additional Configuration ===
+additionalDatasources:
+  # === Elasticsearch Datasource (для логов, если используется) ===
+  - name: Elasticsearch
+    type: elasticsearch
+    access: proxy
+    url: http://elasticsearch:9200
+    database: "[xvpn-]YYYY.MM.DD"
+    jsonData:
+      esVersion: "7.10.0"
+      timeField: "@timestamp"
+      interval: "Daily"
+      maxConcurrentShardRequests: 256
+      logMessageField: "message"
+      logLevelField: "level"
+    editable: false
+
+  # === InfluxDB Datasource (для метрик, если используется) ===
+  - name: InfluxDB
+    type: influxdb
+    access: proxy
+    url: http://influxdb:8086
+    database: xvpn
+    jsonData:
+      httpMode: "GET"
+      version: "InfluxQL"
+    editable: false
+
+  # === MySQL Datasource (для базы данных, если используется) ===
+  - name: MySQL
+    type: mysql
+    access: proxy
+    url: mysql:3306
+    user: xvpn
+    database: xvpn
+    jsonData:
+      encrypt: "false"
+    secureJsonData:
+      password: "${MYSQL_PASSWORD}"
+    editable: false
+
+# === Default Datasources ===
+defaults:
+  # === Prometheus Default ===
+  prometheus:
+    name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    jsonData:
+      timeInterval: "15s"
+      httpMethod: "GET"
+    editable: true
+
+  # === Loki Default ===
+  loki:
+    name: Loki
+    type: loki
+    access: proxy
+    url: http://loki:3100
+    jsonData:
+      maxLines: 1000
+    editable: true
+
+  # === Jaeger Default ===
+  jaeger:
+    name: Jaeger
+    type: jaeger
+    access: proxy
+    url: http://jaeger:16686
+    editable: true
+
+# === Environment Variables ===
+# Следующие переменные могут быть установлены в настройках Grafana:
+# - PROMETHEUS_URL: URL Prometheus сервера (по умолчанию http://prometheus:9090)
+# - LOKI_URL: URL Loki сервера (по умолчанию http://loki:3100)
+# - JAEGER_URL: URL Jaeger сервера (по умолчанию http://jaeger:16686)
+# - ALERTMANAGER_URL: URL Alertmanager сервера (по умолчанию http://alertmanager:9093)
+# - POSTGRES_URL: URL PostgreSQL сервера (по умолчанию postgres://postgres:5432/xvpn)
+# - POSTGRES_PASSWORD: Пароль PostgreSQL (по умолчанию xvpn_password)
+# - REDIS_URL: URL Redis сервера (по умолчанию redis://redis:6379)
+# - MYSQL_URL: URL MySQL сервера (по умолчанию mysql://mysql:3306/xvpn)
+# - MYSQL_PASSWORD: Пароль MySQL (по умолчанию xvpn_password)
+# - ELASTICSEARCH_URL: URL Elasticsearch сервера (по умолчанию http://elasticsearch:9200)
+# - INFLUXDB_URL: URL InfluxDB сервера (по умолчанию http://influxdb:8086)

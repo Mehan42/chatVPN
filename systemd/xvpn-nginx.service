@@ -1,0 +1,67 @@
+# XVPN Nginx Service
+# Сервис веб-сервера Nginx для XVPN
+
+[Unit]
+Description=XVPN Nginx Service
+After=network.target docker.service
+Wants=network.target docker.service
+Requires=network.target docker.service
+
+[Service]
+Type=simple
+User=nginx
+Group=nginx
+WorkingDirectory=/opt/xvpn/server/nginx
+ExecStart=/usr/sbin/nginx \
+  -c /opt/xvpn/server/nginx/nginx.conf \
+  -g "daemon off;" \
+  -p /opt/xvpn/server/nginx \
+  -e /var/log/nginx/error.log \
+  -q \
+  --conf-path=/opt/xvpn/server/nginx/nginx.conf \
+  --error-log-path=/var/log/nginx/error.log \
+  --http-log-path=/var/log/nginx/access.log \
+  --pid-path=/var/run/nginx.pid \
+  --lock-path=/var/run/nginx.lock \
+  --http-client-body-temp-path=/var/cache/nginx/client_temp \
+  --http-proxy-temp-path=/var/cache/nginx/proxy_temp \
+  --http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp \
+  --http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp \
+  --http-scgi-temp-path=/var/cache/nginx/scgi_temp
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=xvpn-nginx
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/xvpn/server/nginx /var/log/nginx /var/cache/nginx /opt/xvpn/data /tmp
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictSUIDSGID=true
+RemoveIPC=true
+PrivateUsers=true
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+MemoryMax=256M
+CPUQuota=25%
+TasksMax=128
+
+# Environment
+Environment=PYTHONPATH=/opt/xvpn/server/nginx
+Environment=LOG_DIR=/var/log/nginx
+Environment=NGINX_DIR=/opt/xvpn/server/nginx
+Environment=INTERVAL=30
+
+[Install]
+WantedBy=multi-user.target

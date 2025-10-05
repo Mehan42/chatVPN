@@ -1,41 +1,52 @@
+# XVPN Traefik Service
+# Сервис обратного прокси Traefik для XVPN
+
 [Unit]
-Description=XVPN Traefik Load Balancer Service
-Documentation=https://docs.traefik.io
-After=docker.service
-Requires=docker.service
-After=network.target
-Requires=network.target
+Description=XVPN Traefik Service
+After=network.target docker.service
+Wants=network.target docker.service
+Requires=network.target docker.service
 
 [Service]
-Type=oneshot
-RemainAfterExit=yes
-User=root
-Group=docker
-WorkingDirectory=/opt/xvpn
-ExecStart=/usr/bin/docker-compose -f /opt/xvpn/docker-compose.yml up -d traefik
-ExecStop=/usr/bin/docker-compose -f /opt/xvpn/docker-compose.yml stop traefik
-TimeoutStartSec=0
-Restart=on-failure
+Type=simple
+User=traefik
+Group=traefik
+WorkingDirectory=/opt/xvpn/server/traefik
+ExecStart=/usr/bin/traefik --configFile=/opt/xvpn/server/traefik/traefik.yml
+Restart=always
 RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=xvpn-traefik
 
 # Security settings
-NoNewPrivileges=false
-PrivateTmp=false
+NoNewPrivileges=true
+PrivateTmp=true
 ProtectSystem=strict
-ReadWritePaths=/opt/xvpn
-ReadWritePaths=/var/run/docker.sock
+ProtectHome=true
+ReadWritePaths=/opt/xvpn/server/traefik /var/log/xvpn /opt/xvpn/data /letsencrypt
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 ProtectKernelTunables=true
 ProtectKernelModules=true
 ProtectControlGroups=true
 RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
 RestrictSUIDSGID=true
 RemoveIPC=true
+PrivateUsers=true
 
 # Resource limits
 LimitNOFILE=65536
 LimitNPROC=4096
 MemoryMax=512M
-CPUQuota=50%
+CPUQuota=25%
+TasksMax=256
+
+# Environment
+Environment=PYTHONPATH=/opt/xvpn/server/traefik
+Environment=LOG_DIR=/var/log/xvpn
+Environment=TRAEFIK_DIR=/opt/xvpn/server/traefik
+Environment=INTERVAL=10
 
 [Install]
 WantedBy=multi-user.target

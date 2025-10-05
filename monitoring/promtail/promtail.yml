@@ -1,0 +1,519 @@
+# XVPN Promtail Configuration
+# Конфигурация агента сбора логов Promtail
+
+# === Server Configuration ===
+server:
+  # HTTP server listen port
+  http_listen_port: 9080
+  
+  # gRPC server listen port
+  grpc_listen_port: 0
+  
+  # Server graceful shutdown timeout
+  graceful_shutdown_timeout: 30s
+
+# === Positions Configuration ===
+positions:
+  # File to store positions in
+  filename: /tmp/positions.yaml
+
+# === Clients Configuration ===
+clients:
+  # Loki client configuration
+  - url: http://loki:3100/loki/api/v1/push
+    # Batch wait time
+    batch_wait: 1s
+    
+    # Batch size
+    batch_size: 1048576  # 1MB
+    
+    # Timeout for sending logs
+    timeout: 10s
+    
+    # Enable compression
+    compression: gzip
+    
+    # Maximum backlog size
+    max_backlog: 262144  # 256KB
+    
+    # Maximum number of retries
+    max_retries: 5
+    
+    # Backoff time for retries
+    backoff_config:
+      min_period: 100ms
+      max_period: 5s
+      max_retries: 10
+
+# === Scrape Configurations ===
+scrape_configs:
+  # === XVPN API Logs ===
+  - job_name: xvpn-api
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: xvpn-api
+          service: api
+          __path__: /var/log/xvpn/api.log
+    pipeline_stages:
+      - json:
+          expressions:
+            timestamp: timestamp
+            level: level
+            message: message
+            module: module
+            function: function
+            line: line
+            process: process
+            thread: thread
+      - timestamp:
+          source: timestamp
+          format: RFC3339
+      - labels:
+          level:
+          module:
+          function:
+      - output:
+          source: message
+
+  # === XVPN Agent Logs ===
+  - job_name: xvpn-agent
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: xvpn-agent
+          service: agent
+          __path__: /var/log/xvpn/agent.log
+    pipeline_stages:
+      - json:
+          expressions:
+            timestamp: timestamp
+            level: level
+            message: message
+            component: component
+            state: state
+            action: action
+            result: result
+      - timestamp:
+          source: timestamp
+          format: RFC3339
+      - labels:
+          level:
+          component:
+          state:
+          action:
+      - output:
+          source: message
+
+  # === XVPN Bot Logs ===
+  - job_name: xvpn-bot
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: xvpn-bot
+          service: bot
+          __path__: /var/log/xvpn/bot.log
+    pipeline_stages:
+      - json:
+          expressions:
+            timestamp: timestamp
+            level: level
+            message: message
+            module: module
+            function: function
+            line: line
+      - timestamp:
+          source: timestamp
+          format: RFC3339
+      - labels:
+          level:
+          module:
+          function:
+      - output:
+          source: message
+
+  # === XVPN Worker Logs ===
+  - job_name: xvpn-worker
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: xvpn-worker
+          service: worker
+          __path__: /var/log/xvpn/worker.log
+    pipeline_stages:
+      - json:
+          expressions:
+            timestamp: timestamp
+            level: level
+            message: message
+            task: task
+            status: status
+      - timestamp:
+          source: timestamp
+          format: RFC3339
+      - labels:
+          level:
+          task:
+          status:
+      - output:
+          source: message
+
+  # === XVPN Orchestrator Logs ===
+  - job_name: xvpn-orchestrator
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: xvpn-orchestrator
+          service: orchestrator
+          __path__: /var/log/xvpn/orchestrator.log
+    pipeline_stages:
+      - json:
+          expressions:
+            timestamp: timestamp
+            level: level
+            message: message
+            component: component
+            action: action
+            result: result
+      - timestamp:
+          source: timestamp
+          format: RFC3339
+      - labels:
+          level:
+          component:
+          action:
+      - output:
+          source: message
+
+  # === XVPN Client Logs ===
+  - job_name: xvpn-client
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: xvpn-client
+          service: client
+          __path__: /home/*/chatvpn/client/logs/*.log
+    pipeline_stages:
+      - json:
+          expressions:
+            timestamp: timestamp
+            level: level
+            message: message
+            module: module
+            function: function
+            line: line
+      - timestamp:
+          source: timestamp
+          format: RFC3339
+      - labels:
+          level:
+          module:
+          function:
+      - output:
+          source: message
+
+  # === XVPN GUI Logs ===
+  - job_name: xvpn-gui
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: xvpn-gui
+          service: gui
+          __path__: /home/*/chatvpn/client/logs/gui.log
+    pipeline_stages:
+      - json:
+          expressions:
+            timestamp: timestamp
+            level: level
+            message: message
+            component: component
+            action: action
+      - timestamp:
+          source: timestamp
+          format: RFC3339
+      - labels:
+          level:
+          component:
+          action:
+      - output:
+          source: message
+
+  # === XVPN State Machine Logs ===
+  - job_name: xvpn-state-machine
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: xvpn-state-machine
+          service: state-machine
+          __path__: /home/*/chatvpn/client/logs/state.log
+    pipeline_stages:
+      - json:
+          expressions:
+            timestamp: timestamp
+            level: level
+            message: message
+            state: state
+            action: action
+            result: result
+      - timestamp:
+          source: timestamp
+          format: RFC3339
+      - labels:
+          level:
+          state:
+          action:
+      - output:
+          source: message
+
+  # === XVPN Health Logs ===
+  - job_name: xvpn-health
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: xvpn-health
+          service: health
+          __path__: /home/*/chatvpn/client/logs/health.log
+    pipeline_stages:
+      - json:
+          expressions:
+            timestamp: timestamp
+            level: level
+            message: message
+            component: component
+            score: score
+      - timestamp:
+          source: timestamp
+          format: RFC3339
+      - labels:
+          level:
+          component:
+          score:
+      - output:
+          source: message
+
+  # === XVPN Transport Manager Logs ===
+  - job_name: xvpn-transport-manager
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: xvpn-transport-manager
+          service: transport-manager
+          __path__: /home/*/chatvpn/client/logs/transport.log
+    pipeline_stages:
+      - json:
+          expressions:
+            timestamp: timestamp
+            level: level
+            message: message
+            transport: transport
+            status: status
+      - timestamp:
+          source: timestamp
+          format: RFC3339
+      - labels:
+          level:
+          transport:
+          status:
+      - output:
+          source: message
+
+  # === XVPN Proxy Helper Logs ===
+  - job_name: xvpn-proxy-helper
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: xvpn-proxy-helper
+          service: proxy-helper
+          __path__: /home/*/chatvpn/client/logs/proxy.log
+    pipeline_stages:
+      - json:
+          expressions:
+            timestamp: timestamp
+            level: level
+            message: message
+            mode: mode
+            port: port
+      - timestamp:
+          source: timestamp
+          format: RFC3339
+      - labels:
+          level:
+          mode:
+          port:
+      - output:
+          source: message
+
+  # === XVPN IPv6 Manager Logs ===
+  - job_name: xvpn-ipv6-manager
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: xvpn-ipv6-manager
+          service: ipv6-manager
+          __path__: /home/*/chatvpn/client/logs/ipv6.log
+    pipeline_stages:
+      - json:
+          expressions:
+            timestamp: timestamp
+            level: level
+            message: message
+            component: component
+            ipv6_supported: ipv6_supported
+      - timestamp:
+          source: timestamp
+          format: RFC3339
+      - labels:
+          level:
+          component:
+          ipv6_supported:
+      - output:
+          source: message
+
+  # === System Logs ===
+  - job_name: system
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: system
+          __path__: /var/log/syslog
+    pipeline_stages:
+      - regex:
+          expression: '^(?P<timestamp>\S+ \S+) (?P<hostname>\S+) (?P<program>\S+)(?:\[(?P<pid>\d+)\])?: (?P<message>.*)$'
+      - timestamp:
+          source: timestamp
+          format: "Jan 02 15:04:05"
+      - labels:
+          hostname:
+          program:
+          pid:
+      - output:
+          source: message
+
+  # === Journal Logs ===
+  - job_name: journal
+    journal:
+      # Path to journal directory
+      path: /var/log/journal
+      
+      # Labels to add to log entries
+      labels:
+        job: systemd-journal
+        
+      # Maximum number of log lines to keep in the journal reader buffer
+      max_age: 12h
+      
+      # JSON flag
+      json: false
+      
+      # Maximum number of log lines to read at once
+      max_entries: 10000
+      
+      # Filter criteria to filter log entries
+      matches:
+        - _SYSTEMD_UNIT: "xvpn-api.service"
+        - _SYSTEMD_UNIT: "xvpn-agent.service"
+        - _SYSTEMD_UNIT: "xvpn-bot.service"
+        - _SYSTEMD_UNIT: "xvpn-worker.service"
+        - _SYSTEMD_UNIT: "xvpn-orchestrator.service"
+        - _SYSTEMD_UNIT: "xvpn-core.service"
+        - _SYSTEMD_UNIT: "xvpn-monitor.service"
+    relabel_configs:
+      - source_labels: ['__journal__systemd_unit']
+        target_label: 'unit'
+      - source_labels: ['__journal_syslog_identifier']
+        target_label: 'syslog_identifier'
+      - source_labels: ['__journal_priority_keyword']
+        target_label: 'level'
+    pipeline_stages:
+      - json:
+          expressions:
+            message: MESSAGE
+            timestamp: __REALTIME_TIMESTAMP
+      - timestamp:
+          source: timestamp
+          format: Unix
+      - output:
+          source: message
+
+# === Tracing Configuration ===
+tracing:
+  # Enable tracing
+  enabled: true
+  
+  # Tracing provider
+  provider: jaeger
+  
+  # Jaeger configuration
+  jaeger:
+    # Sampling server URL
+    sampling_server_url: http://jaeger:5778/sampling
+    
+    # Local agent host port
+    local_agent_host_port: jaeger:6831
+    
+    # Service name
+    service_name: promtail
+
+# === Logging Configuration ===
+log:
+  # Log level
+  level: info
+  
+  # Log format
+  format: logfmt
+  
+  # Log file path
+  file: /var/log/promtail/promtail.log
+
+# === Metrics Configuration ===
+metrics:
+  # Metrics path
+  path: /metrics
+  
+  # Enable metrics
+  enabled: true
+  
+  # Metrics port
+  port: 9080
+
+# === Additional Configuration ===
+additional_arguments:
+  # Additional command line arguments
+  - "--server.http-listen-port=9080"
+  - "--server.grpc-listen-port=0"
+  - "--server.graceful-shutdown-timeout=30s"
+  - "--positions.filename=/tmp/positions.yaml"
+  - "--clients[0].url=http://loki:3100/loki/api/v1/push"
+  - "--clients[0].batch-wait=1s"
+  - "--clients[0].batch-size=1048576"
+  - "--clients[0].timeout=10s"
+  - "--clients[0].compression=gzip"
+  - "--clients[0].max-backlog=262144"
+  - "--clients[0].max-retries=5"
+  - "--clients[0].backoff-config.min-period=100ms"
+  - "--clients[0].backoff-config.max-period=5s"
+  - "--clients[0].backoff-config.max-retries=10"
+  - "--tracing.enabled=true"
+  - "--tracing.provider=jaeger"
+  - "--tracing.jaeger.sampling-server-url=http://jaeger:5778/sampling"
+  - "--tracing.jaeger.local-agent-host-port=jaeger:6831"
+  - "--tracing.jaeger.service-name=promtail"
+  - "--log.level=info"
+  - "--log.format=logfmt"
+  - "--log.file=/var/log/promtail/promtail.log"
+  - "--metrics.path=/metrics"
+  - "--metrics.enabled=true"
+  - "--metrics.port=9080"

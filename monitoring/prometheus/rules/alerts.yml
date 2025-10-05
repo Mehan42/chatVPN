@@ -1,8 +1,9 @@
-# XVPN Prometheus Alert Rules
-# Правила оповещений Prometheus
+# XVPN Prometheus Alerting Rules
+# Правила алертинга Prometheus для мониторинга XVPN
 
+# === Groups ===
 groups:
-  # XVPN API alerts
+  # === XVPN API Alerts ===
   - name: xvpn-api-alerts
     rules:
       # High error rate
@@ -35,7 +36,7 @@ groups:
           summary: "XVPN API unavailable"
           description: "XVPN API is unreachable"
 
-  # XVPN Agent alerts
+  # === XVPN Agent Alerts ===
   - name: xvpn-agent-alerts
     rules:
       # Low health score
@@ -68,7 +69,7 @@ groups:
           summary: "XVPN Agent offline"
           description: "XVPN Agent is unreachable"
 
-  # XVPN Bot alerts
+  # === XVPN Bot Alerts ===
   - name: xvpn-bot-alerts
     rules:
       # Bot errors
@@ -91,7 +92,53 @@ groups:
           summary: "XVPN Bot inactive"
           description: "XVPN Bot is not responding"
 
-  # System alerts
+  # === XVPN Worker Alerts ===
+  - name: xvpn-worker-alerts
+    rules:
+      # Worker errors
+      - alert: XVPNWorkerErrors
+        expr: increase(xvpn_worker_errors_total[5m]) > 0
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "XVPN Worker errors"
+          description: "XVPN Worker has encountered errors (current value: {{ $value }})"
+
+      # Worker offline
+      - alert: XVPNWorkerOffline
+        expr: up{xvpn-worker} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "XVPN Worker offline"
+          description: "XVPN Worker is unreachable"
+
+  # === XVPN Orchestrator Alerts ===
+  - name: xvpn-orchestrator-alerts
+    rules:
+      # Orchestrator errors
+      - alert: XVPNOrchestratorErrors
+        expr: increase(xvpn_orchestrator_errors_total[5m]) > 0
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "XVPN Orchestrator errors"
+          description: "XVPN Orchestrator has encountered errors (current value: {{ $value }})"
+
+      # Orchestrator offline
+      - alert: XVPNOrchestratorOffline
+        expr: up{xvpn-orchestrator} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "XVPN Orchestrator offline"
+          description: "XVPN Orchestrator is unreachable"
+
+  # === System Alerts ===
   - name: system-alerts
     rules:
       # High CPU usage
@@ -133,3 +180,253 @@ groups:
         annotations:
           summary: "High network errors"
           description: "Network receive errors are above 10/s (current value: {{ $value }})"
+
+  # === Network Alerts ===
+  - name: network-alerts
+    rules:
+      # DNS resolution issues
+      - alert: DNSResolutionIssues
+        expr: increase(dns_query_failures_total[5m]) > 5
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "DNS resolution issues"
+          description: "DNS query failures are above 5/5m (current value: {{ $value }})"
+
+      # Connectivity issues
+      - alert: NetworkConnectivityIssues
+        expr: up == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Network connectivity issues"
+          description: "Network connectivity is down"
+
+  # === Security Alerts ===
+  - name: security-alerts
+    rules:
+      # TLS certificate expiration
+      - alert: TLSCertificateExpiration
+        expr: cert_expiry_days < 30
+        for: 1h
+        labels:
+          severity: warning
+        annotations:
+          summary: "TLS certificate expiration"
+          description: "TLS certificate expires in less than 30 days (current value: {{ $value }} days)"
+
+      # Security vulnerabilities
+      - alert: SecurityVulnerabilities
+        expr: security_vulnerabilities_total > 0
+        for: 1h
+        labels:
+          severity: critical
+        annotations:
+          summary: "Security vulnerabilities"
+          description: "Security vulnerabilities detected (current value: {{ $value }})"
+
+  # === Performance Alerts ===
+  - name: performance-alerts
+    rules:
+      # Slow response times
+      - alert: SlowResponseTimes
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Slow response times"
+          description: "95th percentile response time is above 2 seconds (current value: {{ $value }}s)"
+
+      # High request rate
+      - alert: HighRequestRate
+        expr: rate(http_requests_total[5m]) > 1000
+        for: 1m
+        labels:
+          severity: info
+        annotations:
+          summary: "High request rate"
+          description: "Request rate is above 1000 requests/minute (current value: {{ $value }})"
+
+  # === Health Alerts ===
+  - name: health-alerts
+    rules:
+      # Low health score
+      - alert: LowHealthScore
+        expr: xvpn_health_score < 3
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Low health score"
+          description: "Health score is below 3 (current value: {{ $value }})"
+
+      # Critical health score
+      - alert: CriticalHealthScore
+        expr: xvpn_health_score < 1
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Critical health score"
+          description: "Health score is below 1 (current value: {{ $value }})"
+
+# === Recording Rules ===
+# Записывающие правила для агрегации метрик
+
+  # === XVPN API Recording Rules ===
+  - name: xvpn-api-recording-rules
+    rules:
+      # API request rate
+      - record: xvpn_api_request_rate:requests_per_second
+        expr: rate(xvpn_api_requests_total[5m])
+
+      # API error rate
+      - record: xvpn_api_error_rate:errors_per_second
+        expr: rate(xvpn_api_errors_total[5m])
+
+      # API latency
+      - record: xvpn_api_latency:seconds
+        expr: histogram_quantile(0.95, rate(xvpn_api_request_duration_seconds_bucket[5m]))
+
+  # === XVPN Agent Recording Rules ===
+  - name: xvpn-agent-recording-rules
+    rules:
+      # Agent health score average
+      - record: xvpn_agent_health_score:average
+        expr: avg_over_time(xvpn_agent_health_score[1h])
+
+      # Agent transport switches rate
+      - record: xvpn_agent_transport_switches:rate_per_hour
+        expr: rate(xvpn_agent_transport_switches_total[1h])
+
+  # === XVPN Bot Recording Rules ===
+  - name: xvpn-bot-recording-rules
+    rules:
+      # Bot message rate
+      - record: xvpn_bot_message_rate:messages_per_minute
+        expr: rate(xvpn_bot_messages_total[1m])
+
+      # Bot error rate
+      - record: xvpn_bot_error_rate:errors_per_minute
+        expr: rate(xvpn_bot_errors_total[1m])
+
+  # === XVPN Worker Recording Rules ===
+  - name: xvpn-worker-recording-rules
+    rules:
+      # Worker task rate
+      - record: xvpn_worker_task_rate:tasks_per_minute
+        expr: rate(xvpn_worker_tasks_total[1m])
+
+      # Worker error rate
+      - record: xvpn_worker_error_rate:errors_per_minute
+        expr: rate(xvpn_worker_errors_total[1m])
+
+  # === XVPN Orchestrator Recording Rules ===
+  - name: xvpn-orchestrator-recording-rules
+    rules:
+      # Orchestrator task rate
+      - record: xvpn_orchestrator_task_rate:tasks_per_minute
+        expr: rate(xvpn_orchestrator_tasks_total[1m])
+
+      # Orchestrator error rate
+      - record: xvpn_orchestrator_error_rate:errors_per_minute
+        expr: rate(xvpn_orchestrator_errors_total[1m])
+
+  # === System Recording Rules ===
+  - name: system-recording-rules
+    rules:
+      # CPU usage
+      - record: system_cpu_usage:percentage
+        expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)
+
+      # Memory usage
+      - record: system_memory_usage:percentage
+        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100
+
+      # Disk usage
+      - record: system_disk_usage:percentage
+        expr: (node_filesystem_size_bytes - node_filesystem_free_bytes) / node_filesystem_size_bytes * 100
+
+      # Network throughput
+      - record: system_network_throughput:bytes_per_second
+        expr: rate(node_network_receive_bytes_total[5m]) + rate(node_network_transmit_bytes_total[5m])
+
+# === Alertmanager Configuration ===
+# Конфигурация Alertmanager для обработки алертов
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:9093
+
+# === Additional Configuration ===
+# Дополнительные настройки
+
+# Evaluation interval
+evaluation_interval: 15s
+
+# Rule files
+rule_files:
+  - "rules/alerts.yml"
+  - "rules/recording.yml"
+
+# Remote write
+remote_write:
+  - url: http://remote-storage:9090/api/v1/write
+    write_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'xvpn_(api|agent|bot|worker|orchestrator)_.*'
+        action: keep
+
+# Remote read
+remote_read:
+  - url: http://remote-storage:9090/api/v1/read
+    read_recent: true
+
+# Storage
+storage:
+  tsdb_path: /prometheus
+  retention_time: 200h
+  block_duration: 2h
+  wal_compression: true
+
+# Query
+query:
+  max_concurrency: 20
+  timeout: 2m
+  max_samples: 50000000
+
+# Logging
+log:
+  level: info
+  format: json
+  file: /var/log/prometheus/prometheus.log
+
+# Web
+web:
+  listen_address: 0.0.0.0:9090
+  read_timeout: 30s
+  write_timeout: 30s
+  idle_timeout: 5m
+
+# Tracing
+tracing:
+  jaeger:
+    sampling_server_url: http://jaeger:5778/sampling
+    local_agent_host_port: jaeger:6831
+    service_name: prometheus
+
+# Metrics
+metrics:
+  path: /metrics
+  enabled: true
+
+# Alertmanager
+alertmanager:
+  timeout: 10s
+  path: /api/v1/alerts
+  enabled: true

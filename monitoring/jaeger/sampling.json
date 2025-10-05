@@ -1,0 +1,140 @@
+{
+  "service_strategies": [
+    {
+      "service": "xvpn-api",
+      "type": "probabilistic",
+      "param": 0.5,
+      "operation_strategies": [
+        {
+          "operation": "/mcp/v1/vpn.health",
+          "type": "probabilistic",
+          "param": 0.1
+        },
+        {
+          "operation": "/transports/manifest.json",
+          "type": "probabilistic",
+          "param": 0.2
+        },
+        {
+          "operation": "/clients/{uuid}.json",
+          "type": "probabilistic",
+          "param": 0.3
+        }
+      ]
+    },
+    {
+      "service": "xvpn-agent",
+      "type": "probabilistic",
+      "param": 0.7,
+      "operation_strategies": [
+        {
+          "operation": "health_check",
+          "type": "probabilistic",
+          "param": 0.5
+        },
+        {
+          "operation": "transport_switch",
+          "type": "probabilistic",
+          "param": 0.8
+        },
+        {
+          "operation": "config_update",
+          "type": "probabilistic",
+          "param": 0.6
+        }
+      ]
+    },
+    {
+      "service": "xvpn-bot",
+      "type": "probabilistic",
+      "param": 0.3,
+      "operation_strategies": [
+        {
+          "operation": "message_handler",
+          "type": "probabilistic",
+          "param": 0.2
+        },
+        {
+          "operation": "command_handler",
+          "type": "probabilistic",
+          "param": 0.4
+        },
+        {
+          "operation": "notification_sender",
+          "type": "probabilistic",
+          "param": 0.5
+        }
+      ]
+    },
+    {
+      "service": "xvpn-worker",
+      "type": "probabilistic",
+      "param": 0.4,
+      "operation_strategies": [
+        {
+          "operation": "task_processor",
+          "type": "probabilistic",
+          "param": 0.3
+        },
+        {
+          "operation": "health_monitor",
+          "type": "probabilistic",
+          "param": 0.6
+        },
+        {
+          "operation": "log_aggregator",
+          "type": "probabilistic",
+          "param": 0.5
+        }
+      ]
+    },
+    {
+      "service": "xvpn-orchestrator",
+      "type": "probabilistic",
+      "param": 0.9,
+      "operation_strategies": [
+        {
+          "operation": "decision_maker",
+          "type": "probabilistic",
+          "param": 0.8
+        },
+        {
+          "operation": "resource_allocator",
+          "type": "probabilistic",
+          "param": 0.7
+        },
+        {
+          "operation": "incident_handler",
+          "type": "probabilistic",
+          "param": 0.9
+        }
+      ]
+    },
+    {
+      "service": "xvpn-core",
+      "type": "probabilistic",
+      "param": 0.6,
+      "operation_strategies": [
+        {
+          "operation": "connection_handler",
+          "type": "probabilistic",
+          "param": 0.5
+        },
+        {
+          "operation": "traffic_router",
+          "type": "probabilistic",
+          "param": 0.4
+        },
+        {
+          "operation": "security_checker",
+          "type": "probabilistic",
+          "param": 0.7
+        }
+      ]
+    }
+  ],
+  "default_strategy": {
+    "type": "probabilistic",
+    "param": 0.2
+  }
+}

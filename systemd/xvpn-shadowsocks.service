@@ -1,0 +1,122 @@
+# XVPN Shadowsocks Service
+# Сервис Shadowsocks для XVPN (резервный вариант)
+
+[Unit]
+Description=XVPN Shadowsocks Service
+After=network.target
+Wants=network.target
+Requires=network.target
+
+[Service]
+Type=simple
+User=shadowsocks
+Group=shadowsocks
+WorkingDirectory=/opt/xvpn/server/shadowsocks
+ExecStart=/usr/bin/ss-server \
+  -c /opt/xvpn/server/shadowsocks/config.json \
+  -u \
+  -v \
+  --fast-open \
+  --reuse-port \
+  --no-delay \
+  --plugin v2ray-plugin \
+  --plugin-opts "server;mode=websocket;host=shadowsocks.xvpn.local;path=/ws;loglevel=none" \
+  --manager-address 127.0.0.1:6001 \
+  --executable /usr/bin/ss-server \
+  --timeout 300 \
+  --method chacha20-ietf-poly1305 \
+  --password ${SHADOWSOCKS_PASSWORD} \
+  --port 8388 \
+  --listen-address 0.0.0.0:8388 \
+  --ipv6-first \
+  --acl /opt/xvpn/server/shadowsocks/acl.json \
+  --mtu 1400 \
+  --mptcp \
+  --tcp-fastopen \
+  --tcp-quick-ack \
+  --udp-timeout 60 \
+  --udp-cache 1024 \
+  --outbound-fwmark 0xff \
+  --outbound-bind-interface eth0 \
+  --outbound-bind-address 0.0.0.0 \
+  --outbound-bind-port 0 \
+  --inbound-fwmark 0xfe \
+  --inbound-bind-interface eth0 \
+  --inbound-bind-address 0.0.0.0 \
+  --inbound-bind-port 0 \
+  --firewall-mark 0xfd \
+  --traffic-stat \
+  --traffic-stat-port 6002 \
+  --traffic-stat-interval 5 \
+  --traffic-stat-format json \
+  --traffic-stat-file /var/log/shadowsocks/traffic.log \
+  --traffic-stat-rotate 86400 \
+  --traffic-stat-compress \
+  --traffic-stat-encrypt \
+  --traffic-stat-sign \
+  --traffic-stat-verify \
+  --traffic-stat-loglevel info \
+  --traffic-stat-logformat json \
+  --traffic-stat-logfile /var/log/shadowsocks/stats.log \
+  --traffic-stat-logrotate 86400 \
+  --traffic-stat-logcompress \
+  --traffic-stat-logencrypt \
+  --traffic-stat-logsign \
+  --traffic-stat-logverify \
+  --traffic-stat-loginterval 30 \
+  --traffic-stat-logsize 10485760 \
+  --traffic-stat-logcount 5 \
+  --traffic-stat-logbackup 30 \
+  --traffic-stat-logpurge 90 \
+  --traffic-stat-logage 365 \
+  --traffic-stat-loguser uss \
+  --traffic-stat-loggroup shadowsocks \
+  --traffic-stat-logmode 0640 \
+  --traffic-stat-logowner uss \
+  --traffic-stat-logperm 0640 \
+  --traffic-stat-logacl private \
+  --traffic-stat-logsecure true \
+  --traffic-stat-logprotected true \
+  --traffic-stat-logencrypted true \
+  --traffic-stat-logsigned true \
+  --traffic-stat-logverified true \
+  --traffic-stat-logcompressed true \
+  --traffic-stat-logrotated true \
+  --traffic-stat-logpurged true \
+  --traffic-stat-logbackedup true
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=xvpn-shadowsocks
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/xvpn/server/shadowsocks /var/log/shadowsocks /opt/xvpn/data /tmp /var/run
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE CAP_SETGID CAP_SETUID
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE CAP_SETGID CAP_SETUID
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictSUIDSGID=true
+RemoveIPC=true
+PrivateUsers=true
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+MemoryMax=512M
+CPUQuota=25%
+TasksMax=256
+
+# Environment
+Environment=PYTHONPATH=/opt/xvpn/server/shadowsocks
+Environment=LOG_DIR=/var/log/shadowsocks
+Environment=SHADOWSOCKS_DIR=/opt/xvpn/server/shadowsocks
+Environment=INTERVAL=30
+Environment=SHADOWSOCKS_PASSWORD=${SHADOWSOCKS_PASSWORD}
+
+[Install]
+WantedBy=multi-user.target

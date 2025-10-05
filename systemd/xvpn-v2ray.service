@@ -1,0 +1,52 @@
+# XVPN V2Ray Service
+# Сервис V2Ray для XVPN (резервный вариант)
+
+[Unit]
+Description=XVPN V2Ray Service
+After=network.target
+Wants=network.target
+Requires=network.target
+
+[Service]
+Type=simple
+User=v2ray
+Group=v2ray
+WorkingDirectory=/opt/xvpn/server/v2ray
+ExecStart=/usr/bin/v2ray run -c /opt/xvpn/server/v2ray/config.json
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=xvpn-v2ray
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/xvpn/server/v2ray /var/log/v2ray /opt/xvpn/data /tmp /var/run
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE CAP_SETGID CAP_SETUID
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE CAP_SETGID CAP_SETUID
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictSUIDSGID=true
+RemoveIPC=true
+PrivateUsers=true
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+MemoryMax=512M
+CPUQuota=25%
+TasksMax=256
+
+# Environment
+Environment=PYTHONPATH=/opt/xvpn/server/v2ray
+Environment=LOG_DIR=/var/log/v2ray
+Environment=V2RAY_DIR=/opt/xvpn/server/v2ray
+Environment=INTERVAL=30
+
+[Install]
+WantedBy=multi-user.target

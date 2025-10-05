@@ -1,0 +1,64 @@
+# XVPN Prometheus Service
+# Сервис мониторинга Prometheus для XVPN
+
+[Unit]
+Description=XVPN Prometheus Service
+After=network.target alertmanager.service
+Wants=network.target alertmanager.service
+Requires=network.target alertmanager.service
+
+[Service]
+Type=simple
+User=prometheus
+Group=prometheus
+WorkingDirectory=/opt/xvpn/server/prometheus
+ExecStart=/usr/bin/prometheus \
+  --config.file=/opt/xvpn/server/prometheus/prometheus.yml \
+  --storage.tsdb.path=/opt/xvpn/server/prometheus/data \
+  --web.console.libraries=/etc/prometheus/console_libraries \
+  --web.console.templates=/etc/prometheus/consoles \
+  --web.enable-lifecycle \
+  --storage.tsdb.retention.time=200h \
+  --storage.tsdb.block-duration=2h \
+  --storage.tsdb.wal-compression=true \
+  --web.listen-address=0.0.0.0:9090 \
+  --web.read-timeout=30s \
+  --web.write-timeout=30s \
+  --web.idle-timeout=5m
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=xvpn-prometheus
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/xvpn/server/prometheus /var/log/xvpn /opt/xvpn/data
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictSUIDSGID=true
+RemoveIPC=true
+PrivateUsers=true
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+MemoryMax=1G
+CPUQuota=50%
+TasksMax=512
+
+# Environment
+Environment=PYTHONPATH=/opt/xvpn/server/prometheus
+Environment=LOG_DIR=/var/log/xvpn
+Environment=PROMETHEUS_DIR=/opt/xvpn/server/prometheus
+Environment=INTERVAL=15
+
+[Install]
+WantedBy=multi-user.target

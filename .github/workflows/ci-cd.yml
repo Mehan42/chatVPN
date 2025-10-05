@@ -151,7 +151,8 @@ jobs:
 
       # Генерация отчета о покрытии
       - name: Generate Coverage Report
-        run: pytest --cov=src --cov=server --cov=client --cov-report=xml
+        run: |
+          pytest --cov=src --cov=server --cov=client --cov-report=xml --cov-report=term
 
       # Загрузка отчета о покрытии
       - name: Upload Coverage to Codecov

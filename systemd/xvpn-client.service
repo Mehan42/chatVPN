@@ -1,11 +1,11 @@
 # XVPN Client Service
-# Служба XVPN клиента
+# Сервис клиента XVPN
 
 [Unit]
 Description=XVPN Client Service
-After=network.target
-Wants=network.target
-Requires=network.target
+After=network.target graphical-session.target
+Wants=network.target graphical-session.target
+Requires=network.target graphical-session.target
 
 [Service]
 Type=simple
@@ -13,7 +13,7 @@ User=uss
 Group=uss
 WorkingDirectory=/home/uss/chatvpn/client
 Environment=PYTHONPATH=/home/uss/chatvpn/client
-ExecStart=/usr/bin/python3 /home/uss/chatvpn/client/chatvpn_backend.py start
+ExecStart=/usr/bin/python3 /home/uss/chatvpn/client/state_machine.py start
 Restart=always
 RestartSec=5
 StandardOutput=journal
@@ -25,7 +25,7 @@ NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=true
-ReadWritePaths=/home/uss/chatvpn/client /var/log/xvpn
+ReadWritePaths=/home/uss/chatvpn/client /var/log/xvpn /opt/xvpn/data
 CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 ProtectKernelTunables=true
@@ -44,4 +44,4 @@ CPUQuota=25%
 TasksMax=256
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target

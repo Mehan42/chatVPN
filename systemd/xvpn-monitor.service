@@ -1,0 +1,47 @@
+# XVPN Monitor Service
+# Сервис мониторинга XVPN
+
+[Unit]
+Description=XVPN Monitor Service
+After=network.target prometheus.service
+Wants=network.target prometheus.service
+Requires=network.target prometheus.service
+
+[Service]
+Type=simple
+User=xvpn
+Group=xvpn
+WorkingDirectory=/opt/xvpn/server/monitor
+Environment=PYTHONPATH=/opt/xvpn/server/monitor
+ExecStart=/usr/bin/python3 /opt/xvpn/server/monitor/monitor.py
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=xvpn-monitor
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/xvpn/server/monitor /var/log/xvpn /opt/xvpn/data
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictSUIDSGID=true
+RemoveIPC=true
+PrivateUsers=true
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+MemoryMax=256M
+CPUQuota=10%
+TasksMax=128
+
+[Install]
+WantedBy=multi-user.target

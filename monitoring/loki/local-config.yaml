@@ -1,0 +1,586 @@
+# XVPN Loki Configuration
+# Конфигурация системы логирования Loki
+
+# === Server Configuration ===
+server:
+  # HTTP server listen port
+  http_listen_port: 3100
+  
+  # gRPC server listen port
+  grpc_listen_port: 9096
+  
+  # Server graceful shutdown timeout
+  graceful_shutdown_timeout: 30s
+
+# === Memberlist Configuration ===
+memberlist:
+  # Memberlist bind port
+  bind_port: 7946
+  
+  # Memberlist advertise port
+  advertise_port: 7946
+  
+  # Memberlist join addresses
+  join_members:
+    - loki-memberlist:7946
+
+# === Common Configuration ===
+common:
+  # Path prefix for storage
+  path_prefix: /loki
+  
+  # Storage configuration
+  storage:
+    # Filesystem storage
+    filesystem:
+      # Directory for chunks
+      chunks_directory: /loki/chunks
+      
+      # Directory for rules
+      rules_directory: /loki/rules
+      
+      # Directory for indexes
+      index_directory: /loki/index
+      
+      # Directory for WAL
+      wal_directory: /loki/wal
+      
+      # Directory for checkpoints
+      checkpoint_directory: /loki/checkpoint
+      
+      # Directory for compactor
+      compactor_directory: /loki/compactor
+      
+      # Directory for bloom
+      bloom_directory: /loki/bloom
+  
+  # Replication factor
+  replication_factor: 1
+  
+  # Ring configuration
+  ring:
+    # KV store configuration
+    kvstore:
+      # Store type
+      store: inmemory
+      
+      # Prefix for keys
+      prefix: ""
+      
+      # Mock configuration
+      mock:
+        # Mock ring nodes
+        ring:
+          # Replica count
+          replication_factor: 1
+
+# === Schema Configuration ===
+schema_config:
+  # Schema configurations
+  configs:
+    # Schema for 2020-10-24
+    - from: 2020-10-24
+      # Store type
+      store: boltdb-shipper
+      
+      # Object store type
+      object_store: filesystem
+      
+      # Schema version
+      schema: v11
+      
+      # Index configuration
+      index:
+        # Index prefix
+        prefix: index_
+        
+        # Index period
+        period: 24h
+
+# === Limits Configuration ===
+limits_config:
+  # Reject old samples period
+  reject_old_samples: true
+  
+  # Reject old samples max age
+  reject_old_samples_max_age: 168h
+  
+  # Maximum line size in bytes
+  max_line_size: 2048
+  
+  # Maximum label name length
+  max_label_name_length: 1024
+  
+  # Maximum label value length
+  max_label_value_length: 2048
+  
+  # Maximum label names per series
+  max_label_names_per_series: 30
+  
+  # Maximum streams per user
+  max_streams_per_user: 0
+  
+  # Maximum global streams per user
+  max_global_streams_per_user: 0
+  
+  # Ingestion rate limit (bytes per second)
+  ingestion_rate_mb: 4
+  
+  # Ingestion burst size (bytes)
+  ingestion_burst_size_mb: 6
+  
+  # Maximum chunk age before flushing
+  max_chunk_age: 1h
+  
+  # Chunk target size (bytes)
+  chunk_target_size: 1048576
+  
+  # Chunk retention period
+  chunk_retain_period: 1m
+  
+  # Maximum return streams
+  max_returned_streams: 100
+  
+  # Maximum query length
+  max_query_length: 721h
+  
+  # Maximum query parallelism
+  max_query_parallelism: 14
+  
+  # Query timeout
+  query_timeout: 1m
+  
+  # Maximum entries limit per query
+  max_entries_limit_per_query: 5000
+  
+  # Maximum cache freshness
+  max_cache_freshness_per_query: 10m
+  
+  # Split queries by interval
+  split_queries_by_interval: 30m
+  
+  # Query ingestion burst size
+  query_ingestion_burst_size: 10000
+  
+  # Query ingestion rate limit
+  query_ingestion_rate: 1000
+  
+  # Query ingestion burst size limit
+  query_ingestion_burst_size_limit: 100000
+  
+  # Query ingestion rate limit
+  query_ingestion_rate_limit: 10000
+  
+  # Query ingestion burst size per second
+  query_ingestion_burst_size_per_second: 1000
+  
+  # Query ingestion rate per second
+  query_ingestion_rate_per_second: 100
+
+# === Chunk Store Configuration ===
+chunk_store_config:
+  # Chunk cache configuration
+  chunk_cache_config:
+    # Enable caching
+    enable: true
+    
+    # Cache type
+    cache_type: inmemory
+    
+    # Memory cache configuration
+    memory_cache:
+      # Maximum size in bytes
+      max_size: 536870912  # 512MB
+      
+      # TTL for cache entries
+      ttl: 1h
+      
+      # Eviction strategy
+      eviction_strategy: lru
+      
+      # Compression
+      compression: snappy
+      
+      # Prefetching
+      prefetch: true
+      
+      # Prefetch parallelism
+      prefetch_parallelism: 4
+
+  # Write dedupe cache configuration
+  write_dedupe_cache_config:
+    # Enable deduplication cache
+    enable: true
+    
+    # Deduplication cache type
+    cache_type: inmemory
+    
+    # Memory deduplication cache configuration
+    memory_cache:
+      # Maximum size in bytes
+      max_size: 1073741824  # 1GB
+      
+      # TTL for cache entries
+      ttl: 1h
+      
+      # Eviction strategy
+      eviction_strategy: lru
+      
+      # Compression
+      compression: snappy
+      
+      # Prefetching
+      prefetch: true
+      
+      # Prefetch parallelism
+      prefetch_parallelism: 4
+
+# === Table Manager Configuration ===
+table_manager:
+  # Enable table manager
+  enable: false
+  
+  # Table manager retention period
+  retention_period: 0s
+  
+  # Table manager retention deletes
+  retention_deletes_enabled: false
+
+# === Compactor Configuration ===
+compactor:
+  # Enable compactor
+  enable: true
+  
+  # Compactor working directory
+  working_directory: /loki/compactor
+  
+  # Compactor shared store
+  shared_store: filesystem
+  
+  # Compactor compaction interval
+  compaction_interval: 10m
+  
+  # Compactor retention enabled
+  retention_enabled: true
+  
+  # Compactor retention delete delay
+  retention_delete_delay: 2h
+  
+  # Compactor retention delete worker count
+  retention_delete_worker_count: 150
+  
+  # Compactor max compaction parallelism
+  max_compaction_parallelism: 1
+  
+  # Compactor max block chunk segment size
+  max_block_chunk_segment_size: 52428800
+  
+  # Compactor max uploaded chunks
+  max_uploaded_chunks: 20000
+  
+  # Compactor chunk range
+  chunk_range: 24h
+  
+  # Compactor blocks retention period
+  blocks_retention_period: 0s
+
+# === Ruler Configuration ===
+ruler:
+  # Enable ruler
+  enable: true
+  
+  # Ruler storage type
+  storage:
+    # Type of storage
+    type: local
+  
+  # Ruler rule path
+  rule_path: /loki/rules
+  
+  # Ruler alertmanager URL
+  alertmanager_url: http://alertmanager:9093
+  
+  # Ruler ring configuration
+  ring:
+    # KV store configuration
+    kvstore:
+      # Store type
+      store: inmemory
+      
+      # Prefix for keys
+      prefix: ""
+      
+      # Mock configuration
+      mock:
+        # Mock ring nodes
+        ring:
+          # Replica count
+          replication_factor: 1
+  
+  # Ruler enable sharding
+  enable_sharding: false
+  
+  # Ruler enable API
+  enable_api: true
+
+# === Distributor Configuration ===
+distributor:
+  # Distributor ring configuration
+  ring:
+    # KV store configuration
+    kvstore:
+      # Store type
+      store: inmemory
+      
+      # Prefix for keys
+      prefix: ""
+      
+      # Mock configuration
+      mock:
+        # Mock ring nodes
+        ring:
+          # Replica count
+          replication_factor: 1
+
+# === Ingester Configuration ===
+ingester:
+  # Ingester lifecycler configuration
+  lifecycler:
+    # Address to advertise in consul
+    address: 127.0.0.1
+    
+    # Port to advertise in consul
+    port: 9095
+    
+    # ID to register in consul
+    id: loki-ingester
+    
+    # Consul configuration
+    consul:
+      # Hostname and port of consul
+      host: consul:8500
+      
+      # ACL Token to use for consul
+      acl_token: ""
+      
+      # HTTP timeout when talking to consul
+      http_timeout: 600ms
+      
+      # Consul service name
+      service_name: loki
+      
+      # Tags to register with service
+      service_tags: loki
+      
+      # KV store configuration
+      kvstore:
+        # Store type
+        store: inmemory
+        
+        # Prefix for keys
+        prefix: ""
+        
+        # Mock configuration
+        mock:
+          # Mock ring nodes
+          ring:
+            # Replica count
+            replication_factor: 1
+
+# === Query Scheduler Configuration ===
+query_scheduler:
+  # Enable query scheduler
+  enable: true
+  
+  # Max queries per tenant
+  max_outstanding_requests_per_tenant: 100
+
+# === Query Frontend Configuration ===
+query_frontend:
+  # Enable query frontend
+  enable: true
+  
+  # Max retries
+  max_retries: 3
+  
+  # Split queries by interval
+  split_queries_by_interval: 30m
+  
+  # Query ingestion burst size
+  query_ingestion_burst_size: 10000
+  
+  # Query ingestion rate limit
+  query_ingestion_rate: 1000
+  
+  # Query ingestion burst size limit
+  query_ingestion_burst_size_limit: 100000
+  
+  # Query ingestion rate limit
+  query_ingestion_rate_limit: 10000
+  
+  # Query ingestion burst size per second
+  query_ingestion_burst_size_per_second: 1000
+  
+  # Query ingestion rate per second
+  query_ingestion_rate_per_second: 100
+
+# === Authentication Configuration ===
+auth_enabled: false
+
+# === Analytics Configuration ===
+analytics:
+  # Enable analytics reporting
+  reporting_enabled: false
+
+# === Tracing Configuration ===
+tracing:
+  # Enable tracing
+  enabled: true
+  
+  # Tracing provider
+  provider: jaeger
+  
+  # Jaeger configuration
+  jaeger:
+    # Sampling server URL
+    sampling_server_url: http://jaeger:5778/sampling
+    
+    # Local agent host port
+    local_agent_host_port: jaeger:6831
+    
+    # Service name
+    service_name: loki
+
+# === Logging Configuration ===
+log:
+  # Log level
+  level: info
+  
+  # Log format
+  format: logfmt
+  
+  # Log file path
+  file: /var/log/loki/loki.log
+  
+  # Enable structured logging
+  structured: true
+
+# === Monitoring Configuration ===
+monitoring:
+  # Enable monitoring
+  enabled: true
+  
+  # Monitoring port
+  port: 3100
+  
+  # Monitoring path
+  path: /metrics
+  
+  # Enable Prometheus metrics
+  prometheus:
+    # Enable Prometheus metrics
+    enabled: true
+    
+    # Prometheus metrics path
+    path: /metrics
+    
+    # Prometheus metrics port
+    port: 3100
+
+# === Additional Configuration ===
+additional_arguments:
+  # Additional command line arguments
+  - "--server.http-listen-port=3100"
+  - "--server.grpc-listen-port=9096"
+  - "--server.graceful-shutdown-timeout=30s"
+  - "--memberlist.bind-port=7946"
+  - "--memberlist.advertise-port=7946"
+  - "--common.path-prefix=/loki"
+  - "--common.storage.filesystem.chunks-directory=/loki/chunks"
+  - "--common.storage.filesystem.rules-directory=/loki/rules"
+  - "--common.storage.filesystem.index-directory=/loki/index"
+  - "--common.storage.filesystem.wal-directory=/loki/wal"
+  - "--common.storage.filesystem.checkpoint-directory=/loki/checkpoint"
+  - "--common.storage.filesystem.compactor-directory=/loki/compactor"
+  - "--common.storage.filesystem.bloom-directory=/loki/bloom"
+  - "--common.replication-factor=1"
+  - "--schema-config.configs[0].from=2020-10-24"
+  - "--schema-config.configs[0].store=boltdb-shipper"
+  - "--schema-config.configs[0].object-store=filesystem"
+  - "--schema-config.configs[0].schema=v11"
+  - "--schema-config.configs[0].index.prefix=index_"
+  - "--schema-config.configs[0].index.period=24h"
+  - "--limits-config.reject-old-samples=true"
+  - "--limits-config.reject-old-samples-max-age=168h"
+  - "--limits-config.max-line-size=2048"
+  - "--limits-config.max-label-name-length=1024"
+  - "--limits-config.max-label-value-length=2048"
+  - "--limits-config.max-label-names-per-series=30"
+  - "--limits-config.max-streams-per-user=0"
+  - "--limits-config.max-global-streams-per-user=0"
+  - "--limits-config.ingestion-rate-mb=4"
+  - "--limits-config.ingestion-burst-size-mb=6"
+  - "--limits-config.max-chunk-age=1h"
+  - "--limits-config.chunk-target-size=1048576"
+  - "--limits-config.chunk-retain-period=1m"
+  - "--limits-config.max-returned-streams=100"
+  - "--limits-config.max-query-length=721h"
+  - "--limits-config.max-query-parallelism=14"
+  - "--limits-config.query-timeout=1m"
+  - "--limits-config.max-entries-limit-per-query=5000"
+  - "--limits-config.max-cache-freshness-per-query=10m"
+  - "--limits-config.split-queries-by-interval=30m"
+  - "--chunk-store-config.chunk-cache-config.enable=true"
+  - "--chunk-store-config.chunk-cache-config.cache-type=inmemory"
+  - "--chunk-store-config.chunk-cache-config.memory-cache.max-size=536870912"
+  - "--chunk-store-config.chunk-cache-config.memory-cache.ttl=1h"
+  - "--chunk-store-config.chunk-cache-config.memory-cache.eviction-strategy=lru"
+  - "--chunk-store-config.chunk-cache-config.memory-cache.compression=snappy"
+  - "--chunk-store-config.chunk-cache-config.memory-cache.prefetch=true"
+  - "--chunk-store-config.chunk-cache-config.memory-cache.prefetch-parallelism=4"
+  - "--chunk-store-config.write-dedupe-cache-config.enable=true"
+  - "--chunk-store-config.write-dedupe-cache-config.cache-type=inmemory"
+  - "--chunk-store-config.write-dedupe-cache-config.memory-cache.max-size=1073741824"
+  - "--chunk-store-config.write-dedupe-cache-config.memory-cache.ttl=1h"
+  - "--chunk-store-config.write-dedupe-cache-config.memory-cache.eviction-strategy=lru"
+  - "--chunk-store-config.write-dedupe-cache-config.memory-cache.compression=snappy"
+  - "--chunk-store-config.write-dedupe-cache-config.memory-cache.prefetch=true"
+  - "--chunk-store-config.write-dedupe-cache-config.memory-cache.prefetch-parallelism=4"
+  - "--table-manager.enable=false"
+  - "--table-manager.retention-period=0s"
+  - "--table-manager.retention-deletes-enabled=false"
+  - "--compactor.enable=true"
+  - "--compactor.working-directory=/loki/compactor"
+  - "--compactor.shared-store=filesystem"
+  - "--compactor.compaction-interval=10m"
+  - "--compactor.retention-enabled=true"
+  - "--compactor.retention-delete-delay=2h"
+  - "--compactor.retention-delete-worker-count=150"
+  - "--compactor.max-compaction-parallelism=1"
+  - "--compactor.max-block-chunk-segment-size=52428800"
+  - "--compactor.max-uploaded-chunks=20000"
+  - "--compactor.chunk-range=24h"
+  - "--compactor.blocks-retention-period=0s"
+  - "--ruler.enable=true"
+  - "--ruler.storage.type=local"
+  - "--ruler.rule-path=/loki/rules"
+  - "--ruler.alertmanager-url=http://alertmanager:9093"
+  - "--ruler.enable-sharding=false"
+  - "--ruler.enable-api=true"
+  - "--auth-enabled=false"
+  - "--analytics.reporting-enabled=false"
+  - "--tracing.enabled=true"
+  - "--tracing.provider=jaeger"
+  - "--tracing.jaeger.sampling-server-url=http://jaeger:5778/sampling"
+  - "--tracing.jaeger.local-agent-host-port=jaeger:6831"
+  - "--tracing.jaeger.service-name=loki"
+  - "--log.level=info"
+  - "--log.format=logfmt"
+  - "--log.file=/var/log/loki/loki.log"
+  - "--log.structured=true"
+  - "--monitoring.enabled=true"
+  - "--monitoring.port=3100"
+  - "--monitoring.path=/metrics"
+  - "--monitoring.prometheus.enabled=true"
+  - "--monitoring.prometheus.path=/metrics"
+  - "--monitoring.prometheus.port=3100"

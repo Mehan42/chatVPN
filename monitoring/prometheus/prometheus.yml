@@ -1,25 +1,35 @@
-# XVPN Monitoring and Logging Configuration
-# Основная конфигурация мониторинга и логирования
+# XVPN Prometheus Configuration
+# Конфигурация системы мониторинга Prometheus
 
-# === Prometheus Configuration ===
-# monitoring/prometheus/prometheus.yml
-
+# === Global Configuration ===
 global:
+  # Как часто скрейпить таргеты по умолчанию
   scrape_interval: 15s
+  
+  # Как часто оценивать правила
   evaluation_interval: 15s
+  
+  # Таймаут для скрейпинга таргетов
   scrape_timeout: 10s
 
+# === Rule Files ===
 rule_files:
-  - "rules/*.yml"
+  # Alerting rules
+  - "rules/alerts.yml"
+  
+  # Recording rules
+  - "rules/recording.yml"
 
+# === Alerting Configuration ===
 alerting:
   alertmanagers:
     - static_configs:
         - targets:
             - alertmanager:9093
 
+# === Scrape Configurations ===
 scrape_configs:
-  # XVPN API metrics
+  # === XVPN API Service ===
   - job_name: 'xvpn-api'
     static_configs:
       - targets: ['xvpn-api:8443']
@@ -29,7 +39,7 @@ scrape_configs:
     tls_config:
       insecure_skip_verify: true
 
-  # XVPN Agent metrics
+  # === XVPN Agent Service ===
   - job_name: 'xvpn-agent'
     static_configs:
       - targets: ['xvpn-agent:8443']
@@ -39,7 +49,7 @@ scrape_configs:
     tls_config:
       insecure_skip_verify: true
 
-  # XVPN Bot metrics
+  # === XVPN Bot Service ===
   - job_name: 'xvpn-bot'
     static_configs:
       - targets: ['xvpn-bot:8443']
@@ -49,7 +59,7 @@ scrape_configs:
     tls_config:
       insecure_skip_verify: true
 
-  # XVPN Worker metrics
+  # === XVPN Worker Service ===
   - job_name: 'xvpn-worker'
     static_configs:
       - targets: ['xvpn-worker:8443']
@@ -59,7 +69,7 @@ scrape_configs:
     tls_config:
       insecure_skip_verify: true
 
-  # XVPN Orchestrator metrics
+  # === XVPN Orchestrator Service ===
   - job_name: 'xvpn-orchestrator'
     static_configs:
       - targets: ['xvpn-orchestrator:8080']
@@ -67,21 +77,17 @@ scrape_configs:
     metrics_path: /metrics
     scheme: http
 
-  # Node exporter metrics
-  - job_name: 'node-exporter'
+  # === XVPN Core VPN Service ===
+  - job_name: 'xvpn-core'
     static_configs:
-      - targets: ['node-exporter:9100']
-    scrape_interval: 15s
+      - targets: ['xvpn-core:443']
+    scrape_interval: 30s
     metrics_path: /metrics
+    scheme: https
+    tls_config:
+      insecure_skip_verify: true
 
-  # Docker container metrics
-  - job_name: 'docker-containers'
-    static_configs:
-      - targets: ['cadvisor:8080']
-    scrape_interval: 15s
-    metrics_path: /metrics
-
-  # Redis metrics
+  # === Redis Cache ===
   - job_name: 'redis'
     static_configs:
       - targets: ['redis:6379']
@@ -89,10 +95,173 @@ scrape_configs:
     metrics_path: /metrics
     scheme: http
 
-  # PostgreSQL metrics
+  # === PostgreSQL Database ===
   - job_name: 'postgresql'
     static_configs:
       - targets: ['postgres:5432']
     scrape_interval: 30s
     metrics_path: /metrics
     scheme: http
+
+  # === Node Exporter ===
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+    scrape_interval: 15s
+    metrics_path: /metrics
+    scheme: http
+
+  # === Docker Containers ===
+  - job_name: 'docker-containers'
+    static_configs:
+      - targets: ['cadvisor:8080']
+    scrape_interval: 15s
+    metrics_path: /metrics
+    scheme: http
+
+  # === Traefik Load Balancer ===
+  - job_name: 'traefik'
+    static_configs:
+      - targets: ['traefik:8080']
+    scrape_interval: 10s
+    metrics_path: /metrics
+    scheme: http
+
+  # === Grafana Dashboard ===
+  - job_name: 'grafana'
+    static_configs:
+      - targets: ['grafana:3000']
+    scrape_interval: 30s
+    metrics_path: /metrics
+    scheme: http
+
+  # === Loki Logging ===
+  - job_name: 'loki'
+    static_configs:
+      - targets: ['loki:3100']
+    scrape_interval: 30s
+    metrics_path: /metrics
+    scheme: http
+
+# === Remote Write Configuration ===
+remote_write:
+  # Write to remote storage (if needed)
+  - url: http://remote-storage:9090/api/v1/write
+    write_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'xvpn_(api|agent|bot|worker|orchestrator)_.*'
+        action: keep
+
+# === Remote Read Configuration ===
+remote_read:
+  # Read from remote storage (if needed)
+  - url: http://remote-storage:9090/api/v1/read
+    read_recent: true
+
+# === Storage Configuration ===
+storage:
+  # TSDB storage path
+  tsdb_path: /prometheus
+  
+  # Retention time
+  retention_time: 200h
+  
+  # Block duration
+  block_duration: 2h
+  
+  # WAL compression
+  wal_compression: true
+
+# === Query Configuration ===
+query:
+  # Max concurrency
+  max_concurrency: 20
+  
+  # Timeout
+  timeout: 2m
+  
+  # Max samples per query
+  max_samples: 50000000
+
+# === Logging Configuration ===
+log:
+  # Log level
+  level: info
+  
+  # Log format
+  format: json
+  
+  # Log file
+  file: /var/log/prometheus/prometheus.log
+
+# === Web Configuration ===
+web:
+  # Listen address
+  listen_address: 0.0.0.0:9090
+  
+  # Read timeout
+  read_timeout: 30s
+  
+  # Write timeout
+  write_timeout: 30s
+  
+  # Idle timeout
+  idle_timeout: 5m
+
+# === Tracing Configuration ===
+tracing:
+  # Jaeger tracing
+  jaeger:
+    # Sampling server URL
+    sampling_server_url: http://jaeger:5778/sampling
+    
+    # Local agent host port
+    local_agent_host_port: jaeger:6831
+    
+    # Service name
+    service_name: prometheus
+
+# === Metrics Configuration ===
+metrics:
+  # Path for Prometheus metrics
+  path: /metrics
+  
+  # Enable metrics
+  enabled: true
+
+# === Alertmanager Configuration ===
+alertmanager:
+  # Timeout for sending alerts
+  timeout: 10s
+  
+  # Path for alerts
+  path: /api/v1/alerts
+  
+  # Enable alertmanager
+  enabled: true
+
+# === Additional Configuration ===
+additional_arguments:
+  # Additional command line arguments
+  - "--storage.tsdb.path=/prometheus"
+  - "--storage.tsdb.retention.time=200h"
+  - "--storage.tsdb.block-duration=2h"
+  - "--storage.tsdb.wal-compression=true"
+  - "--web.listen-address=0.0.0.0:9090"
+  - "--web.read-timeout=30s"
+  - "--web.write-timeout=30s"
+  - "--web.idle-timeout=5m"
+  - "--query.max-concurrency=20"
+  - "--query.timeout=2m"
+  - "--query.max-samples=50000000"
+  - "--log.level=info"
+  - "--log.format=json"
+  - "--log.file=/var/log/prometheus/prometheus.log"
+  - "--tracing.jaeger.sampling-server-url=http://jaeger:5778/sampling"
+  - "--tracing.jaeger.local-agent-host-port=jaeger:6831"
+  - "--tracing.jaeger.service-name=prometheus"
+  - "--metrics.path=/metrics"
+  - "--metrics.enabled=true"
+  - "--alertmanager.timeout=10s"
+  - "--alertmanager.path=/api/v1/alerts"
+  - "--alertmanager.enabled=true"

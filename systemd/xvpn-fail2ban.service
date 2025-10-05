@@ -1,0 +1,52 @@
+# XVPN Fail2Ban Service
+# Сервис защиты от брутфорса Fail2Ban для XVPN
+
+[Unit]
+Description=XVPN Fail2Ban Service
+After=network.target iptables.service
+Wants=network.target iptables.service
+Requires=network.target iptables.service
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/opt/xvpn/server/fail2ban
+ExecStart=/usr/bin/fail2ban-client -c /opt/xvpn/server/fail2ban start
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=xvpn-fail2ban
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/xvpn/server/fail2ban /var/log/fail2ban /opt/xvpn/data /tmp /var/log/xvpn /var/log/nginx /var/log/ssh /var/log/auth.log
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE CAP_DAC_OVERRIDE
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE CAP_DAC_OVERRIDE
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictSUIDSGID=true
+RemoveIPC=true
+PrivateUsers=true
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+MemoryMax=256M
+CPUQuota=10%
+TasksMax=128
+
+# Environment
+Environment=PYTHONPATH=/opt/xvpn/server/fail2ban
+Environment=LOG_DIR=/var/log/fail2ban
+Environment=FAIL2BAN_DIR=/opt/xvpn/server/fail2ban
+Environment=INTERVAL=60
+
+[Install]
+WantedBy=multi-user.target

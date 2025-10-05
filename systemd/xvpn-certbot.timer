@@ -1,0 +1,21 @@
+# XVPN Certbot Timer
+# Таймер автоматического обновления SSL сертификатов Certbot для XVPN
+
+[Unit]
+Description=XVPN Certbot Timer
+After=network.target
+Wants=network.target
+Requires=network.target
+
+[Timer]
+# Запускать ежедневно в 2:00
+OnCalendar=daily
+# Сохранять состояние таймера между перезагрузками
+Persistent=true
+# Случайная задержка для распределения нагрузки
+RandomizedDelaySec=30m
+# Точность таймера
+AccuracySec=1min
+
+[Install]
+WantedBy=timers.target

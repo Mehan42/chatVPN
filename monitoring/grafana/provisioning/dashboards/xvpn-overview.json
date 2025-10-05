@@ -1,8 +1,8 @@
 {
   "dashboard": {
     "id": null,
-    "title": "XVPN Overview",
-    "tags": ["xvpn", "vpn", "overview"],
+    "title": "XVPN System Overview",
+    "tags": ["xvpn", "vpn", "overview", "system"],
     "timezone": "browser",
     "schemaVersion": 16,
     "version": 0,
@@ -11,7 +11,7 @@
       {
         "id": 1,
         "type": "graph",
-        "title": "API Requests",
+        "title": "API Requests Rate",
         "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
         "targets": [
           {

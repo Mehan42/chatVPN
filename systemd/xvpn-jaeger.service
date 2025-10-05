@@ -1,0 +1,111 @@
+# XVPN Jaeger Service
+# Сервис распределенного трассирования Jaeger для XVPN
+
+[Unit]
+Description=XVPN Jaeger Service
+After=network.target prometheus.service
+Wants=network.target prometheus.service
+Requires=network.target prometheus.service
+
+[Service]
+Type=simple
+User=jaeger
+Group=jaeger
+WorkingDirectory=/opt/xvpn/server/jaeger
+ExecStart=/usr/bin/jaeger-all-in-one \
+  --config-file=/opt/xvpn/server/jaeger/jaeger.yml \
+  --log-level=info \
+  --log-format=logfmt \
+  --log-file=/var/log/jaeger/jaeger.log \
+  --sampling.strategies-file=/opt/xvpn/server/jaeger/sampling.json \
+  --sampling.refresh-interval=5s \
+  --metrics.backend=prometheus \
+  --metrics.http-route=/metrics \
+  --metrics.http-port=14269 \
+  --collector.zipkin.http-port=9411 \
+  --collector.http-port=14268 \
+  --collector.grpc-port=14250 \
+  --collector.health-check-http-port=14269 \
+  --collector.queue-size=2000 \
+  --collector.num-workers=50 \
+  --collector.max-packet-size=65000 \
+  --agent.reporter.type=grpc \
+  --agent.reporter.host-port=jaeger-collector:14250 \
+  --agent.reporter.queue-size=1000 \
+  --agent.reporter.max-packet-size=65000 \
+  --agent.reporter.flush-interval=1s \
+  --agent.reporter.log-spam=false \
+  --query.grpc.host-port=jaeger-query:16687 \
+  --query.health-check-http-port=16687 \
+  --query.base-path=/ \
+  --query.static-files=/go/bin/query-static \
+  --storage.type=badger \
+  --storage.badger.ephemeral=false \
+  --storage.badger.directory-value=/opt/xvpn/server/jaeger/data \
+  --storage.badger.directory-key=/opt/xvpn/server/jaeger/key \
+  --storage.badger.read-only=false \
+  --storage.badger.truncate=true \
+  --storage.badger.sync-writes=true \
+  --storage.badger.compression=snappy \
+  --storage.badger.encryption-key= \
+  --storage.badger.block-cache-size=0 \
+  --storage.badger.index-cache-size=0 \
+  --storage.badger.namespace-mode= \
+  --storage.badger.namespace-permissions= \
+  --storage.badger.memory-map=true \
+  --storage.badger.num-level-zero-tables=5 \
+  --storage.badger.num-level-zero-tables-stale=10 \
+  --storage.badger.level-size-multiplier=10 \
+  --storage.badger.max-levels=7 \
+  --storage.badger.value-threshold=1048576 \
+  --storage.badger.num-memtables=5 \
+  --storage.badger.bloom-false-positive=0.01 \
+  --storage.badger.block-size=4096 \
+  --storage.badger.sync-writes=true \
+  --storage.badger.num-go-routines=8 \
+  --storage.badger.ratio-zstd-compression=0 \
+  --storage.badger.discard-ratio=0.95 \
+  --storage.badger.read-only=false \
+  --storage.badger.truncate=true \
+  --storage.badger.in-memory=false \
+  --storage.badger.metrics-enabled=true \
+  --storage.badger.logging-level=info \
+  --storage.badger.cache-size=0 \
+  --storage.badger.index-cache-size=0
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=xvpn-jaeger
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/xvpn/server/jaeger /var/log/jaeger /tmp
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictSUIDSGID=true
+RemoveIPC=true
+PrivateUsers=true
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+MemoryMax=512M
+CPUQuota=25%
+TasksMax=256
+
+# Environment
+Environment=PYTHONPATH=/opt/xvpn/server/jaeger
+Environment=LOG_DIR=/var/log/jaeger
+Environment=JAEGER_DIR=/opt/xvpn/server/jaeger
+Environment=INTERVAL=30
+
+[Install]
+WantedBy=multi-user.target

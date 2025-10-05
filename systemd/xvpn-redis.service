@@ -1,28 +1,32 @@
+# XVPN Redis Service
+# Сервис кэширования Redis для XVPN
+
 [Unit]
-Description=XVPN Redis Cache Service
-Documentation=https://redis.io/documentation
+Description=XVPN Redis Service
 After=network.target
+Wants=network.target
 Requires=network.target
 
 [Service]
-Type=oneshot
-RemainAfterExit=yes
+Type=simple
 User=redis
 Group=redis
-WorkingDirectory=/opt/xvpn
-ExecStart=/usr/bin/docker-compose -f /opt/xvpn/docker-compose.yml up -d redis
-ExecStop=/usr/bin/docker-compose -f /opt/xvpn/docker-compose.yml stop redis
-TimeoutStartSec=0
-Restart=on-failure
+WorkingDirectory=/opt/xvpn/server/redis
+ExecStart=/usr/bin/redis-server /opt/xvpn/server/redis/redis.conf
+Restart=always
 RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=xvpn-redis
 
 # Security settings
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=true
-ReadWritePaths=/opt/xvpn/data
-ReadWritePaths=/opt/xvpn/config
+ReadWritePaths=/opt/xvpn/server/redis /var/log/xvpn /opt/xvpn/data
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 ProtectKernelTunables=true
 ProtectKernelModules=true
 ProtectControlGroups=true
@@ -34,12 +38,15 @@ PrivateUsers=true
 # Resource limits
 LimitNOFILE=65536
 LimitNPROC=4096
-MemoryMax=512M
-CPUQuota=25%
+MemoryMax=256M
+CPUQuota=10%
+TasksMax=128
 
-# Redis-specific settings
-Environment=REDIS_CONFIG_FILE=/opt/xvpn/config/redis.conf
-Environment=REDIS_DATA_DIR=/opt/xvpn/data/redis
+# Environment
+Environment=PYTHONPATH=/opt/xvpn/server/redis
+Environment=LOG_DIR=/var/log/xvpn
+Environment=REDIS_DIR=/opt/xvpn/server/redis
+Environment=INTERVAL=60
 
 [Install]
 WantedBy=multi-user.target

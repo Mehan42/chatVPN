@@ -208,7 +208,7 @@ template: |
   
   *[XVPN - Intelligent VPN with AI Agents](https://github.com/Mehan42/chatVPN)*
 
-# === Настройки автоматического создания релизов ===
+# === Настройки автоматической маркировки ===
 autolabeler:
   - label: 'bug'
     files:
@@ -315,14 +315,15 @@ version-resolver:
       - 'maintenance'
       - 'documentation'
       - 'testing'
+      - 'performance'
 
-# === Настройки автоматического публикования ===
+# === Настройки публикации ===
 publish: true
 prerelease: false
 draft: false
 
 # === Настройки уведомлений ===
-notify:
+notifications:
   slack:
     webhook: ${{ secrets.SLACK_WEBHOOK }}
     channel: '#releases'

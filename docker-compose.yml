@@ -1,57 +1,86 @@
-# XVPN Docker Compose Configuration with Traefik and uv
-# Version: 1.0
-# Author: XVPN Team
-# Description: Production-ready Docker setup with uv package manager and Traefik load balancer
+# XVPN Docker Compose for Production
+# Конфигурация для production развертывания
 
 version: '3.8'
 
-# Включаем Traefik как основной reverse proxy и load balancer
+# === Networks ===
+networks:
+  xvpn-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+  traefik-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16
+
+# === Volumes ===
+volumes:
+  xvpn-data:
+    driver: local
+  xvpn-logs:
+    driver: local
+  redis-data:
+    driver: local
+  postgres-data:
+    driver: local
+  grafana-data:
+    driver: local
+  prometheus-data:
+    driver: local
+  loki-data:
+    driver: local
+  traefik-letsencrypt:
+    driver: local
+  traefik-config:
+    driver: local
+
+# === Services ===
 services:
   # === Traefik Load Balancer ===
   traefik:
     image: traefik:v2.10
     container_name: xvpn-traefik
     command:
-      # Включаем API для мониторинга
+      # API dashboard
       - "--api.insecure=true"
-      # Включаем Docker provider для автоматической discovery сервисов
+      # Docker provider
       - "--providers.docker=true"
-      # Включаем Docker Swarm provider для оркестрации
       - "--providers.docker.exposedbydefault=false"
-      # Определяем точки входа
+      # Entry points
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--entrypoints.xvpn.address=:8443"
-      # Включаем автоматические SSL сертификаты Let's Encrypt
+      # Let's Encrypt
       - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
-      - "--certificatesresolvers.myresolver.acme.email=admin@uss.hopto.org"
+      - "--certificatesresolvers.myresolver.acme.email=admin@xvpn.local"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
-      # Включаем TLS опции из внешнего файла
+      # File provider
       - "--providers.file.filename=/etc/traefik/tls.yml"
       - "--providers.file.watch=true"
     ports:
-      # HTTP порт
       - "80:80"
-      # HTTPS порт
       - "443:443"
-      # XVPN API порт (внутренний)
       - "8443:8443"
-      # Traefik Dashboard (для мониторинга)
-      - "8080:8080"
+      - "8080:8080"  # Traefik dashboard
     volumes:
-      # Доступ к Docker socket для автоматического discovery сервисов
+      # Docker socket
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      # Хранилище для SSL сертификатов
-      - "./traefik/letsencrypt:/letsencrypt"
-      # Конфигурационные файлы Traefik
+      # SSL certificates
+      - "traefik-letsencrypt:/letsencrypt"
+      # Configuration files
       - "./traefik/traefik.yml:/etc/traefik/traefik.yml:ro"
       - "./traefik/tls.yml:/etc/traefik/tls.yml:ro"
     networks:
+      - traefik-network
       - xvpn-network
     restart: unless-stopped
     labels:
-      # Включаем Traefik dashboard
+      # Enable Traefik
       - "traefik.enable=true"
+      # Dashboard router
       - "traefik.http.routers.traefik.rule=Host(`traefik.xvpn.local`)"
       - "traefik.http.routers.traefik.entrypoints=web"
       - "traefik.http.services.traefik.loadbalancer.server.port=8080"
@@ -61,46 +90,47 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile.api
-      args:
-        # Аргументы для оптимизации сборки
-        - UV_CACHE_DIR=/tmp/uv-cache
-        - PYTHON_VERSION=3.11
+      target: production
     container_name: xvpn-api
     command: uvx run --app server.api.app:app
     environment:
-      # Environment variables для Flask API
+      # Flask environment
       - FLASK_ENV=production
       - FLASK_DEBUG=false
       - PYTHONUNBUFFERED=1
+      # Database
       - DATABASE_URL=sqlite:////data/xvpn.db
       - REDIS_URL=redis://redis:6379/0
+      # Logging
       - LOG_LEVEL=INFO
+      # Configuration
       - XVPN_CONFIG_FILE=/config/api.json
     volumes:
-      # Персистентное хранение данных
-      - xvpn-data:/data
-      - ./config:/config:ro
-      # Кэш uv для ускорения последующих сборок
-      - uv-cache:/tmp/uv-cache
+      # Data persistence
+      - "xvpn-data:/data"
+      - "./config:/config:ro"
+      # Cache
+      - "uv-cache:/tmp/uv-cache"
     networks:
       - xvpn-network
     restart: unless-stopped
     depends_on:
       - redis
     labels:
-      # Traefik конфигурация для API
+      # Enable Traefik
       - "traefik.enable=true"
-      - "traefik.http.routers.api.rule=Host(`api.uss.hopto.org`) || PathPrefix(`/api`)"
+      # API router
+      - "traefik.http.routers.api.rule=Host(`api.xvpn.local`) || PathPrefix(`/api`)"
       - "traefik.http.routers.api.entrypoints=websecure"
       - "traefik.http.routers.api.tls.certresolver=myresolver"
       - "traefik.http.services.api.loadbalancer.server.port=8443"
       - "traefik.http.middlewares.api-stripprefix.stripprefix.prefixes=/api"
       - "traefik.http.routers.api.middlewares=api-stripprefix"
       # Health check
-      - "traefik.http.routers.api.rule=Host(`api.uss.hopto.org`) || PathPrefix(`/api`) || PathPrefix(`/mcp`)"
-      # Метрики для мониторинга
+      - "traefik.http.routers.api.rule=Host(`api.xvpn.local`) || PathPrefix(`/api`) || PathPrefix(`/mcp`)"
+      # Metrics
       - "traefik.http.routers.api.priority=10"
-      # Дополнительные заголовки безопасности
+      # Security headers
       - "traefik.http.middlewares.api-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
       - "traefik.http.middlewares.api-headers.headers.sslredirect=true"
       - "traefik.http.routers.api.middlewares=api-stripprefix,api-headers"
@@ -110,9 +140,7 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile.agent
-      args:
-        - UV_CACHE_DIR=/tmp/uv-cache
-        - PYTHON_VERSION=3.11
+      target: production
     container_name: xvpn-agent
     command: uvx run --app server.agent.agent:main
     environment:
@@ -123,11 +151,11 @@ services:
       - HEALTH_URL=http://xvpn-api:8443/mcp/v1/vpn.health
       - AGENT_CONFIG_FILE=/config/agent.json
     volumes:
-      - xvpn-data:/data
-      - ./config:/config:ro
-      - uv-cache:/tmp/uv-cache
-      # База знаний агента
-      - ./server/agent/knowledge:/app/agent/knowledge:ro
+      - "xvpn-data:/data"
+      - "./config:/config:ro"
+      - "uv-cache:/tmp/uv-cache"
+      # Knowledge base
+      - "./server/agent/knowledge:/app/agent/knowledge:ro"
     networks:
       - xvpn-network
     restart: unless-stopped
@@ -135,11 +163,11 @@ services:
       - xvpn-api
       - redis
     labels:
-      # Traefik конфигурация для агента
+      # Enable Traefik
       - "traefik.enable=true"
+      # Agent router
       - "traefik.http.routers.agent.rule=PathPrefix(`/agent`)"
       - "traefik.http.routers.agent.entrypoints=websecure"
-      - "traefik.http.routers.agent.tls.certresolver=myresolver"
       - "traefik.http.services.agent.loadbalancer.server.port=8443"
       - "traefik.http.middlewares.agent-stripprefix.stripprefix.prefixes=/agent"
       - "traefik.http.routers.agent.middlewares=agent-stripprefix"
@@ -151,9 +179,7 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile.bot
-      args:
-        - UV_CACHE_DIR=/tmp/uv-cache
-        - PYTHON_VERSION=3.11
+      target: production
     container_name: xvpn-bot
     command: uvx run --app server.admin.tg_bot:main
     environment:
@@ -164,35 +190,34 @@ services:
       - API_BASE_URL=https://api.xvpn.local
       - BOT_CONFIG_FILE=/config/bot.json
     volumes:
-      - ./config:/config:ro
-      - uv-cache:/tmp/uv-cache
+      - "./config:/config:ro"
+      - "uv-cache:/tmp/uv-cache"
     networks:
       - xvpn-network
     restart: unless-stopped
     depends_on:
       - xvpn-api
     labels:
-      # Traefik конфигурация для бота
+      # Enable Traefik
       - "traefik.enable=true"
-      - "traefik.http.routers.bot.rule=Host(`bot.uss.hopto.org`)"
+      # Bot router
+      - "traefik.http.routers.bot.rule=Host(`bot.xvpn.local`)"
       - "traefik.http.routers.bot.entrypoints=websecure"
       - "traefik.http.routers.bot.tls.certresolver=myresolver"
       - "traefik.http.services.bot.loadbalancer.server.port=8443"
       # Health check
       - "traefik.http.routers.bot.priority=30"
-      # Дополнительные заголовки безопасности
+      # Security headers
       - "traefik.http.middlewares.bot-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
       - "traefik.http.middlewares.bot-headers.headers.sslredirect=true"
       - "traefik.http.routers.bot.middlewares=bot-headers"
 
-  # === XVPN Worker Service (для фоновых задач) ===
+  # === XVPN Worker Service ===
   xvpn-worker:
     build:
       context: .
       dockerfile: docker/Dockerfile.worker
-      args:
-        - UV_CACHE_DIR=/tmp/uv-cache
-        - PYTHON_VERSION=3.11
+      target: production
     container_name: xvpn-worker
     command: uvx run --app server.worker.worker:main
     environment:
@@ -201,9 +226,9 @@ services:
       - WORKER_COUNT=2
       - REDIS_URL=redis://redis:6379/0
     volumes:
-      - xvpn-data:/data
-      - ./config:/config:ro
-      - uv-cache:/tmp/uv-cache
+      - "xvpn-data:/data"
+      - "./config:/config:ro"
+      - "uv-cache:/tmp/uv-cache"
     networks:
       - xvpn-network
     restart: unless-stopped
@@ -219,100 +244,43 @@ services:
           memory: 256M
           cpus: '0.25'
 
-  # === Redis Cache ===
-  redis:
-    image: redis:7-alpine
-    container_name: xvpn-redis
-    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
-    volumes:
-      - redis-data:/data
-      - ./config/redis.conf:/etc/redis/redis.conf:ro
-    networks:
-      - xvpn-network
-    restart: unless-stopped
-    labels:
-      - "traefik.enable=false"  # Redis не доступен через Traefik
-
-  # === PostgreSQL Database (альтернатива SQLite) ===
-  postgres:
-    image: postgres:15-alpine
-    container_name: xvpn-postgres
-    environment:
-      - POSTGRES_DB=xvpn
-      - POSTGRES_USER=xvpn
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-      - ./config/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
-    networks:
-      - xvpn-network
-    restart: unless-stopped
-    labels:
-      - "traefik.enable=false"
-
-  # === XVPN Core VPN Service ===
-  xvpn-core:
-    image: teddysun/xray:latest
-    container_name: xvpn-core
-    command: xray run -c /config/xray/xray.json
-    volumes:
-      - ./config/xray:/config:ro
-      - xvpn-data:/data
-    networks:
-      - xvpn-network
-    restart: unless-stopped
-    labels:
-      # Traefik конфигурация для VPN ядра
-      - "traefik.enable=true"
-      - "traefik.http.routers.vpn.rule=Host(`vpn.uss.hopto.org`)"
-      - "traefik.http.routers.vpn.entrypoints=websecure"
-      - "traefik.http.routers.vpn.tls.certresolver=myresolver"
-      - "traefik.http.services.vpn.loadbalancer.server.port=443"
-      # Health check
-      - "traefik.http.routers.vpn.priority=5"
-      # Дополнительные заголовки безопасности
-      - "traefik.http.middlewares.vpn-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
-      - "traefik.http.middlewares.vpn-headers.headers.sslredirect=true"
-      - "traefik.http.routers.vpn.middlewares=vpn-headers"
-
-  # === XVPN AI Orchestrator ===
+  # === XVPN Orchestrator Service ===
   xvpn-orchestrator:
     build:
       context: .
       dockerfile: docker/Dockerfile.orchestrator
-      args:
-        - UV_CACHE_DIR=/tmp/uv-cache
-        - PYTHON_VERSION=3.11
+      target: production
     container_name: xvpn-orchestrator
     environment:
       - PYTHONUNBUFFERED=1
       - LOG_LEVEL=INFO
       - XVPN_CONFIG_FILE=/app/orchestrator_config.json
     volumes:
-      - ./server/agent/orchestrator_config.json:/app/orchestrator_config.json:ro
-      - ./server/agent/scripts:/app/scripts:ro
-      - xvpn-data:/data
-      - uv-cache:/tmp/uv-cache
-      # Логи оркестратора
-      - /var/log/xvpn/orchestration:/var/log/xvpn/orchestration
-      - /var/log/xvpn/agent:/var/log/xvpn/agent
-      - /var/log/xvpn/api:/var/log/xvpn/api
-      - /var/log/xvpn/core:/var/log/xvpn/core
+      - "./server/agent/orchestrator_config.json:/app/orchestrator_config.json:ro"
+      - "./server/agent/scripts:/app/scripts:ro"
+      - "xvpn-data:/data"
+      - "uv-cache:/tmp/uv-cache"
+      # Logs
+      - "/var/log/xvpn/orchestration:/var/log/xvpn/orchestration"
+      - "/var/log/xvpn/agent:/var/log/xvpn/agent"
+      - "/var/log/xvpn/api:/var/log/xvpn/api"
+      - "/var/log/xvpn/core:/var/log/xvpn/core"
     networks:
       - xvpn-network
     restart: unless-stopped
     depends_on:
       - xvpn-api
     labels:
-      # Traefik конфигурация для оркестратора
+      # Enable Traefik
       - "traefik.enable=true"
-      - "traefik.http.routers.orchestrator.rule=Host(`orchestrator.uss.hopto.org`)"
+      # Orchestrator router
+      - "traefik.http.routers.orchestrator.rule=Host(`orchestrator.xvpn.local`)"
       - "traefik.http.routers.orchestrator.entrypoints=websecure"
       - "traefik.http.routers.orchestrator.tls.certresolver=myresolver"
       - "traefik.http.services.orchestrator.loadbalancer.server.port=8080"
       # Health check
       - "traefik.http.routers.orchestrator.priority=15"
-      # Дополнительные заголовки безопасности
+      # Security headers
       - "traefik.http.middlewares.orchestrator-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
       - "traefik.http.middlewares.orchestrator-headers.headers.sslredirect=true"
       - "traefik.http.routers.orchestrator.middlewares=orchestrator-headers"
@@ -323,6 +291,63 @@ services:
       retries: 3
       start_period: 40s
 
+  # === Redis Cache ===
+  redis:
+    image: redis:7-alpine
+    container_name: xvpn-redis
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - "redis-data:/data"
+      - "./config/redis.conf:/etc/redis/redis.conf:ro"
+    networks:
+      - xvpn-network
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=false"  # Redis not accessible via Traefik
+
+  # === PostgreSQL Database ===
+  postgres:
+    image: postgres:15-alpine
+    container_name: xvpn-postgres
+    environment:
+      - POSTGRES_DB=xvpn
+      - POSTGRES_USER=xvpn
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - "postgres-data:/var/lib/postgresql/data"
+      - "./config/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro"
+    networks:
+      - xvpn-network
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=false"
+
+  # === XVPN Core VPN Service ===
+  xvpn-core:
+    image: teddysun/xray:latest
+    container_name: xvpn-core
+    command: xray run -c /config/xray.json
+    volumes:
+      - "./config/xray:/config:ro"
+      - "xvpn-data:/data"
+    networks:
+      - xvpn-network
+    restart: unless-stopped
+    labels:
+      # Enable Traefik
+      - "traefik.enable=true"
+      # VPN router
+      - "traefik.http.routers.vpn.rule=Host(`vpn.xvpn.local`)"
+      - "traefik.http.routers.vpn.entrypoints=websecure"
+      - "traefik.http.routers.vpn.tls.certresolver=myresolver"
+      - "traefik.http.services.vpn.loadbalancer.server.port=443"
+      # Health check
+      - "traefik.http.routers.vpn.priority=5"
+      # Security headers
+      - "traefik.http.middlewares.vpn-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.vpn-headers.headers.sslredirect=true"
+      - "traefik.http.routers.vpn.middlewares=vpn-headers"
+
   # === Monitoring and Logging ===
   grafana:
     image: grafana/grafana:latest
@@ -331,18 +356,20 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
       - GF_USERS_ALLOW_SIGN_UP=false
     volumes:
-      - grafana-data:/var/lib/grafana
-      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - "grafana-data:/var/lib/grafana"
+      - "./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro"
     networks:
       - xvpn-network
     restart: unless-stopped
     labels:
+      # Enable Traefik
       - "traefik.enable=true"
-      - "traefik.http.routers.grafana.rule=Host(`grafana.uss.hopto.org`)"
+      # Grafana router
+      - "traefik.http.routers.grafana.rule=Host(`grafana.xvpn.local`)"
       - "traefik.http.routers.grafana.entrypoints=websecure"
       - "traefik.http.routers.grafana.tls.certresolver=myresolver"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
-      # Дополнительные заголовки безопасности
+      # Security headers
       - "traefik.http.middlewares.grafana-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
       - "traefik.http.middlewares.grafana-headers.headers.sslredirect=true"
       - "traefik.http.routers.grafana.middlewares=grafana-headers"
@@ -358,16 +385,30 @@ services:
       - '--web.enable-lifecycle'
       - '--storage.tsdb.retention.time=200h'
     volumes:
-      - prometheus-data:/prometheus
-      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - ./monitoring/prometheus/rules:/etc/prometheus/rules:ro
+      - "prometheus-data:/prometheus"
+      - "./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
+      - "./monitoring/prometheus/rules:/etc/prometheus/rules:ro"
     networks:
       - xvpn-network
     restart: unless-stopped
     labels:
       - "traefik.enable=false"
 
-  # === Monitoring Agent ===
+  # === Logging Agent ===
+  loki:
+    image: grafana/loki:latest
+    container_name: xvpn-loki
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - "loki-data:/data/loki"
+      - "./monitoring/loki/local-config.yaml:/etc/loki/local-config.yaml:ro"
+    networks:
+      - xvpn-network
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=false"
+
+  # === Node Exporter ===
   node-exporter:
     image: prom/node-exporter:latest
     container_name: xvpn-node-exporter
@@ -376,58 +417,35 @@ services:
     ports:
       - "9100:9100"
     volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
-      - ./monitoring/node-exporter/web.yml:/etc/node-exporter/web.yml:ro
+      - "/proc:/host/proc:ro"
+      - "/sys:/host/sys:ro"
+      - "/:/rootfs:ro"
+      - "./monitoring/node-exporter/web.yml:/etc/node-exporter/web.yml:ro"
     networks:
       - xvpn-network
     restart: unless-stopped
     labels:
       - "traefik.enable=false"
 
-# === Volumes для персистентного хранения ===
-volumes:
-  xvpn-data:
-    driver: local
-  redis-data:
-    driver: local
-  postgres-data:
-    driver: local
-  grafana-data:
-    driver: local
-  prometheus-data:
-    driver: local
-  uv-cache:
-    driver: local
-
-# === Сеть для взаимодействия сервисов ===
-networks:
-  xvpn-network:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16
-
 # === Environment Variables ===
-# Создайте .env файл в корне проекта со следующими переменными:
-# BOT_TOKEN=ваш_токен_telegram_бота
-# CHAT_ID=ваш_chat_id
-# POSTGRES_PASSWORD=пароль_для_postgres
-# GRAFANA_PASSWORD=пароль_для_grafana
+# Create a .env file in the project root with the following variables:
+# BOT_TOKEN=your_telegram_bot_token_here
+# CHAT_ID=your_chat_id_here
+# POSTGRES_PASSWORD=your_postgres_password_here
+# GRAFANA_PASSWORD=your_grafana_password_here
 
-# === Команды для использования ===
-# Запуск всех сервисов
+# === Commands for Use ===
+# Start all services
 # docker-compose up -d
 
-# Остановка всех сервисов
+# Stop all services
 # docker-compose down
 
-# Просмотр логов
+# View logs
 # docker-compose logs -f [service_name]
 
-# Обновление сервисов
+# Update services
 # docker-compose pull && docker-compose up -d --force-recreate
 
-# Очистка неиспользуемых volumes
+# Clean up unused volumes
 # docker-compose down -v

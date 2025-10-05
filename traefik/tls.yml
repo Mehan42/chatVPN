@@ -3,14 +3,16 @@
 
 # === TLS Options ===
 tls:
-  # Default TLS options
+  # === Default TLS Options ===
   options:
-    # Default TLS configuration
+    # === Default TLS Configuration ===
     default:
       # Minimum TLS version
-      minVersion: VersionTLS12
+      minVersion: VersionTLS13
+      
       # Maximum TLS version
       maxVersion: VersionTLS13
+      
       # Cipher suites
       cipherSuites:
         - TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
@@ -19,40 +21,68 @@ tls:
         - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         - TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
         - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305
+        
       # Curve preferences
       curvePreferences:
         - CurveP521
         - CurveP384
         - CurveP256
+        
       # Prefer server cipher suites
       preferServerCipherSuites: true
+      
       # Session tickets
       sessionTickets:
         enabled: true
+        
       # ALPN protocols
       alpnProtocols:
         - h2
         - http/1.1
-
-    # Modern TLS configuration (more secure)
+        
+      # Renegotiation support
+      renegotiationSupport: NoRenegotiation
+      
+    # === Modern TLS Configuration (highest security) ===
     modern:
+      # Minimum TLS version
       minVersion: VersionTLS13
+      
+      # Maximum TLS version
       maxVersion: VersionTLS13
+      
+      # Cipher suites
       cipherSuites: []
+      
+      # Curve preferences
       curvePreferences:
         - CurveP521
         - CurveP384
         - CurveP256
+        
+      # Prefer server cipher suites
       preferServerCipherSuites: true
+      
+      # Session tickets
       sessionTickets:
         enabled: true
+        
+      # ALPN protocols
       alpnProtocols:
         - h2
-
-    # Intermediate TLS configuration (compatibility)
+        
+      # Renegotiation support
+      renegotiationSupport: NoRenegotiation
+      
+    # === Intermediate TLS Configuration (compatibility) ===
     intermediate:
+      # Minimum TLS version
       minVersion: VersionTLS12
+      
+      # Maximum TLS version
       maxVersion: VersionTLS13
+      
+      # Cipher suites
       cipherSuites:
         - TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
         - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
@@ -62,97 +92,183 @@ tls:
         - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305
         - TLS_DHE_RSA_WITH_AES_256_GCM_SHA384
         - TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
+        
+      # Curve preferences
       curvePreferences:
         - CurveP521
         - CurveP384
         - CurveP256
+        
+      # Prefer server cipher suites
       preferServerCipherSuites: true
+      
+      # Session tickets
       sessionTickets:
         enabled: true
+        
+      # ALPN protocols
       alpnProtocols:
         - h2
         - http/1.1
+        
+      # Renegotiation support
+      renegotiationSupport: NoRenegotiation
+      
+    # === Legacy TLS Configuration (backward compatibility) ===
+    legacy:
+      # Minimum TLS version
+      minVersion: VersionTLS10
+      
+      # Maximum TLS version
+      maxVersion: VersionTLS13
+      
+      # Cipher suites
+      cipherSuites:
+        - TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
+        - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305
+        - TLS_DHE_RSA_WITH_AES_256_GCM_SHA384
+        - TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA
+        - TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA
+        - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
+        - TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA
+        - TLS_RSA_WITH_AES_256_GCM_SHA384
+        - TLS_RSA_WITH_AES_128_GCM_SHA256
+        - TLS_RSA_WITH_AES_256_CBC_SHA
+        - TLS_RSA_WITH_AES_128_CBC_SHA
+        
+      # Curve preferences
+      curvePreferences:
+        - CurveP521
+        - CurveP384
+        - CurveP256
+        
+      # Prefer server cipher suites
+      preferServerCipherSuites: true
+      
+      # Session tickets
+      sessionTickets:
+        enabled: true
+        
+      # ALPN protocols
+      alpnProtocols:
+        - h2
+        - http/1.1
+        - spdy/3.1
+        
+      # Renegotiation support
+      renegotiationSupport: RenegotiateOnceAsClient
 
-  # Custom certificates
+  # === Custom Certificates ===
   certificates:
-    # Default certificate
-    - certFile: /etc/traefik/certs/default.crt
-      keyFile: /etc/traefik/certs/default.key
+    # === Default Certificate ===
+    - certFile: /etc/letsencrypt/live/xvpn.local/fullchain.pem
+      keyFile: /etc/letsencrypt/live/xvpn.local/privkey.pem
+      
+      # Store certificate
+      stores:
+        - default
+        
+    # === Wildcard Certificate ===
+    - certFile: /etc/letsencrypt/live/xvpn.local/fullchain.pem
+      keyFile: /etc/letsencrypt/live/xvpn.local/privkey.pem
+      
       # Store certificate
       stores:
         - default
 
-    # Wildcard certificate
-    - certFile: /etc/traefik/certs/wildcard.crt
-      keyFile: /etc/traefik/certs/wildcard.key
-      # Store certificate
-      stores:
-        - default
-
-  # Certificate stores
+  # === Certificate Stores ===
   stores:
-    # Default store
+    # === Default Store ===
     default:
       # Default certificate
       defaultCertificate:
-        certFile: /etc/traefik/certs/default.crt
-        keyFile: /etc/traefik/certs/default.key
+        certFile: /etc/letsencrypt/live/xvpn.local/fullchain.pem
+        keyFile: /etc/letsencrypt/live/xvpn.local/privkey.pem
 
 # === Certificate Resolvers ===
 certificatesResolvers:
-  # Let's Encrypt resolver
+  # === Let's Encrypt Resolver ===
   le:
     # ACME configuration
     acme:
       # Email for Let's Encrypt
       email: admin@xvpn.local
+      
       # Storage for certificates
       storage: /letsencrypt/acme.json
+      
       # TLS challenge
       tlsChallenge: {}
+      
       # HTTP challenge
       httpChallenge:
         # Entry point for HTTP challenge
         entryPoint: web
+        
       # DNS challenge (for wildcard certificates)
       dnsChallenge:
         # Provider for DNS challenge
         provider: cloudflare
+        
         # Delay before DNS propagation check
         delayBeforeCheck: 0
+        
         # Disable propagation check
         disablePropagationCheck: false
+        
         # Resolvers to use for DNS propagation check
         resolvers:
           - "1.1.1.1:53"
           - "8.8.8.8:53"
-
-  # Self-signed certificate resolver
+          
+  # === Self-Signed Resolver ===
   self-signed:
     # Self-signed certificate
     selfSigned: {}
 
-# === TLS Store Configuration ===
-tlsStore:
-  # Default TLS store
-  default:
-    # Default certificate
-    defaultCertificate:
-      certFile: /etc/traefik/certs/default.crt
-      keyFile: /etc/traefik/certs/default.key
+# === Pilot Configuration ===
+pilot:
+  # Token for Traefik Pilot
+  token: your-traefik-pilot-token
 
-# === Additional TLS Configuration ===
-# Additional TLS settings
+# === Experimental Features ===
+experimental:
+  # Enable plugins
+  plugins:
+    enabled: true
+    
+  # Enable HTTP/3
+  http3:
+    enabled: true
+
+# === Additional Configuration ===
 additionalArguments:
-  - "--tls.options.default.minVersion=VersionTLS12"
+  # === TLS Options ===
+  - "--tls.options.default.minVersion=VersionTLS13"
   - "--tls.options.default.maxVersion=VersionTLS13"
   - "--tls.options.default.cipherSuites=TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305"
   - "--tls.options.default.curvePreferences=CurveP521,CurveP384,CurveP256"
   - "--tls.options.default.preferServerCipherSuites=true"
   - "--tls.options.default.sessionTickets.enabled=true"
   - "--tls.options.default.alpnProtocols=h2,http/1.1"
+  - "--tls.options.default.renegotiationSupport=NoRenegotiation"
+  
+  # === Modern TLS Options ===
   - "--tls.options.modern.minVersion=VersionTLS13"
   - "--tls.options.modern.maxVersion=VersionTLS13"
+  - "--tls.options.modern.cipherSuites="
+  - "--tls.options.modern.curvePreferences=CurveP521,CurveP384,CurveP256"
+  - "--tls.options.modern.preferServerCipherSuites=true"
+  - "--tls.options.modern.sessionTickets.enabled=true"
+  - "--tls.options.modern.alpnProtocols=h2"
+  - "--tls.options.modern.renegotiationSupport=NoRenegotiation"
+  
+  # === Intermediate TLS Options ===
   - "--tls.options.intermediate.minVersion=VersionTLS12"
   - "--tls.options.intermediate.maxVersion=VersionTLS13"
   - "--tls.options.intermediate.cipherSuites=TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,TLS_DHE_RSA_WITH_AES_128_GCM_SHA256"
@@ -160,24 +276,32 @@ additionalArguments:
   - "--tls.options.intermediate.preferServerCipherSuites=true"
   - "--tls.options.intermediate.sessionTickets.enabled=true"
   - "--tls.options.intermediate.alpnProtocols=h2,http/1.1"
+  - "--tls.options.intermediate.renegotiationSupport=NoRenegotiation"
+  
+  # === Legacy TLS Options ===
+  - "--tls.options.legacy.minVersion=VersionTLS10"
+  - "--tls.options.legacy.maxVersion=VersionTLS13"
+  - "--tls.options.legacy.cipherSuites=TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,TLS_DHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_128_GCM_SHA256,TLS_RSA_WITH_AES_256_CBC_SHA,TLS_RSA_WITH_AES_128_CBC_SHA"
+  - "--tls.options.legacy.curvePreferences=CurveP521,CurveP384,CurveP256"
+  - "--tls.options.legacy.preferServerCipherSuites=true"
+  - "--tls.options.legacy.sessionTickets.enabled=true"
+  - "--tls.options.legacy.alpnProtocols=h2,http/1.1,spdy/3.1"
+  - "--tls.options.legacy.renegotiationSupport=RenegotiateOnceAsClient"
+  
+  # === Certificate Resolvers ===
   - "--certificatesresolvers.le.acme.email=admin@xvpn.local"
   - "--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json"
   - "--certificatesresolvers.le.acme.tlschallenge=true"
   - "--certificatesresolvers.le.acme.httpchallenge.entrypoint=web"
+  - "--certificatesresolvers.le.acme.dnschallenge.provider=cloudflare"
+  - "--certificatesresolvers.le.acme.dnschallenge.delayBeforeCheck=0"
+  - "--certificatesresolvers.le.acme.dnschallenge.disablePropagationCheck=false"
+  - "--certificatesresolvers.le.acme.dnschallenge.resolvers=1.1.1.1:53,8.8.8.8:53"
   - "--certificatesresolvers.self-signed.selfsigned=true"
-  - "--tlsstore.default.defaultcertificate.certfile=/etc/traefik/certs/default.crt"
-  - "--tlsstore.default.defaultcertificate.keyfile=/etc/traefik/certs/default.key"
-
-# === Certificate Pinning ===
-# Certificate pinning configuration
-certificatePinning:
-  # Enable certificate pinning
-  enabled: false
-  # Pinning mode
-  mode: SPKI
-  # Trusted certificates
-  trustedCertificates:
-    - /etc/traefik/certs/trusted.crt
-  # Trusted fingerprints
-  trustedFingerprints:
-    - "sha256//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+  
+  # === Pilot Configuration ===
+  - "--pilot.token=your-traefik-pilot-token"
+  
+  # === Experimental Features ===
+  - "--experimental.plugins.enabled=true"
+  - "--experimental.http3.enabled=true"

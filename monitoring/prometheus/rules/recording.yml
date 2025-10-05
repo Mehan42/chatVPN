@@ -1,0 +1,284 @@
+# XVPN Prometheus Recording Rules
+# Записывающие правила Prometheus для агрегации метрик
+
+# === Groups ===
+groups:
+  # === XVPN API Recording Rules ===
+  - name: xvpn-api-recording-rules
+    rules:
+      # API request rate
+      - record: xvpn_api_request_rate:requests_per_second
+        expr: rate(xvpn_api_requests_total[5m])
+
+      # API error rate
+      - record: xvpn_api_error_rate:errors_per_second
+        expr: rate(xvpn_api_errors_total[5m])
+
+      # API latency (95th percentile)
+      - record: xvpn_api_latency:p95_seconds
+        expr: histogram_quantile(0.95, rate(xvpn_api_request_duration_seconds_bucket[5m]))
+
+      # API latency (99th percentile)
+      - record: xvpn_api_latency:p99_seconds
+        expr: histogram_quantile(0.99, rate(xvpn_api_request_duration_seconds_bucket[5m]))
+
+      # API latency (average)
+      - record: xvpn_api_latency:avg_seconds
+        expr: rate(xvpn_api_request_duration_seconds_sum[5m]) / rate(xvpn_api_request_duration_seconds_count[5m])
+
+      # API uptime
+      - record: xvpn_api_uptime:percentage
+        expr: up{xvpn-api} * 100
+
+  # === XVPN Agent Recording Rules ===
+  - name: xvpn-agent-recording-rules
+    rules:
+      # Agent health score average (1h)
+      - record: xvpn_agent_health_score:avg_1h
+        expr: avg_over_time(xvpn_agent_health_score[1h])
+
+      # Agent health score average (24h)
+      - record: xvpn_agent_health_score:avg_24h
+        expr: avg_over_time(xvpn_agent_health_score[24h])
+
+      # Agent transport switches rate (per hour)
+      - record: xvpn_agent_transport_switches:rate_per_hour
+        expr: rate(xvpn_agent_transport_switches_total[1h])
+
+      # Agent errors rate (per hour)
+      - record: xvpn_agent_errors:rate_per_hour
+        expr: rate(xvpn_agent_errors_total[1h])
+
+      # Agent uptime
+      - record: xvpn_agent_uptime:percentage
+        expr: up{xvpn-agent} * 100
+
+  # === XVPN Bot Recording Rules ===
+  - name: xvpn-bot-recording-rules
+    rules:
+      # Bot message rate (per minute)
+      - record: xvpn_bot_message_rate:messages_per_minute
+        expr: rate(xvpn_bot_messages_total[1m])
+
+      # Bot error rate (per hour)
+      - record: xvpn_bot_errors:rate_per_hour
+        expr: rate(xvpn_bot_errors_total[1h])
+
+      # Bot uptime
+      - record: xvpn_bot_uptime:percentage
+        expr: up{xvpn-bot} * 100
+
+  # === XVPN Worker Recording Rules ===
+  - name: xvpn-worker-recording-rules
+    rules:
+      # Worker task rate (per minute)
+      - record: xvpn_worker_task_rate:tasks_per_minute
+        expr: rate(xvpn_worker_tasks_total[1m])
+
+      # Worker error rate (per hour)
+      - record: xvpn_worker_errors:rate_per_hour
+        expr: rate(xvpn_worker_errors_total[1h])
+
+      # Worker uptime
+      - record: xvpn_worker_uptime:percentage
+        expr: up{xvpn-worker} * 100
+
+  # === XVPN Orchestrator Recording Rules ===
+  - name: xvpn-orchestrator-recording-rules
+    rules:
+      # Orchestrator task rate (per minute)
+      - record: xvpn_orchestrator_task_rate:tasks_per_minute
+        expr: rate(xvpn_orchestrator_tasks_total[1m])
+
+      # Orchestrator error rate (per hour)
+      - record: xvpn_orchestrator_errors:rate_per_hour
+        expr: rate(xvpn_orchestrator_errors_total[1h])
+
+      # Orchestrator uptime
+      - record: xvpn_orchestrator_uptime:percentage
+        expr: up{xvpn-orchestrator} * 100
+
+  # === System Recording Rules ===
+  - name: system-recording-rules
+    rules:
+      # CPU usage percentage
+      - record: system_cpu_usage:percentage
+        expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)
+
+      # Memory usage percentage
+      - record: system_memory_usage:percentage
+        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100
+
+      # Disk usage percentage
+      - record: system_disk_usage:percentage
+        expr: (node_filesystem_size_bytes - node_filesystem_free_bytes) / node_filesystem_size_bytes * 100
+
+      # Network throughput (bytes per second)
+      - record: system_network_throughput:bytes_per_second
+        expr: rate(node_network_receive_bytes_total[5m]) + rate(node_network_transmit_bytes_total[5m])
+
+      # Network errors rate
+      - record: system_network_errors:errors_per_second
+        expr: rate(node_network_receive_errs_total[5m]) + rate(node_network_transmit_errs_total[5m])
+
+  # === Container Recording Rules ===
+  - name: container-recording-rules
+    rules:
+      # Container CPU usage
+      - record: container_cpu_usage:percentage
+        expr: rate(container_cpu_usage_seconds_total[5m]) * 100
+
+      # Container memory usage
+      - record: container_memory_usage:percentage
+        expr: container_memory_usage_bytes / container_spec_memory_limit_bytes * 100
+
+      # Container network throughput
+      - record: container_network_throughput:bytes_per_second
+        expr: rate(container_network_receive_bytes_total[5m]) + rate(container_network_transmit_bytes_total[5m])
+
+  # === Connection Recording Rules ===
+  - name: connection-recording-rules
+    rules:
+      # Active connections
+      - record: xvpn_active_connections:count
+        expr: xvpn_active_connections
+
+      # Total connections rate (per hour)
+      - record: xvpn_total_connections:rate_per_hour
+        expr: rate(xvpn_total_connections[1h])
+
+      # Connection success rate
+      - record: xvpn_connection_success_rate:percentage
+        expr: xvpn_active_connections / xvpn_total_connections * 100
+
+  # === Security Recording Rules ===
+  - name: security-recording-rules
+    rules:
+      # Security violations rate (per hour)
+      - record: xvpn_security_violations:rate_per_hour
+        expr: rate(xvpn_security_violations_total[1h])
+
+      # TLS handshake failures rate (per hour)
+      - record: xvpn_tls_handshake_failures:rate_per_hour
+        expr: rate(xvpn_tls_handshake_failures_total[1h])
+
+      # Certificate expiration days
+      - record: xvpn_certificate_expiry_days:days
+        expr: cert_expiry_days
+
+  # === Performance Recording Rules ===
+  - name: performance-recording-rules
+    rules:
+      # Response time (95th percentile)
+      - record: xvpn_response_time:p95_seconds
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))
+
+      # Response time (99th percentile)
+      - record: xvpn_response_time:p99_seconds
+        expr: histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m]))
+
+      # Response time (average)
+      - record: xvpn_response_time:avg_seconds
+        expr: rate(http_request_duration_seconds_sum[5m]) / rate(http_request_duration_seconds_count[5m])
+
+      # Request rate
+      - record: xvpn_request_rate:requests_per_second
+        expr: rate(http_requests_total[5m])
+
+  # === Health Recording Rules ===
+  - name: health-recording-rules
+    rules:
+      # Health score average (1h)
+      - record: xvpn_health_score:avg_1h
+        expr: avg_over_time(xvpn_health_score[1h])
+
+      # Health score average (24h)
+      - record: xvpn_health_score:avg_24h
+        expr: avg_over_time(xvpn_health_score[24h])
+
+      # Health score trend
+      - record: xvpn_health_score:trend
+        expr: deriv(xvpn_health_score[1h])
+
+  # === Alert Recording Rules ===
+  - name: alert-recording-rules
+    rules:
+      # Active alerts count
+      - record: xvpn_active_alerts:count
+        expr: count(ALERTS{alertstate="firing"})
+
+      # Alerts by severity
+      - record: xvpn_alerts_by_severity:count
+        expr: count by(severity) (ALERTS{alertstate="firing"})
+
+      # Alerts by service
+      - record: xvpn_alerts_by_service:count
+        expr: count by(service) (ALERTS{alertstate="firing"})
+
+# === Additional Configuration ===
+# Дополнительные настройки
+
+# Evaluation interval
+evaluation_interval: 15s
+
+# Rule files
+rule_files:
+  - "rules/alerts.yml"
+  - "rules/recording.yml"
+
+# Remote write
+remote_write:
+  - url: http://remote-storage:9090/api/v1/write
+    write_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'xvpn_(api|agent|bot|worker|orchestrator)_.*'
+        action: keep
+
+# Remote read
+remote_read:
+  - url: http://remote-storage:9090/api/v1/read
+    read_recent: true
+
+# Storage
+storage:
+  tsdb_path: /prometheus
+  retention_time: 200h
+  block_duration: 2h
+  wal_compression: true
+
+# Query
+query:
+  max_concurrency: 20
+  timeout: 2m
+  max_samples: 50000000
+
+# Logging
+log:
+  level: info
+  format: json
+  file: /var/log/prometheus/prometheus.log
+
+# Web
+web:
+  listen_address: 0.0.0.0:9090
+  read_timeout: 30s
+  write_timeout: 30s
+  idle_timeout: 5m
+
+# Tracing
+tracing:
+  jaeger:
+    sampling_server_url: http://jaeger:5778/sampling
+    local_agent_host_port: jaeger:6831
+    service_name: prometheus
+
+# Metrics
+metrics:
+  path: /metrics
+  enabled: true
+
+# Alertmanager
+alertmanager:
+  timeout: 10s
+  path: /api/v1/alerts
+  enabled: true

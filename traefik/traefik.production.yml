@@ -1,5 +1,5 @@
-# XVPN Traefik Production Configuration
-# Конфигурация Traefik для production среды
+# XVPN Traefik Configuration with Metrics and Monitoring
+# Конфигурация Traefik с метриками и мониторингом
 
 # === Global Configuration ===
 global:
@@ -97,6 +97,7 @@ accessLog:
       - "500"
       - "502"
       - "503"
+      - "504"
 
 # === Tracing Configuration ===
 tracing:
@@ -121,7 +122,7 @@ certificatesResolvers:
   # Let's Encrypt resolver
   le:
     acme:
-      email: admin@your-domain.com
+      email: admin@xvpn.local
       storage: /letsencrypt/acme.json
       tlsChallenge: {}
       httpChallenge:
@@ -161,10 +162,22 @@ additionalArguments:
   - "--tracing.jaeger.serviceName=traefik"
   - "--metrics.prometheus=true"
   - "--metrics.prometheus.entryPoint=metrics"
-  - "--certificatesresolvers.le.acme.email=admin@your-domain.com"
+  - "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0"
+  - "--certificatesresolvers.le.acme.email=admin@xvpn.local"
   - "--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json"
   - "--certificatesresolvers.le.acme.tlschallenge=true"
   - "--certificatesresolvers.le.acme.httpchallenge.entrypoint=web"
+  - "--certificatesresolvers.le.acme.dnschallenge.provider=cloudflare"
+  - "--certificatesresolvers.le.acme.dnschallenge.delayBeforeCheck=0"
+  - "--certificatesresolvers.le.acme.dnschallenge.disablePropagationCheck=false"
+  - "--certificatesresolvers.le.acme.dnschallenge.resolvers=1.1.1.1:53,8.8.8.8:53"
   - "--pilot.token=your-traefik-pilot-token"
   - "--experimental.plugins.enabled=true"
   - "--experimental.http3.enabled=true"
+  - "--api.dashboard=true"
+  - "--api.insecure=false"
+  - "--api.debug=false"
+  - "--log.format=json"
+  - "--log.filepath=/var/log/traefik/traefik.log"
+  - "--accesslog.bufferingsize=100"
+  - "--accesslog.filters.statuscodes=200,404,500,502,503,504"

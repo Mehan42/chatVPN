@@ -1,0 +1,136 @@
+# XVPN GitHub Release Drafter Workflow
+# Workflow для автоматического создания черновиков релизов
+
+name: Release Drafter
+
+on:
+  # Запуск при пуше в основную ветку
+  push:
+    branches:
+      - main
+      - develop
+      
+  # Запуск при создании pull request
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches:
+      - main
+      - develop
+
+  # Запуск вручную
+  workflow_dispatch:
+
+permissions:
+  # Требуются для создания и обновления релизов
+  contents: write
+  pull-requests: read
+
+jobs:
+  # === Обновление черновика релиза ===
+  update_release_draft:
+    name: Update Release Draft
+    runs-on: ubuntu-latest
+    steps:
+      # === Создание/обновление черновика релиза ===
+      - name: Draft Release
+        uses: release-drafter/release-drafter@v5
+        with:
+          config-name: release-drafter.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # === Публикация релиза ===
+  publish_release:
+    name: Publish Release
+    runs-on: ubuntu-latest
+    needs: update_release_draft
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+      # === Публикация релиза ===
+      - name: Publish Release
+        uses: release-drafter/release-drafter@v5
+        with:
+          config-name: release-drafter.yml
+          publish: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # === Уведомления о релизе ===
+  release_notifications:
+    name: Release Notifications
+    runs-on: ubuntu-latest
+    needs: [update_release_draft, publish_release]
+    if: always()
+    steps:
+      # === Уведомление в Slack ===
+      - name: Notify Slack about Release
+        if: success() && github.event_name == 'workflow_dispatch'
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          channel: "#releases"
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+          icon_emoji: ":rocket:"
+          username: "Release Bot"
+          
+      # === Уведомление в Telegram ===
+      - name: Notify Telegram about Release
+        if: success() && github.event_name == 'workflow_dispatch'
+        run: |
+          curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
+            -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+            -d text="🚀 New release published for ${{ github.repository }} on ${{ github.ref }}!"
+            
+      # === Уведомление по email ===
+      - name: Notify Email about Release
+        if: success() && github.event_name == 'workflow_dispatch'
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "🚀 New Release Published: XVPN"
+          body: |
+            A new release has been published for the XVPN repository.
+            
+            Repository: ${{ github.repository }}
+            Branch: ${{ github.ref }}
+            Commit: ${{ github.sha }}
+            
+            Please check the GitHub Releases page for details.
+          to: releases@xvpn.local
+          from: release-bot@xvpn.local
+
+# === Настройки по умолчанию ===
+defaults:
+  run:
+    shell: bash
+
+# === Переменные окружения ===
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+  TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+  TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+  EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
+  EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+
+# === Секреты, необходимые для работы ===
+# Для работы этого workflow необходимы следующие секреты:
+# - GITHUB_TOKEN: токен GitHub для доступа к API
+# - SLACK_WEBHOOK: webhook URL для Slack уведомлений
+# - TELEGRAM_BOT_TOKEN: токен Telegram бота для уведомлений
+# - TELEGRAM_CHAT_ID: ID чата для уведомлений
+# - EMAIL_USERNAME: имя пользователя для email уведомлений
+# - EMAIL_PASSWORD: пароль для email уведомлений
+
+# === Переменные среды ===
+# Следующие переменные могут быть установлены в настройках репозитория:
+# - RELEASE_DRAFTER_CONFIG: путь к конфигурационному файлу release-drafter (по умолчанию .github/release-drafter.yml)
+# - GITHUB_TOKEN: токен GitHub для доступа к API (по умолчанию secrets.GITHUB_TOKEN)
+# - SLACK_WEBHOOK: webhook URL для Slack уведомлений (по умолчанию secrets.SLACK_WEBHOOK)
+# - TELEGRAM_BOT_TOKEN: токен Telegram бота для уведомлений (по умолчанию secrets.TELEGRAM_BOT_TOKEN)
+# - TELEGRAM_CHAT_ID: ID чата для уведомлений (по умолчанию secrets.TELEGRAM_CHAT_ID)
+# - EMAIL_USERNAME: имя пользователя для email уведомлений (по умолчанию secrets.EMAIL_USERNAME)
+# - EMAIL_PASSWORD: пароль для email уведомлений (по умолчанию secrets.EMAIL_PASSWORD)

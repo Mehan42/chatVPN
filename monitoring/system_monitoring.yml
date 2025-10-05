@@ -1,0 +1,952 @@
+# XVPN System Monitoring Configuration
+# Конфигурация системного мониторинга
+
+# === Global Configuration ===
+global:
+  # Enable global monitoring
+  enabled: true
+  
+  # Monitoring interval
+  interval: 15s
+  
+  # Monitoring timeout
+  timeout: 10s
+  
+  # Monitoring retries
+  retries: 3
+
+# === System Metrics ===
+system:
+  # CPU metrics
+  cpu:
+    # Enable CPU monitoring
+    enabled: true
+    
+    # CPU metrics interval
+    interval: 15s
+    
+    # CPU metrics timeout
+    timeout: 10s
+    
+    # CPU metrics retries
+    retries: 3
+    
+    # CPU metrics path
+    path: /metrics/cpu
+    
+    # CPU metrics format
+    format: json
+    
+    # CPU metrics file
+    file: /var/log/xvpn/metrics/cpu.json
+    
+    # CPU metrics retention
+    retention: 7d
+    
+    # CPU metrics aggregation
+    aggregation: true
+    
+    # CPU metrics alerting
+    alerting: true
+    
+    # CPU metrics thresholds
+    thresholds:
+      # CPU usage threshold
+      usage: 80
+      
+      # CPU temperature threshold
+      temperature: 85
+      
+      # CPU frequency threshold
+      frequency: 3.5
+      
+      # CPU load average threshold
+      load_average: 1.5
+      
+      # CPU steal time threshold
+      steal_time: 5
+      
+      # CPU iowait threshold
+      iowait: 10
+      
+      # CPU softirq threshold
+      softirq: 5
+      
+      # CPU guest threshold
+      guest: 5
+      
+      # CPU nice threshold
+      nice: 5
+      
+      # CPU system threshold
+      system: 5
+      
+      # CPU user threshold
+      user: 5
+      
+      # CPU idle threshold
+      idle: 5
+      
+      # CPU irq threshold
+      irq: 5
+      
+      # CPU softirq threshold
+      softirq: 5
+      
+      # CPU steal threshold
+      steal: 5
+      
+      # CPU guest_nice threshold
+      guest_nice: 5
+      
+      # CPU context switches threshold
+      context_switches: 10000
+      
+      # CPU interrupts threshold
+      interrupts: 10000
+      
+      # CPU soft interrupts threshold
+      soft_interrupts: 10000
+      
+      # CPU syscalls threshold
+      syscalls: 10000
+
+  # Memory metrics
+  memory:
+    # Enable memory monitoring
+    enabled: true
+    
+    # Memory metrics interval
+    interval: 15s
+    
+    # Memory metrics timeout
+    timeout: 10s
+    
+    # Memory metrics retries
+    retries: 3
+    
+    # Memory metrics path
+    path: /metrics/memory
+    
+    # Memory metrics format
+    format: json
+    
+    # Memory metrics file
+    file: /var/log/xvpn/metrics/memory.json
+    
+    # Memory metrics retention
+    retention: 7d
+    
+    # Memory metrics aggregation
+    aggregation: true
+    
+    # Memory metrics alerting
+    alerting: true
+    
+    # Memory metrics thresholds
+    thresholds:
+      # Memory usage threshold
+      usage: 85
+      
+      # Memory available threshold
+      available: 15
+      
+      # Memory swap usage threshold
+      swap_usage: 50
+      
+      # Memory swap in threshold
+      swap_in: 1000
+      
+      # Memory swap out threshold
+      swap_out: 1000
+      
+      # Memory page faults threshold
+      page_faults: 1000
+      
+      # Memory major page faults threshold
+      major_page_faults: 100
+      
+      # Memory page ins threshold
+      page_ins: 1000
+      
+      # Memory page outs threshold
+      page_outs: 1000
+      
+      # Memory page dirty threshold
+      page_dirty: 1000
+      
+      # Memory page clean threshold
+      page_clean: 1000
+      
+      # Memory page activate threshold
+      page_activate: 1000
+      
+      # Memory page deactivate threshold
+      page_deactivate: 1000
+      
+      # Memory page steal threshold
+      page_steal: 1000
+      
+      # Memory page scan threshold
+      page_scan: 1000
+      
+      # Memory page refill threshold
+      page_refill: 1000
+      
+      # Memory page reclaim threshold
+      page_reclaim: 1000
+      
+      # Memory page migrate threshold
+      page_migrate: 1000
+      
+      # Memory page compact threshold
+      page_compact: 1000
+      
+      # Memory page split threshold
+      page_split: 1000
+      
+      # Memory page merge threshold
+      page_merge: 1000
+
+  # Disk metrics
+  disk:
+    # Enable disk monitoring
+    enabled: true
+    
+    # Disk metrics interval
+    interval: 30s
+    
+    # Disk metrics timeout
+    timeout: 15s
+    
+    # Disk metrics retries
+    retries: 3
+    
+    # Disk metrics path
+    path: /metrics/disk
+    
+    # Disk metrics format
+    format: json
+    
+    # Disk metrics file
+    file: /var/log/xvpn/metrics/disk.json
+    
+    # Disk metrics retention
+    retention: 7d
+    
+    # Disk metrics aggregation
+    aggregation: true
+    
+    # Disk metrics alerting
+    alerting: true
+    
+    # Disk metrics thresholds
+    thresholds:
+      # Disk usage threshold
+      usage: 90
+      
+      # Disk inodes usage threshold
+      inodes_usage: 95
+      
+      # Disk read bytes threshold
+      read_bytes: 104857600  # 100MB/s
+      
+      # Disk write bytes threshold
+      write_bytes: 104857600  # 100MB/s
+      
+      # Disk read operations threshold
+      read_operations: 1000
+      
+      # Disk write operations threshold
+      write_operations: 1000
+      
+      # Disk read time threshold
+      read_time: 1000
+      
+      # Disk write time threshold
+      write_time: 1000
+      
+      # Disk io time threshold
+      io_time: 1000
+      
+      # Disk weighted io time threshold
+      weighted_io_time: 1000
+      
+      # Disk sectors read threshold
+      sectors_read: 204800  # 100MB/s
+      
+      # Disk sectors written threshold
+      sectors_written: 204800  # 100MB/s
+      
+      # Disk io in progress threshold
+      io_in_progress: 100
+      
+      # Disk io merged read threshold
+      io_merged_read: 1000
+      
+      # Disk io merged write threshold
+      io_merged_write: 1000
+
+  # Network metrics
+  network:
+    # Enable network monitoring
+    enabled: true
+    
+    # Network metrics interval
+    interval: 15s
+    
+    # Network metrics timeout
+    timeout: 10s
+    
+    # Network metrics retries
+    retries: 3
+    
+    # Network metrics path
+    path: /metrics/network
+    
+    # Network metrics format
+    format: json
+    
+    # Network metrics file
+    file: /var/log/xvpn/metrics/network.json
+    
+    # Network metrics retention
+    retention: 7d
+    
+    # Network metrics aggregation
+    aggregation: true
+    
+    # Network metrics alerting
+    alerting: true
+    
+    # Network metrics thresholds
+    thresholds:
+      # Network bytes sent threshold
+      bytes_sent: 10485760  # 10MB/s
+      
+      # Network bytes received threshold
+      bytes_received: 10485760  # 10MB/s
+      
+      # Network packets sent threshold
+      packets_sent: 10000
+      
+      # Network packets received threshold
+      packets_received: 10000
+      
+      # Network errors in threshold
+      errors_in: 100
+      
+      # Network errors out threshold
+      errors_out: 100
+      
+      # Network drops in threshold
+      drops_in: 100
+      
+      # Network drops out threshold
+      drops_out: 100
+      
+      # Network collisions threshold
+      collisions: 10
+      
+      # Network multicast threshold
+      multicast: 10000
+      
+      # Network compressed in threshold
+      compressed_in: 1000
+      
+      # Network compressed out threshold
+      compressed_out: 1000
+      
+      # Network fifo in threshold
+      fifo_in: 100
+      
+      # Network fifo out threshold
+      fifo_out: 100
+      
+      # Network frame threshold
+      frame: 100
+      
+      # Network carrier threshold
+      carrier: 100
+      
+      # Network txqueuelen threshold
+      txqueuelen: 1000
+      
+      # Network speed threshold
+      speed: 1000000000  # 1Gbps
+      
+      # Network duplex threshold
+      duplex: full
+      
+      # Network autoneg threshold
+      autoneg: true
+
+# === Process Metrics ===
+process:
+  # Enable process monitoring
+  enabled: true
+  
+  # Process metrics interval
+  interval: 30s
+  
+  # Process metrics timeout
+  timeout: 15s
+  
+  # Process metrics retries
+  retries: 3
+  
+  # Process metrics path
+  path: /metrics/process
+  
+  # Process metrics format
+  format: json
+  
+  # Process metrics file
+  file: /var/log/xvpn/metrics/process.json
+  
+  # Process metrics retention
+  retention: 7d
+  
+  # Process metrics aggregation
+  aggregation: true
+  
+  # Process metrics alerting
+  alerting: true
+  
+  # Process metrics thresholds
+  thresholds:
+    # Process count threshold
+    count: 500
+    
+    # Process zombie count threshold
+    zombie_count: 10
+    
+    # Process threads threshold
+    threads: 1000
+    
+    # Process file descriptors threshold
+    file_descriptors: 10000
+    
+    # Process memory usage threshold
+    memory_usage: 1073741824  # 1GB
+    
+    # Process CPU usage threshold
+    cpu_usage: 50
+    
+    # Process uptime threshold
+    uptime: 86400  # 1 day
+    
+    # Process restarts threshold
+    restarts: 5
+    
+    # Process crashes threshold
+    crashes: 3
+    
+    # Process errors threshold
+    errors: 100
+    
+    # Process warnings threshold
+    warnings: 1000
+    
+    # Process info threshold
+    info: 10000
+    
+    # Process debug threshold
+    debug: 100000
+    
+    # Process trace threshold
+    trace: 1000000
+
+# === Service Metrics ===
+service:
+  # Enable service monitoring
+  enabled: true
+  
+  # Service metrics interval
+  interval: 30s
+  
+  # Service metrics timeout
+  timeout: 15s
+  
+  # Service metrics retries
+  retries: 3
+  
+  # Service metrics path
+  path: /metrics/service
+  
+  # Service metrics format
+  format: json
+  
+  # Service metrics file
+  file: /var/log/xvpn/metrics/service.json
+  
+  # Service metrics retention
+  retention: 7d
+  
+  # Service metrics aggregation
+  aggregation: true
+  
+  # Service metrics alerting
+  alerting: true
+  
+  # Service metrics thresholds
+  thresholds:
+    # Service uptime threshold
+    uptime: 86400  # 1 day
+    
+    # Service restarts threshold
+    restarts: 5
+    
+    # Service crashes threshold
+    crashes: 3
+    
+    # Service errors threshold
+    errors: 100
+    
+    # Service warnings threshold
+    warnings: 1000
+    
+    # Service info threshold
+    info: 10000
+    
+    # Service debug threshold
+    debug: 100000
+    
+    # Service trace threshold
+    trace: 1000000
+
+# === Application Metrics ===
+application:
+  # Enable application monitoring
+  enabled: true
+  
+  # Application metrics interval
+  interval: 15s
+  
+  # Application metrics timeout
+  timeout: 10s
+  
+  # Application metrics retries
+  retries: 3
+  
+  # Application metrics path
+  path: /metrics/application
+  
+  # Application metrics format
+  format: json
+  
+  # Application metrics file
+  file: /var/log/xvpn/metrics/application.json
+  
+  # Application metrics retention
+  retention: 7d
+  
+  # Application metrics aggregation
+  aggregation: true
+  
+  # Application metrics alerting
+  alerting: true
+  
+  # Application metrics thresholds
+  thresholds:
+    # Application response time threshold
+    response_time: 1000  # 1 second
+    
+    # Application throughput threshold
+    throughput: 1000  # 1000 requests/second
+    
+    # Application error rate threshold
+    error_rate: 5  # 5%
+    
+    # Application availability threshold
+    availability: 99.9  # 99.9%
+    
+    # Application latency threshold
+    latency: 500  # 500 milliseconds
+    
+    # Application jitter threshold
+    jitter: 100  # 100 milliseconds
+    
+    # Application packet loss threshold
+    packet_loss: 1  # 1%
+    
+    # Application retransmission threshold
+    retransmission: 5  # 5%
+    
+    # Application congestion threshold
+    congestion: 10  # 10%
+    
+    # Application bandwidth threshold
+    bandwidth: 104857600  # 100MB/s
+    
+    # Application connection timeout threshold
+    connection_timeout: 30  # 30 seconds
+    
+    # Application connection refused threshold
+    connection_refused: 10  # 10 connections/minute
+    
+    # Application connection reset threshold
+    connection_reset: 10  # 10 connections/minute
+    
+    # Application DNS resolution timeout threshold
+    dns_resolution_timeout: 5  # 5 seconds
+    
+    # Application DNS resolution error threshold
+    dns_resolution_error: 5  # 5 errors/minute
+    
+    # Application TLS handshake timeout threshold
+    tls_handshake_timeout: 10  # 10 seconds
+    
+    # Application TLS handshake error threshold
+    tls_handshake_error: 5  # 5 errors/minute
+    
+    # Application certificate expiration threshold
+    certificate_expiration: 30  # 30 days
+    
+    # Application certificate revoked threshold
+    certificate_revoked: 1  # 1 certificate
+    
+    # Application certificate mismatch threshold
+    certificate_mismatch: 1  # 1 certificate
+
+# === Security Metrics ===
+security:
+  # Enable security monitoring
+  enabled: true
+  
+  # Security metrics interval
+  interval: 60s
+  
+  # Security metrics timeout
+  timeout: 30s
+  
+  # Security metrics retries
+  retries: 3
+  
+  # Security metrics path
+  path: /metrics/security
+  
+  # Security metrics format
+  format: json
+  
+  # Security metrics file
+  file: /var/log/xvpn/metrics/security.json
+  
+  # Security metrics retention
+  retention: 30d
+  
+  # Security metrics aggregation
+  aggregation: true
+  
+  # Security metrics alerting
+  alerting: true
+  
+  # Security metrics thresholds
+  thresholds:
+    # Security vulnerability threshold
+    vulnerability: 1  # 1 vulnerability
+    
+    # Security breach threshold
+    breach: 1  # 1 breach
+    
+    # Security incident threshold
+    incident: 1  # 1 incident
+    
+    # Security threat threshold
+    threat: 1  # 1 threat
+    
+    # Security attack threshold
+    attack: 1  # 1 attack
+    
+    # Security intrusion threshold
+    intrusion: 1  # 1 intrusion
+    
+    # Security malware threshold
+    malware: 1  # 1 malware
+    
+    # Security phishing threshold
+    phishing: 1  # 1 phishing
+    
+    # Security spam threshold
+    spam: 100  # 100 spam messages/minute
+    
+    # Security ddos threshold
+    ddos: 1000  # 1000 requests/second
+    
+    # Security brute force threshold
+    brute_force: 10  # 10 attempts/minute
+    
+    # Security credential stuffing threshold
+    credential_stuffing: 10  # 10 attempts/minute
+    
+    # Security session hijacking threshold
+    session_hijacking: 1  # 1 hijacking attempt
+    
+    # Security man in the middle threshold
+    man_in_the_middle: 1  # 1 attack attempt
+    
+    # Security sql injection threshold
+    sql_injection: 1  # 1 attack attempt
+    
+    # Security cross site scripting threshold
+    cross_site_scripting: 1  # 1 attack attempt
+    
+    # Security cross site request forgery threshold
+    cross_site_request_forgery: 1  # 1 attack attempt
+    
+    # Security buffer overflow threshold
+    buffer_overflow: 1  # 1 attack attempt
+    
+    # Security integer overflow threshold
+    integer_overflow: 1  # 1 attack attempt
+    
+    # Security format string threshold
+    format_string: 1  # 1 attack attempt
+    
+    # Security privilege escalation threshold
+    privilege_escalation: 1  # 1 attack attempt
+    
+    # Security directory traversal threshold
+    directory_traversal: 1  # 1 attack attempt
+    
+    # Security command injection threshold
+    command_injection: 1  # 1 attack attempt
+    
+    # Security file inclusion threshold
+    file_inclusion: 1  # 1 attack attempt
+    
+    # Security remote code execution threshold
+    remote_code_execution: 1  # 1 attack attempt
+    
+    # Security remote file inclusion threshold
+    remote_file_inclusion: 1  # 1 attack attempt
+    
+    # Security local file inclusion threshold
+    local_file_inclusion: 1  # 1 attack attempt
+
+# === Performance Metrics ===
+performance:
+  # Enable performance monitoring
+  enabled: true
+  
+  # Performance metrics interval
+  interval: 15s
+  
+  # Performance metrics timeout
+  timeout: 10s
+  
+  # Performance metrics retries
+  retries: 3
+  
+  # Performance metrics path
+  path: /metrics/performance
+  
+  # Performance metrics format
+  format: json
+  
+  # Performance metrics file
+  file: /var/log/xvpn/metrics/performance.json
+  
+  # Performance metrics retention
+  retention: 7d
+  
+  # Performance metrics aggregation
+  aggregation: true
+  
+  # Performance metrics alerting
+  alerting: true
+  
+  # Performance metrics thresholds
+  thresholds:
+    # Performance response time threshold
+    response_time: 1000  # 1 second
+    
+    # Performance throughput threshold
+    throughput: 1000  # 1000 requests/second
+    
+    # Performance error rate threshold
+    error_rate: 5  # 5%
+    
+    # Performance availability threshold
+    availability: 99.9  # 99.9%
+    
+    # Performance latency threshold
+    latency: 500  # 500 milliseconds
+    
+    # Performance jitter threshold
+    jitter: 100  # 100 milliseconds
+    
+    # Performance packet loss threshold
+    packet_loss: 1  # 1%
+    
+    # Performance retransmission threshold
+    retransmission: 5  # 5%
+    
+    # Performance congestion threshold
+    congestion: 10  # 10%
+    
+    # Performance bandwidth threshold
+    bandwidth: 104857600  # 100MB/s
+    
+    # Performance connection timeout threshold
+    connection_timeout: 30  # 30 seconds
+    
+    # Performance connection refused threshold
+    connection_refused: 10  # 10 connections/minute
+    
+    # Performance connection reset threshold
+    connection_reset: 10  # 10 connections/minute
+    
+    # Performance DNS resolution timeout threshold
+    dns_resolution_timeout: 5  # 5 seconds
+    
+    # Performance DNS resolution error threshold
+    dns_resolution_error: 5  # 5 errors/minute
+    
+    # Performance TLS handshake timeout threshold
+    tls_handshake_timeout: 10  # 10 seconds
+    
+    # Performance TLS handshake error threshold
+    tls_handshake_error: 5  # 5 errors/minute
+    
+    # Performance certificate expiration threshold
+    certificate_expiration: 30  # 30 days
+    
+    # Performance certificate revoked threshold
+    certificate_revoked: 1  # 1 certificate
+    
+    # Performance certificate mismatch threshold
+    certificate_mismatch: 1  # 1 certificate
+
+# === Health Metrics ===
+health:
+  # Enable health monitoring
+  enabled: true
+  
+  # Health metrics interval
+  interval: 30s
+  
+  # Health metrics timeout
+  timeout: 15s
+  
+  # Health metrics retries
+  retries: 3
+  
+  # Health metrics path
+  path: /metrics/health
+  
+  # Health metrics format
+  format: json
+  
+  # Health metrics file
+  file: /var/log/xvpn/metrics/health.json
+  
+  # Health metrics retention
+  retention: 7d
+  
+  # Health metrics aggregation
+  aggregation: true
+  
+  # Health metrics alerting
+  alerting: true
+  
+  # Health metrics thresholds
+  thresholds:
+    # Health score threshold
+    score: 3  # 3/5
+    
+    # Health status threshold
+    status: healthy  # healthy, warning, critical
+    
+    # Health alert threshold
+    alert: 1  # 1 alert
+    
+    # Health warning threshold
+    warning: 5  # 5 warnings
+    
+    # Health critical threshold
+    critical: 1  # 1 critical
+    
+    # Health error threshold
+    error: 10  # 10 errors
+    
+    # Health failure threshold
+    failure: 3  # 3 failures
+    
+    # Health recovery threshold
+    recovery: 1  # 1 recovery
+    
+    # Health uptime threshold
+    uptime: 86400  # 1 day
+    
+    # Health downtime threshold
+    downtime: 300  # 5 minutes
+    
+    # Health availability threshold
+    availability: 99.9  # 99.9%
+    
+    # Health reliability threshold
+    reliability: 99.9  # 99.9%
+    
+    # Health maintainability threshold
+    maintainability: 99.9  # 99.9%
+    
+    # Health efficiency threshold
+    efficiency: 99.9  # 99.9%
+    
+    # Health portability threshold
+    portability: 99.9  # 99.9%
+    
+    # Health testability threshold
+    testability: 99.9  # 99.9%
+    
+    # Health scalability threshold
+    scalability: 99.9  # 99.9%
+    
+    # Health security threshold
+    security: 99.9  # 99.9%
+    
+    # Health usability threshold
+    usability: 99.9  # 99.9%
+    
+    # Health compatibility threshold
+    compatibility: 99.9  # 99.9%
+    
+    # Health interoperability threshold
+    interoperability: 99.9  # 99.9%
+    
+    # Health reliability threshold
+    reliability: 99.9  # 99.9%
+    
+    # Health performance threshold
+    performance: 99.9  # 99.9%
+    
+    # Health functionality threshold
+    functionality: 99.9  # 99.9%
+    
+    # Health maintainability threshold
+    maintainability: 99.9  # 99.9%
+    
+    # Health efficiency threshold
+    efficiency: 99.9  # 99.9%
+    
+    # Health portability threshold
+    portability: 99.9  # 99.9%
+    
+    # Health testability threshold
+    testability: 99.9  # 99.9%
+    
+    # Health scalability threshold
+    scalability: 99.9  # 99.9%
+    
+    # Health security threshold
+    security: 99.9  # 99.9%
+    
+    # Health usability threshold
+    usability: 99.9  # 99.9%
+    
+    # Health compatibility threshold
+    compatibility: 99.9  # 99.9%
+    
+    # Health interoperability threshold
+    interoperability: 99.9  # 99.9%

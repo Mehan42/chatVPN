@@ -1,0 +1,93 @@
+# XVPN Security Monitor Service
+# Сервис мониторинга безопасности для XVPN
+
+[Unit]
+Description=XVPN Security Monitor Service
+After=network.target xvpn-api.service
+Wants=network.target xvpn-api.service
+Requires=network.target xvpn-api.service
+
+[Service]
+Type=simple
+User=security-monitor
+Group=security-monitor
+WorkingDirectory=/opt/xvpn/server/security-monitor
+ExecStart=/usr/bin/python3 /opt/xvpn/server/security-monitor/security_monitor.py \
+  --config=/opt/xvpn/server/security-monitor/config.json \
+  --log-file=/var/log/security-monitor/security-monitor.log \
+  --log-level=INFO \
+  --log-format=json \
+  --api-url=https://security-monitor.xvpn.local \
+  --api-port=8451 \
+  --metrics-url=http://security-monitor-metrics:9090 \
+  --metrics-port=9090 \
+  --proxy-uri=https://security-proxy.xvpn.local \
+  --listen=0.0.0.0:8451 \
+  --listen-ipv6=[::]:8451 \
+  --forward-proxy \
+  --forward-proxy-host=forward-proxy.xvpn.local \
+  --forward-proxy-port=1080 \
+  --forward-proxy-username=${FORWARD_PROXY_USERNAME} \
+  --forward-proxy-password=${FORWARD_PROXY_PASSWORD} \
+  --forward-proxy-protocol=socks5 \
+  --forward-proxy-tls=true \
+  --forward-proxy-tls-verify=true \
+  --forward-proxy-tls-cert=/opt/xvpn/server/security-monitor/certs/forward-proxy.crt \
+  --forward-proxy-tls-key=/opt/xvpn/server/security-monitor/certs/forward-proxy.key \
+  --forward-proxy-tls-ca=/opt/xvpn/server/security-monitor/certs/ca.crt \
+  --forward-proxy-tls-cipher-suites=TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305 \
+  --forward-proxy-tls-curves=CurveP521,CurveP384,CurveP256 \
+  --forward-proxy-tls-prefer-server-cipher-suites=true \
+  --forward-proxy-tls-session-tickets=true \
+  --forward-proxy-tls-alpn-protocols=h2,http/1.1 \
+  --forward-proxy-tls-renegotiation-support=NoRenegotiation \
+  --forward-proxy-tls-max-version=VersionTLS13 \
+  --forward-proxy-tls-min-version=VersionTLS12 \
+  --forward-proxy-tls-compression=snappy \
+  --forward-proxy-tls-prefetch=true \
+  --forward-proxy-tls-prefetch-parallelism=4 \
+  --forward-proxy-tls-cache=true \
+  --forward-proxy-tls-cache-type=inmemory \
+  --forward-proxy-tls-cache-memory-size=536870912 \
+  --forward-proxy-tls-cache-ttl=1h \
+  --forward-proxy-tls-cache-eviction-strategy=lru \
+  --forward-proxy-tls-cache-compression=snappy \
+  --forward-proxy-tls-cache-prefetch=true \
+  --forward-proxy-tls-cache-prefetch-parallelism=4
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=xvpn-security-monitor
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/xvpn/server/security-monitor /var/log/security-monitor /opt/xvpn/data /tmp /var/run
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE CAP_SETGID CAP_SETUID
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE CAP_SETGID CAP_SETUID
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictSUIDSGID=true
+RemoveIPC=true
+PrivateUsers=true
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+MemoryMax=512M
+CPUQuota=25%
+TasksMax=256
+
+# Environment
+Environment=PYTHONPATH=/opt/xvpn/server/security-monitor
+Environment=LOG_DIR=/var/log/security-monitor
+Environment=SECURITY_MONITOR_DIR=/opt/xvpn/server/security-monitor
+Environment=INTERVAL=30
+Environment=FORWARD_PROXY_USERNAME=${FORWARD_PROXY_USERNAME}
+Environment=FORWARD_PROXY_PASSWORD=${FORWARD_PROXY_PASSWORD}
+
+[Install]
+WantedBy=multi-user.target

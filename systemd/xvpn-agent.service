@@ -1,5 +1,5 @@
 # XVPN Agent Service
-# Служба XVPN агента
+# Сервис агента для XVPN
 
 [Unit]
 Description=XVPN Agent Service
@@ -9,11 +9,11 @@ Requires=network.target xvpn-api.service
 
 [Service]
 Type=simple
-User=uss
-Group=uss
-WorkingDirectory=/home/uss/chatvpn/server/agent
-Environment=PYTHONPATH=/home/uss/chatvpn/server/agent
-ExecStart=/usr/bin/python3 /home/uss/chatvpn/server/agent/agent.py
+User=xvpn
+Group=xvpn
+WorkingDirectory=/opt/xvpn/server/agent
+Environment=PYTHONPATH=/opt/xvpn/server/agent
+ExecStart=/usr/bin/python3 /opt/xvpn/server/agent/agent.py
 Restart=always
 RestartSec=5
 StandardOutput=journal
@@ -25,7 +25,7 @@ NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=true
-ReadWritePaths=/home/uss/chatvpn/server/agent /var/log/xvpn /opt/xvpn/data
+ReadWritePaths=/opt/xvpn/server/agent /var/log/xvpn /opt/xvpn/data
 CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 ProtectKernelTunables=true

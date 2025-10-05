@@ -1,0 +1,98 @@
+# XVPN cAdvisor Service
+# Сервис мониторинга контейнеров cAdvisor для XVPN
+
+[Unit]
+Description=XVPN cAdvisor Service
+After=network.target docker.service
+Wants=network.target docker.service
+Requires=network.target docker.service
+
+[Service]
+Type=simple
+User=cadvisor
+Group=cadvisor
+WorkingDirectory=/opt/xvpn/server/cadvisor
+ExecStart=/usr/bin/cadvisor \
+  --port=8080 \
+  --logtostderr \
+  --housekeeping_interval=10s \
+  --max_housekeeping_interval=15s \
+  --allow_dynamic_housekeeping=true \
+  --docker_only=false \
+  --raw_cgroup_prefix_whitelist="" \
+  --perf_events_config="" \
+  --resctrl_interval=0 \
+  --block_device_blacklist="^/dev/loop.*" \
+  --disable_metrics="" \
+  --enable_load_reader=true \
+  --store_container_labels=true \
+  --whitelisted_container_labels="" \
+  --containerd=/run/containerd/containerd.sock \
+  --docker=tcp://localhost:2375 \
+  --storage_driver="" \
+  --storage_driver_buffer_duration=1m0s \
+  --storage_driver_db="cadvisor" \
+  --storage_driver_host="localhost:8086" \
+  --storage_driver_password="root" \
+  --storage_driver_secure=false \
+  --storage_driver_user="root" \
+  --event_storage_age_limit="default=24h" \
+  --event_storage_event_limit="default=100000" \
+  --application_metrics_count_limit=100 \
+  --disable_container_fs=false \
+  --docker_env_metadata_whitelist="" \
+  --docker_label_metadata_whitelist="" \
+  --global_housekeeping_interval=1m0s \
+  --http_check_poll_interval=30s \
+  --image_labels_allowlist="" \
+  --label_allowlist="" \
+  --pod_label_allowlist="" \
+  --raw_cgroup_prefix_allowlist="" \
+  --version=false \
+  --vmodule="" \
+  --alsologtostderr=false \
+  --log_backtrace_at=:0 \
+  --log_dir="" \
+  --logtostderr=true \
+  --stderrthreshold=0 \
+  --v=0 \
+  --vmodule="" \
+  --listen_ip=0.0.0.0 \
+  --profiling=true
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=xvpn-cadvisor
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/xvpn/server/cadvisor /var/log/cadvisor /tmp
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE CAP_SYS_ADMIN
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE CAP_SYS_ADMIN
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictSUIDSGID=true
+RemoveIPC=true
+PrivateUsers=true
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+MemoryMax=512M
+CPUQuota=25%
+TasksMax=256
+
+# Environment
+Environment=PYTHONPATH=/opt/xvpn/server/cadvisor
+Environment=LOG_DIR=/var/log/cadvisor
+Environment=CADVISOR_DIR=/opt/xvpn/server/cadvisor
+Environment=INTERVAL=30
+
+[Install]
+WantedBy=multi-user.target

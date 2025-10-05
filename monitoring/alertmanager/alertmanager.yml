@@ -1,0 +1,275 @@
+# XVPN Alertmanager Configuration
+# Конфигурация системы уведомлений Alertmanager
+
+# === Global Configuration ===
+global:
+  # Resolve timeout for alerts
+  resolve_timeout: 5m
+  
+  # SMTP configuration for email notifications
+  smtp_smarthost: 'smtp.gmail.com:587'
+  smtp_from: 'alerts@xvpn.local'
+  smtp_auth_username: 'alerts@xvpn.local'
+  smtp_auth_password: '${ALERTMANAGER_SMTP_PASSWORD}'
+  smtp_require_tls: true
+  
+  # HTTP configuration for webhook notifications
+  http_config:
+    # TLS configuration
+    tls_config:
+      insecure_skip_verify: false
+    
+    # Proxy configuration
+    proxy_url: ''
+    
+    # Timeout for HTTP requests
+    timeout: 30s
+
+# === Route Configuration ===
+route:
+  # Group by alert name
+  group_by: ['alertname']
+  
+  # Wait to group alerts
+  group_wait: 10s
+  
+  # Interval to send batch of alerts
+  group_interval: 10s
+  
+  # Repeat interval for firing alerts
+  repeat_interval: 1h
+  
+  # Receiver for alerts
+  receiver: 'telegram-notifications'
+  
+  # Child routes
+  routes:
+    # High priority alerts
+    - match:
+        severity: critical
+      receiver: 'telegram-notifications'
+      group_wait: 0s
+      group_interval: 5s
+      repeat_interval: 30m
+      
+    # Medium priority alerts
+    - match:
+        severity: warning
+      receiver: 'telegram-notifications'
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 2h
+      
+    # Low priority alerts
+    - match:
+        severity: info
+      receiver: 'telegram-notifications'
+      group_wait: 1m
+      group_interval: 10m
+      repeat_interval: 6h
+
+# === Receivers Configuration ===
+receivers:
+  # Telegram notifications
+  - name: 'telegram-notifications'
+    webhook_configs:
+      # Telegram bot webhook
+      - url: 'http://xvpn-bot:8443/webhook/alerts'
+        send_resolved: true
+        http_config:
+          tls_config:
+            insecure_skip_verify: true
+        # Maximum number of alerts to include in a single webhook
+        max_alerts: 10
+        
+  # Email notifications
+  - name: 'email-notifications'
+    email_configs:
+      # Email recipients
+      - to: 'admin@xvpn.local'
+        send_resolved: true
+        # Email subject template
+        subject: '{{ template "xvpn.default.subject" . }}'
+        # Email text template
+        text: '{{ template "xvpn.default.text" . }}'
+        # HTML template
+        html: '{{ template "xvpn.default.html" . }}'
+        # Headers
+        headers:
+          From: 'alerts@xvpn.local'
+          To: 'admin@xvpn.local'
+          Subject: '{{ template "xvpn.default.subject" . }}'
+        # Auth
+        auth_username: 'alerts@xvpn.local'
+        auth_password: '${ALERTMANAGER_EMAIL_PASSWORD}'
+        # TLS
+        require_tls: true
+        # Timeout
+        timeout: 30s
+        
+  # Slack notifications
+  - name: 'slack-notifications'
+    slack_configs:
+      # Slack webhook URL
+      - api_url: '${SLACK_WEBHOOK_URL}'
+        # Slack channel
+        channel: '#alerts'
+        # Username for bot
+        username: 'XVPN Alert Bot'
+        # Icon emoji
+        icon_emoji: ':rotating_light:'
+        # Send resolved alerts
+        send_resolved: true
+        # Title template
+        title: '{{ template "xvpn.slack.title" . }}'
+        # Text template
+        text: '{{ template "xvpn.slack.text" . }}'
+        # Footer template
+        footer: '{{ template "xvpn.slack.footer" . }}'
+        # Color based on severity
+        color: '{{ if eq .Status "firing" }}danger{{ else }}good{{ end }}'
+        # Fields
+        fields:
+          - title: 'Alert Name'
+            value: '{{ .CommonLabels.alertname }}'
+            short: true
+          - title: 'Severity'
+            value: '{{ .CommonLabels.severity }}'
+            short: true
+          - title: 'Instance'
+            value: '{{ .CommonLabels.instance }}'
+            short: true
+          - title: 'Summary'
+            value: '{{ .CommonAnnotations.summary }}'
+            short: false
+          - title: 'Description'
+            value: '{{ .CommonAnnotations.description }}'
+            short: false
+        # Timeout
+        timeout: 30s
+
+# === Templates Configuration ===
+templates:
+  # Alert templates directory
+  - '/etc/alertmanager/templates/*.tmpl'
+
+# === Inhibit Rules Configuration ===
+inhibit_rules:
+  # Inhibit warning alerts when critical alerts are firing
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    # Labels that must be equal
+    equal: ['alertname', 'instance']
+
+# === Mute Time Intervals Configuration ===
+mute_time_intervals:
+  # Mute during maintenance windows
+  - name: 'maintenance-windows'
+    time_intervals:
+      - times:
+          - start_time: '02:00'
+            end_time: '04:00'
+        weekdays: ['saturday', 'sunday']
+        months: ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
+
+# === Time Intervals Configuration ===
+time_intervals:
+  # Business hours
+  - name: 'business-hours'
+    time_intervals:
+      - times:
+          - start_time: '09:00'
+            end_time: '17:00'
+        weekdays: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
+        months: ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
+
+# === Alert Relabeling Configuration ===
+alert_relabel_configs:
+  # Add environment label
+  - source_labels: [__address__]
+    target_label: environment
+    replacement: production
+    
+  # Add service label
+  - source_labels: [job]
+    target_label: service
+    
+  # Add severity label if not present
+  - source_labels: [severity]
+    target_label: severity
+    replacement: info
+    regex: ''
+
+# === Logging Configuration ===
+log:
+  # Log level
+  level: info
+  
+  # Log format
+  format: logfmt
+  
+  # Log file
+  file: /var/log/alertmanager/alertmanager.log
+
+# === Metrics Configuration ===
+metrics:
+  # Enable metrics
+  enabled: true
+  
+  # Metrics path
+  path: /metrics
+  
+  # Enable Prometheus metrics
+  prometheus:
+    # Enable Prometheus metrics
+    enabled: true
+    
+    # Prometheus metrics path
+    path: /metrics
+    
+    # Prometheus metrics port
+    port: 9093
+
+# === Tracing Configuration ===
+tracing:
+  # Enable tracing
+  enabled: true
+  
+  # Tracing provider
+  provider: jaeger
+  
+  # Jaeger configuration
+  jaeger:
+    # Sampling server URL
+    sampling_server_url: http://jaeger:5778/sampling
+    
+    # Local agent host port
+    local_agent_host_port: jaeger:6831
+    
+    # Service name
+    service_name: alertmanager
+
+# === Additional Configuration ===
+additional_arguments:
+  # Additional command line arguments
+  - "--config.file=/etc/alertmanager/alertmanager.yml"
+  - "--storage.path=/alertmanager"
+  - "--data.retention=120h"
+  - "--web.listen-address=0.0.0.0:9093"
+  - "--web.external-url=https://alertmanager.xvpn.local"
+  - "--web.route-prefix=/"
+  - "--log.level=info"
+  - "--log.format=logfmt"
+  - "--log.file=/var/log/alertmanager/alertmanager.log"
+  - "--tracing.jaeger=true"
+  - "--tracing.jaeger.sampling-server-url=http://jaeger:5778/sampling"
+  - "--tracing.jaeger.local-agent-host-port=jaeger:6831"
+  - "--tracing.jaeger.service-name=alertmanager"
+  - "--metrics.enabled=true"
+  - "--metrics.path=/metrics"
+  - "--metrics.port=9093"
+  - "--alertmanager.timeout=10s"
+  - "--alertmanager.path=/api/v1/alerts"
+  - "--alertmanager.enabled=true"

@@ -25,16 +25,29 @@
 
 ### Method 1: Automated Installation (Recommended)
 
+For Server:
 ```bash
 # Clone the repository
 git clone https://github.com/Mehan42/chatVPN.git
 cd chatVPN
 
-# Run the installation script
-sudo ./installer/install_xvpn.sh
+# Run the server installation script (as root/sudo)
+sudo ./install_server.sh
 ```
 
-### Method 2: Manual Installation
+For Client:
+```bash
+# Clone the repository
+git clone https://github.com/Mehan42/chatVPN.git
+cd chatVPN
+
+# Run the client installation script (as regular user)
+./install_client.sh
+```
+
+### Method 2: Manual Installation with uv (Recommended)
+
+Modern installations should use `uv` for faster and more reliable dependency management:
 
 1. **Update system packages**
    ```bash
@@ -43,12 +56,13 @@ sudo ./installer/install_xvpn.sh
 
 2. **Install dependencies**
    ```bash
-   sudo apt install -y python3 python3-pip python3-venv curl wget git docker.io docker-compose jq
+   sudo apt install -y python3 python3-venv curl wget git docker.io docker-compose jq
    ```
 
 3. **Install uv package manager**
    ```bash
    curl -LsSf https://astral.sh/uv/install.sh | sh
+   # Or use pip: pip install uv
    ```
 
 4. **Create xvpn user**
@@ -68,14 +82,22 @@ sudo ./installer/install_xvpn.sh
    sudo chown -R xvpn:xvpn /opt/xvpn
    ```
 
-7. **Install Python dependencies**
+7. **Install Python dependencies with uv (recommended)**
+
+   For Server:
    ```bash
-   sudo -u xvpn bash -c "cd /opt/xvpn && pip3 install -r requirements.txt"
+   sudo -u xvpn bash -c "cd /opt/xvpn && uv pip install -r requirements_server.txt"
    ```
 
-8. **Install AI components**
+   For Client:
    ```bash
-   sudo -u xvpn bash -c "cd /opt/xvpn && pip3 install chromadb sentence-transformers"
+   sudo -u xvpn bash -c "cd /opt/xvpn && uv pip install -r requirements_client.txt"
+   ```
+
+   Alternative using pip3:
+   ```bash
+   sudo -u xvpn bash -c "cd /opt/xvpn && pip3 install -r requirements_server.txt"  # for server
+   sudo -u xvpn bash -c "cd /opt/xvpn && pip3 install -r requirements_client.txt"  # for client
    ```
 
 9. **Copy systemd services**
@@ -168,7 +190,9 @@ docker-compose logs -f
 
 ## Client Installation
 
-### Linux Client
+### Linux Client (Recommended Method)
+
+Using the automated script:
 ```bash
 # Clone repository
 git clone https://github.com/Mehan42/chatVPN.git
@@ -177,6 +201,39 @@ cd chatVPN
 # Run client installation script
 ./install_client.sh
 ```
+
+### Linux Client (Manual Installation with uv)
+
+For more control over the installation:
+
+1. **Install uv package manager**:
+   ```bash
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   ```
+
+2. **Install client dependencies**:
+   ```bash
+   uv pip install -r requirements_client.txt
+   # Or alternatively: pip3 install -r requirements_client.txt
+   ```
+
+3. **Install XRay** (required for VPN functionality):
+   ```bash
+   bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
+   ```
+
+4. **Prepare client directories**:
+   ```bash
+   mkdir -p ~/chatvpn/client
+   mkdir -p ~/chatvpn/client/logs
+   mkdir -p ~/chatvpn/client/states
+   mkdir -p ~/chatvpn/client/transports
+   ```
+
+5. **Run the client**:
+   ```bash
+   python3 client/vpn_client.py start
+   ```
 
 ### Windows Client
 Download the Windows installer from releases page and run as administrator.
@@ -225,9 +282,26 @@ sudo systemctl status xvpn-*
    - Check DNS resolution
 
 4. **Python dependency issues**
-   - Reinstall dependencies: `pip3 install -r requirements.txt --force-reinstall`
-   - Check Python version compatibility
-   - Verify virtual environment setup
+
+   Using uv (recommended):
+   ```bash
+   # Clear uv cache and reinstall
+   uv cache clean
+   uv pip install -r requirements_server.txt  # or requirements_client.txt
+   ```
+
+   Using pip:
+   ```bash
+   # Reinstall dependencies: 
+   pip3 install -r requirements_server.txt --force-reinstall  # or requirements_client.txt
+   # Check Python version compatibility
+   # Verify virtual environment setup
+   ```
+
+5. **uv-specific issues**
+   - Install uv: `curl -LsSf https://astral.sh/uv/install.sh | sh`
+   - Check uv version: `uv --version`
+   - Use uv pip: `uv pip install package_name`
 
 ### Logs Location
 
@@ -242,6 +316,13 @@ sudo systemctl status xvpn-*
 ```bash
 cd /opt/xvpn
 git pull
+
+# Update dependencies if changed
+sudo -u xvpn bash -c "cd /opt/xvpn && uv pip install -r requirements_server.txt"  # or requirements_client.txt
+
+# Or using pip:
+# sudo -u xvpn bash -c "cd /opt/xvpn && pip3 install -r requirements_server.txt --upgrade"
+
 sudo systemctl restart xvpn-*
 ```
 

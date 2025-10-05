@@ -40,7 +40,8 @@ install_dependencies() {
     # Проверяем, установлен ли uv
     if command -v uv &> /dev/null; then
         echo "✅ Найден uv, установка зависимостей через uv..."
-        uv pip install -r requirements_client.txt
+        # Используем флаг --system для установки в системное окружение
+        uv pip install --system -r requirements_client.txt
         return 0
     else
         echo "⚠️ uv не найден, устанавливаем..."
@@ -48,7 +49,7 @@ install_dependencies() {
             # Повторная проверка после установки
             if command -v uv &> /dev/null; then
                 echo "✅ Найден uv, установка зависимостей через uv..."
-                uv pip install -r requirements_client.txt
+                uv pip install --system -r requirements_client.txt
                 return 0
             else
                 echo "⚠️ uv не доступен после установки, используем pip..."

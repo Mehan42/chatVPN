@@ -105,7 +105,8 @@ Modern installations should use `uv` for faster and more reliable dependency man
    # Try uv first (if uv is available)
    if command -v uv &> /dev/null; then
        # Run with uv from user's path (using sudo -i to ensure proper environment)
-       sudo -i -u xvpn bash -c "cd /opt/xvpn && ~/.local/bin/uv pip install -r requirements_server.txt"
+       # Use --system flag to install in non-virtual environment
+       sudo -i -u xvpn bash -c "cd /opt/xvpn && ~/.local/bin/uv pip install --system -r requirements_server.txt"
    else
        # Fallback to pip
        sudo -u xvpn bash -c "cd /opt/xvpn && pip3 install -r requirements_server.txt"
@@ -418,7 +419,8 @@ fi
 # Try uv first (if uv is available)
 if command -v uv &> /dev/null; then
     # Run with uv from user's path
-    sudo -i -u xvpn bash -c "cd /opt/xvpn && ~/.local/bin/uv pip install -r requirements_server.txt --upgrade"  # or requirements_client.txt
+    # Use --system flag to install in non-virtual environment
+    sudo -i -u xvpn bash -c "cd /opt/xvpn && ~/.local/bin/uv pip install --system -r requirements_server.txt --upgrade"  # or requirements_client.txt
 else
     # Fallback to pip
     sudo -u xvpn bash -c "cd /opt/xvpn && pip3 install -r requirements_server.txt --upgrade"  # or requirements_client.txt

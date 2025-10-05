@@ -11,17 +11,21 @@ if ! command -v python3 &> /dev/null; then
     exit 1
 fi
 
-# Функция установки uv (системно)
+# Функция установки uv с созданием системного symlink
 install_uv_system_wide() {
     echo "📦 Установка uv (менеджер пакетов)..."
     
-    # Установка uv в системную директорию для доступности всем пользователям
+    # Установка uv в локальную директорию, затем создание системного symlink
     if command -v curl &> /dev/null; then
-        curl -LsSf https://astral.sh/uv/install.sh | sh -s -- -p /usr/local/bin
-        # Обновляем PATH для использования uv
-        export PATH="$PATH:/root/.cargo/bin"
-        source "$HOME/.cargo/env" 2>/dev/null || true
-        echo "✅ uv установлен в /usr/local/bin"
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+        # Обновляем PATH для использования uv в текущей сессии
+        export PATH="$HOME/.local/bin:$PATH"
+        
+        # Создаем системный symlink для доступности другим пользователям
+        if command -v sudo &> /dev/null; then
+            sudo ln -sf "$HOME/.local/bin/uv" /usr/local/bin/uv 2>/dev/null || true
+        fi
+        echo "✅ uv установлен и доступен системно"
         return 0
     else
         echo "❌ curl не найден, невозможно установить uv"
@@ -33,12 +37,8 @@ install_uv_system_wide() {
 install_dependencies() {
     echo "📦 Установка зависимостей для клиента..."
     
-    # Проверяем, установлен ли uv системно
-    if command -v /usr/local/bin/uv &> /dev/null; then
-        echo "✅ Найден системный uv, установка зависимостей через uv..."
-        /usr/local/bin/uv pip install -r requirements_client.txt
-        return 0
-    elif command -v uv &> /dev/null; then
+    # Проверяем, установлен ли uv
+    if command -v uv &> /dev/null; then
         echo "✅ Найден uv, установка зависимостей через uv..."
         uv pip install -r requirements_client.txt
         return 0
@@ -46,9 +46,9 @@ install_dependencies() {
         echo "⚠️ uv не найден, устанавливаем..."
         if install_uv_system_wide; then
             # Повторная проверка после установки
-            if command -v /usr/local/bin/uv &> /dev/null; then
-                echo "✅ Найден системный uv, установка зависимостей через uv..."
-                /usr/local/bin/uv pip install -r requirements_client.txt
+            if command -v uv &> /dev/null; then
+                echo "✅ Найден uv, установка зависимостей через uv..."
+                uv pip install -r requirements_client.txt
                 return 0
             else
                 echo "⚠️ uv не доступен после установки, используем pip..."

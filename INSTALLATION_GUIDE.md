@@ -86,30 +86,26 @@ Modern installations should use `uv` for faster and more reliable dependency man
 
    First, ensure uv is installed system-wide (recommended):
    ```bash
-   # Install uv system-wide so it's available to all users
-   curl -LsSf https://astral.sh/uv/install.sh | sh -s -- -p /usr/local/bin
-   # Add uv to PATH for root user (for use with sudo -u)
-   export PATH="$PATH:/root/.cargo/bin"
-   # Reload shell to make sure uv is available
-   source "$HOME/.cargo/env" 2>/dev/null || true
-   ```
-
-   Alternative: Install uv with fallback to pip
-   ```bash
-   # Install uv if not already present (system-wide)
-   if ! command -v uv &> /dev/null; then
-       curl -LsSf https://astral.sh/uv/install.sh | sh -s -- -p /usr/local/bin
-   fi
-   export PATH="$PATH:/root/.cargo/bin"
-   source "$HOME/.cargo/env" 2>/dev/null || true
+   # Install uv to default location ($HOME/.local/bin) and add to PATH
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   # Add uv to PATH for current session
+   export PATH="$HOME/.local/bin:$PATH"
+   # Make it persistent in shell profile
+   echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
    ```
 
    For Server (with fallback to pip if uv fails):
    ```bash
-   # Try uv first (check if uv is available system-wide)
+   # Install uv if not already present
+   if ! command -v uv &> /dev/null; then
+       curl -LsSf https://astral.sh/uv/install.sh | sh
+       export PATH="$HOME/.local/bin:$PATH"
+   fi
+   
+   # Try uv first (if uv is available)
    if command -v uv &> /dev/null; then
-       # Use uv with path to system installation
-       sudo -u xvpn bash -c "cd /opt/xvpn && /usr/local/bin/uv pip install -r requirements_server.txt"
+       # Run with uv from user's path (using sudo -i to ensure proper environment)
+       sudo -i -u xvpn bash -c "cd /opt/xvpn && ~/.local/bin/uv pip install -r requirements_server.txt"
    else
        # Fallback to pip
        sudo -u xvpn bash -c "cd /opt/xvpn && pip3 install -r requirements_server.txt"
@@ -118,22 +114,30 @@ Modern installations should use `uv` for faster and more reliable dependency man
 
    For Client (with fallback to pip if uv fails):
    ```bash
-   # Try uv first (check if uv is available system-wide)
+   # Install uv if not already present
+   if ! command -v uv &> /dev/null; then
+       curl -LsSf https://astral.sh/uv/install.sh | sh
+       export PATH="$HOME/.local/bin:$PATH"
+   fi
+   
+   # Try uv first (if uv is available)
    if command -v uv &> /dev/null; then
-       # Use uv with path to system installation
-       sudo -u xvpn bash -c "cd /opt/xvpn && /usr/local/bin/uv pip install -r requirements_client.txt"
+       # Run with uv from user's path
+       sudo -i -u xvpn bash -c "cd /opt/xvpn && ~/.local/bin/uv pip install -r requirements_client.txt"
    else
        # Fallback to pip
        sudo -u xvpn bash -c "cd /opt/xvpn && pip3 install -r requirements_client.txt"
    fi
    ```
    
-   Alternative method - Install uv in a location accessible to xvpn user:
+   Alternative method - Create a system-wide symlink:
    ```bash
-   # Download and install uv to a system location
-   curl -LsSf https://astral.sh/uv/install.sh | sh -s -- -f
-   # Make sure PATH includes uv location
-   sudo -u xvpn bash -c "source \$HOME/.cargo/env 2>/dev/null || true && exec bash -c 'cd /opt/xvpn && uv pip install -r requirements_server.txt'"
+   # Install uv normally
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   # Create a system-wide symlink (requires root)
+   sudo ln -sf $HOME/.local/bin/uv /usr/local/bin/uv
+   # Now it's available to all users
+   sudo -u xvpn bash -c "cd /opt/xvpn && uv pip install -r requirements_server.txt"
    ```
 
 9. **Copy systemd services**
@@ -354,10 +358,16 @@ cd /opt/xvpn
 git pull
 
 # Update dependencies with fallback
-# Try uv first (check if uv is available system-wide)
+# Ensure uv is available
+if ! command -v uv &> /dev/null; then
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    export PATH="$HOME/.local/bin:$PATH"
+fi
+
+# Try uv first (if uv is available)
 if command -v uv &> /dev/null; then
-    # Use uv with path to system installation
-    sudo -u xvpn bash -c "cd /opt/xvpn && /usr/local/bin/uv pip install -r requirements_server.txt --upgrade"  # or requirements_client.txt
+    # Run with uv from user's path
+    sudo -i -u xvpn bash -c "cd /opt/xvpn && ~/.local/bin/uv pip install -r requirements_server.txt --upgrade"  # or requirements_client.txt
 else
     # Fallback to pip
     sudo -u xvpn bash -c "cd /opt/xvpn && pip3 install -r requirements_server.txt --upgrade"  # or requirements_client.txt

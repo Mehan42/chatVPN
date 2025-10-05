@@ -92,6 +92,7 @@ class VPNStateMachine:
         self.event_queue = []
         self.lock = threading.Lock()
         self.state_callbacks = {}
+        self.last_state = None  # Инициализация переменной для отслеживания предыдущего состояния
         
         # Инициализация путей
         self.state_dir = Path.home() / 'chatvpn' / 'client' / 'states'
@@ -378,7 +379,7 @@ class VPNStateMachine:
         
         # Попробовать обновить список транспортов
         try:
-            from discover import discover_transports
+            from .discover import discover_transports
             manifest_path = Path.home() / 'chatvpn' / 'client' / 'transports' / 'manifest.json'
             discovered = discover_transports(manifest_path)
             if discovered:

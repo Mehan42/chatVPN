@@ -12,7 +12,7 @@ import subprocess
 import requests
 from pathlib import Path
 from typing import Dict, List, Optional, Any
-from discover import discover_transports
+from .discover import discover_transports
 from chatvpn_backend import reload_xray_config
 
 # Настройка логирования
@@ -223,9 +223,11 @@ class TransportManager:
                 config = self.current_transport.get('config', {}) if self.current_transport else {}
                 if config.get('tls', {}).get('enabled', False):
                     import ssl
+                    # Используем контекст по умолчанию с проверкой сертификатов
                     context = ssl.create_default_context()
-                    context.check_hostname = False
-                    context.verify_mode = ssl.CERT_NONE
+                    # Для VPN транспортов может потребоваться обработка самоподписных сертификатов
+                    # В продакшене рекомендуется использовать доверенные сертификаты
+                    # или ввести механизм доверия к определенным сертификатам
                     
                     # Пробуем IPv4
                     try:
@@ -233,6 +235,19 @@ class TransportManager:
                             with context.wrap_socket(sock, server_hostname=host) as ssock:
                                 logger.debug(f"TLS connectivity to {host}:{port} successful")
                                 return True
+                    except ssl.CertificateError:
+                        # Если сертификат недействителен, можно попробовать с отключенной проверкой
+                        # как временная мера для самоподписных сертификатов
+                        insecure_context = ssl.create_default_context()
+                        insecure_context.check_hostname = False
+                        insecure_context.verify_mode = ssl.CERT_NONE
+                        try:
+                            with socket.create_connection((host, port), timeout) as sock:
+                                with insecure_context.wrap_socket(sock, server_hostname=host) as ssock:
+                                    logger.warning(f"TLS connectivity to {host}:{port} successful with insecure context")
+                                    return True
+                        except:
+                            pass
                     except:
                         pass
                     
@@ -242,6 +257,19 @@ class TransportManager:
                             with context.wrap_socket(sock, server_hostname=host) as ssock:
                                 logger.debug(f"IPv6 TLS connectivity to {host}:{port} successful")
                                 return True
+                    except ssl.CertificateError:
+                        # Если сертификат недействителен, можно попробовать с отключенной проверкой
+                        # как временная мера для самоподписных сертификатов
+                        insecure_context = ssl.create_default_context()
+                        insecure_context.check_hostname = False
+                        insecure_context.verify_mode = ssl.CERT_NONE
+                        try:
+                            with socket.create_connection((host, port), timeout) as sock:
+                                with insecure_context.wrap_socket(sock, server_hostname=host) as ssock:
+                                    logger.warning(f"IPv6 TLS connectivity to {host}:{port} successful with insecure context")
+                                    return True
+                        except:
+                            pass
                     except:
                         pass
             

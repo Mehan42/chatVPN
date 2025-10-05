@@ -11,7 +11,22 @@ if ! command -v python3 &> /dev/null; then
     exit 1
 fi
 
-# Функция установки uv с созданием системного symlink
+# Создание виртуального окружения для избежания проблем с PEP 668
+setup_virtual_environment() {
+    echo "🔧 Создание виртуального окружения для избежания PEP 668..."
+    
+    # Установка виртуального окружения в домашнюю директорию пользователя
+    python3 -m venv ~/chatvpn/venv
+    source ~/chatvpn/venv/bin/activate
+    
+    # Установка pip в виртуальном окружении
+    pip install --upgrade pip
+    
+    echo "✅ Виртуальное окружение создано"
+    return 0
+}
+
+# Функция установки uv и создание системного symlink
 install_uv_system_wide() {
     echo "📦 Установка uv (менеджер пакетов)..."
     
@@ -37,37 +52,48 @@ install_uv_system_wide() {
 install_dependencies() {
     echo "📦 Установка зависимостей для клиента..."
     
-    # Проверяем, установлен ли uv
+    # Обработка PEP 668 - сначала пробуем в виртуальном окружении
+    if [ -d "~/chatvpn/venv" ]; then
+        echo "⚠️ Проверка виртуального окружения в ~/chatvpn/venv..."
+        if [ -f "~/chatvpn/venv/bin/activate" ]; then
+            echo "✅ Использование существующего виртуального окружения"
+            source ~/chatvpn/venv/bin/activate
+        else
+            echo "⚠️ Виртуальное окружение не найдено, создание..."
+            setup_virtual_environment
+            source ~/chatvpn/venv/bin/activate
+        fi
+    else
+        echo "⚠️ Виртуальное окружение не найдено, создание..."
+        setup_virtual_environment
+        source ~/chatvpn/venv/bin/activate
+    fi
+    
+    # Проверяем, установлен ли uv в системе
     if command -v uv &> /dev/null; then
         echo "✅ Найден uv, установка зависимостей через uv..."
-        # Используем флаг --system для установки в системное окружение
-        uv pip install --system -r requirements_client.txt
+        # Используем uv в виртуальном окружении
+        uv pip install -r requirements_client.txt
         return 0
     else
-        echo "⚠️ uv не найден, устанавливаем..."
+        echo "⚠️ uv не найден, пробуем установить..."
         if install_uv_system_wide; then
-            # Повторная проверка после установки
             if command -v uv &> /dev/null; then
                 echo "✅ Найден uv, установка зависимостей через uv..."
-                uv pip install --system -r requirements_client.txt
+                uv pip install -r requirements_client.txt
                 return 0
             else
-                echo "⚠️ uv не доступен после установки, используем pip..."
+                echo "⚠️ uv не доступен после установки, используем pip из виртуального окружения..."
             fi
         else
-            echo "⚠️ Не удалось установить uv, используем pip..."
+            echo "⚠️ Не удалось установить uv, используем pip из виртуального окружения..."
         fi
     fi
     
-    # Попытка 2: Использовать pip3
-    if command -v pip3 &> /dev/null; then
-        echo "✅ Найден pip3, установка зависимостей через pip3..."
-        pip3 install -r requirements_client.txt
-        return 0
-    else
-        echo "❌ Ни uv, ни pip3 не найдены"
-        exit 1
-    fi
+    # Установка через pip в виртуальном окружении
+    echo "✅ Установка зависимостей через pip в виртуальном окружении..."
+    pip install -r requirements_client.txt
+    return 0
 }
 
 # Попытка установки зависимостей
@@ -107,6 +133,6 @@ fi
 echo "✅ Установка клиентской части XVPN завершена!"
 echo ""
 echo "📋 Клиент готов к использованию. Для запуска используйте:"
-echo "   python3 client/vpn_client.py start"
+echo "   ~/chatvpn/venv/bin/python3 client/vpn_client.py start"
 echo ""
 echo "🔧 Для настройки подключения отредактируйте ~/chatvpn/client/client.json"

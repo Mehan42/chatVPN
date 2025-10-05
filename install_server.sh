@@ -11,7 +11,22 @@ if ! command -v python3 &> /dev/null; then
     exit 1
 fi
 
-# Функция установки uv с созданием системного symlink
+# Создание виртуального окружения для избежания проблем с PEP 668
+setup_virtual_environment() {
+    echo "🔧 Создание виртуального окружения для избежания PEP 668..."
+    
+    # Установка виртуального окружения
+    python3 -m venv /opt/xvpn/venv
+    source /opt/xvpn/venv/bin/activate
+    
+    # Установка pip в виртуальном окружении
+    pip install --upgrade pip
+    
+    echo "✅ Виртуальное окружение создано"
+    return 0
+}
+
+# Функция установки uv и создание системного symlink
 install_uv_system_wide() {
     echo "📦 Установка uv (менеджер пакетов)..."
     
@@ -37,37 +52,41 @@ install_uv_system_wide() {
 install_dependencies() {
     echo "📦 Установка зависимостей для сервера..."
     
-    # Проверяем, установлен ли uv
+    # Обработка PEP 668 - сначала пробуем в виртуальном окружении
+    if [ -d "/opt/xvpn/venv" ]; then
+        echo "✅ Использование существующего виртуального окружения"
+        source /opt/xvpn/venv/bin/activate
+    else
+        echo "⚠️ Виртуальное окружение не найдено, создание..."
+        setup_virtual_environment
+        source /opt/xvpn/venv/bin/activate
+    fi
+    
+    # Проверяем, установлен ли uv в системе
     if command -v uv &> /dev/null; then
         echo "✅ Найден uv, установка зависимостей через uv..."
-        # Используем флаг --system для установки в системное окружение
-        uv pip install --system -r requirements_server.txt
+        # Используем uv в виртуальном окружении
+        uv pip install -r requirements_server.txt
         return 0
     else
-        echo "⚠️ uv не найден, устанавливаем..."
+        echo "⚠️ uv не найден, пробуем установить..."
         if install_uv_system_wide; then
-            # Повторная проверка после установки
             if command -v uv &> /dev/null; then
                 echo "✅ Найден uv, установка зависимостей через uv..."
-                uv pip install --system -r requirements_server.txt
+                uv pip install -r requirements_server.txt
                 return 0
             else
-                echo "⚠️ uv не доступен после установки, используем pip..."
+                echo "⚠️ uv не доступен после установки, используем pip из виртуального окружения..."
             fi
         else
-            echo "⚠️ Не удалось установить uv, используем pip..."
+            echo "⚠️ Не удалось установить uv, используем pip из виртуального окружения..."
         fi
     fi
     
-    # Попытка 2: Использовать pip3
-    if command -v pip3 &> /dev/null; then
-        echo "✅ Найден pip3, установка зависимостей через pip3..."
-        pip3 install -r requirements_server.txt
-        return 0
-    else
-        echo "❌ Ни uv, ни pip3 не найдены"
-        exit 1
-    fi
+    # Установка через pip в виртуальном окружении
+    echo "✅ Установка зависимостей через pip в виртуальном окружении..."
+    pip install -r requirements_server.txt
+    return 0
 }
 
 # Попытка установки зависимостей
@@ -106,6 +125,6 @@ fi
 echo "✅ Установка серверной части XVPN завершена!"
 echo ""
 echo "📋 Для запуска компонентов используйте:"
-echo "   API: python3 server/api/app.py"
-echo "   Agent: python3 server/agent/agent.py"
-echo "   Orchestrator: python3 server/agent/orchestrator.py"
+echo "   API: /opt/xvpn/venv/bin/python3 server/api/app.py"
+echo "   Agent: /opt/xvpn/venv/bin/python3 server/agent/agent.py"
+echo "   Orchestrator: /opt/xvpn/venv/bin/python3 server/agent/orchestrator.py"

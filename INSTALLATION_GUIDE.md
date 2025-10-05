@@ -82,22 +82,36 @@ Modern installations should use `uv` for faster and more reliable dependency man
    sudo chown -R xvpn:xvpn /opt/xvpn
    ```
 
-7. **Install Python dependencies with uv (recommended)**
+7. **Install Python dependencies (with automatic uv installation if needed)**
 
-   For Server:
+   First, ensure uv is installed (recommended):
    ```bash
-   sudo -u xvpn bash -c "cd /opt/xvpn && uv pip install -r requirements_server.txt"
+   # Install uv if not already present
+   if ! command -v uv &> /dev/null; then
+       curl -LsSf https://astral.sh/uv/install.sh | sh
+   fi
    ```
 
-   For Client:
+   For Server (with fallback to pip if uv fails):
    ```bash
-   sudo -u xvpn bash -c "cd /opt/xvpn && uv pip install -r requirements_client.txt"
+   # Try uv first
+   if command -v uv &> /dev/null; then
+       sudo -u xvpn bash -c "cd /opt/xvpn && uv pip install -r requirements_server.txt"
+   else
+       # Fallback to pip
+       sudo -u xvpn bash -c "cd /opt/xvpn && pip3 install -r requirements_server.txt"
+   fi
    ```
 
-   Alternative using pip3:
+   For Client (with fallback to pip if uv fails):
    ```bash
-   sudo -u xvpn bash -c "cd /opt/xvpn && pip3 install -r requirements_server.txt"  # for server
-   sudo -u xvpn bash -c "cd /opt/xvpn && pip3 install -r requirements_client.txt"  # for client
+   # Try uv first
+   if command -v uv &> /dev/null; then
+       sudo -u xvpn bash -c "cd /opt/xvpn && uv pip install -r requirements_client.txt"
+   else
+       # Fallback to pip
+       sudo -u xvpn bash -c "cd /opt/xvpn && pip3 install -r requirements_client.txt"
+   fi
    ```
 
 9. **Copy systemd services**
@@ -317,11 +331,14 @@ sudo systemctl status xvpn-*
 cd /opt/xvpn
 git pull
 
-# Update dependencies if changed
-sudo -u xvpn bash -c "cd /opt/xvpn && uv pip install -r requirements_server.txt"  # or requirements_client.txt
-
-# Or using pip:
-# sudo -u xvpn bash -c "cd /opt/xvpn && pip3 install -r requirements_server.txt --upgrade"
+# Update dependencies with fallback
+# Try uv first
+if command -v uv &> /dev/null; then
+    sudo -u xvpn bash -c "cd /opt/xvpn && uv pip install -r requirements_server.txt --upgrade"  # or requirements_client.txt
+else
+    # Fallback to pip
+    sudo -u xvpn bash -c "cd /opt/xvpn && pip3 install -r requirements_server.txt --upgrade"  # or requirements_client.txt
+fi
 
 sudo systemctl restart xvpn-*
 ```

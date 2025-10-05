@@ -1,20 +1,18 @@
 [Unit]
-Description=XVPN Control API Service
+Description=XVPN API Server
 After=network.target
-StartLimitIntervalSec=0
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3 /home/%u/.xvpn/api/app.py
-WorkingDirectory=/home/%u/.xvpn
+User=xvpn
+Group=xvpn
+WorkingDirectory=/opt/xvpn
+Environment=PATH=/opt/xvpn/venv/bin
+ExecStart=/opt/xvpn/venv/bin/python3 /opt/xvpn/server/api/app.py
 Restart=always
-RestartSec=3
-User=%i
-Group=%i
-StandardOutput=journal
-StandardError=journal
-SyslogIdentifier=xvpn-api
-Environment=PYTHONUNBUFFERED=1
+RestartSec=5
+Environment=FLASK_ENV=production
+Environment=PYTHONPATH=/opt/xvpn
 
 [Install]
 WantedBy=multi-user.target

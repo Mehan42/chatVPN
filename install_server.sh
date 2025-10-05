@@ -122,9 +122,55 @@ if command -v systemctl &> /dev/null; then
     echo "   sudo systemctl start xvpn-orchestrator"
 fi
 
+# Настройка Nginx для маршрутизации (если требуется)
+if command -v nginx &> /dev/null; then
+    echo "🌐 Настройка Nginx для маршрутизации MCP/API..."
+    sudo apt install -y nginx || true
+    
+    # Создание конфигурации Nginx
+    sudo tee /etc/nginx/sites-available/xvpn > /dev/null << 'EOF'
+server {
+    listen 443 ssl http2;
+    server_name _;
+
+    ssl_certificate /opt/xvpn/tls/cert.pem;
+    ssl_certificate_key /opt/xvpn/tls/key.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+
+    # Все пути кроме внутренних API перенаправляем на XRay (VPN)
+    location / {
+        proxy_pass http://127.0.0.1:443;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # Внутренние API пути перенаправляем на MCP (порт 8443)
+    location ~ ^/(mcp|api|admin) {
+        proxy_pass https://127.0.0.1:8443;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_ssl_verify off;
+    }
+}
+EOF
+
+    # Включение сайта
+    sudo ln -sf /etc/nginx/sites-available/xvpn /etc/nginx/sites-enabled/
+    sudo systemctl restart nginx 2>/dev/null || echo "⚠️  Nginx не запущен, запустите вручную: sudo systemctl start nginx"
+fi
+
 echo "✅ Установка серверной части XVPN завершена!"
 echo ""
 echo "📋 Для запуска компонентов используйте:"
-echo "   API: /opt/xvpn/venv/bin/python3 server/api/app.py"
-echo "   Agent: /opt/xvpn/venv/bin/python3 server/agent/agent.py"
-echo "   Orchestrator: /opt/xvpn/venv/bin/python3 server/agent/orchestrator.py"
+echo "   API: sudo systemctl start xvpn-api (порт 8443)"
+echo "   Agent: sudo systemctl start xvpn-agent"
+echo "   Orchestrator: sudo systemctl start xvpn-orchestrator"
+echo ""
+echo "ℹ️  XRay работает на порту 443 (VPN)"
+echo "ℹ️  MCP/API работает на порту 8443 (управление)"
+echo "ℹ️  Nginx маршрутизирует внешний трафик при необходимости"

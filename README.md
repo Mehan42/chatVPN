@@ -48,6 +48,29 @@ XVPN is an intelligent VPN system that uses AI agents to automatically manage tr
 - **Multi-region support**: Distributed deployment across multiple geographic regions
 - **Fault tolerance**: Built-in redundancy and disaster recovery mechanisms
 
+## 🏗️ Architecture
+
+XVPN uses a hybrid architecture with separate components for VPN traffic and management:
+
+### Port Configuration:
+- **Port 443**: XRay VPN traffic (primary VPN endpoint)
+- **Port 8443**: MCP/API management interface (internal use)
+- **Optional Nginx**: Reverse proxy for external access routing
+
+### Component Architecture:
+1. **XRay Core** - Handles VPN tunneling on port 443
+2. **MCP/API Server** - Management interface on port 8443
+3. **Agent Service** - Local system management
+4. **Orchestrator** - Coordination between components
+5. **Nginx Proxy** - External traffic routing (optional)
+
+Traffic flows:
+- External VPN clients → Port 443 (XRay)
+- Internal management → Port 8443 (MCP/API)
+- External web access → Nginx routes to appropriate service
+
+See [ARCHITECTURE_INFO.md](ARCHITECTURE_INFO.md) for detailed architecture information.
+
 ## 🚀 Quick Installation
 
 ### Server Installation
@@ -71,6 +94,27 @@ cd chatVPN
 # Install client components (run as regular user, not root)
 ./install_client.sh
 ```
+
+## 🏗️ Architecture Overview
+
+XVPN uses a hybrid architecture with separate components for VPN traffic and management:
+
+### Port Configuration:
+- **Port 443**: XRay VPN traffic (primary VPN endpoint)
+- **Port 8443**: MCP/API management interface (internal use)
+- **Optional Nginx**: Reverse proxy for external access routing
+
+### Component Architecture:
+1. **XRay Core** - Handles VPN tunneling on port 443
+2. **MCP/API Server** - Management interface on port 8443
+3. **Agent Service** - Local system management
+4. **Orchestrator** - Coordination between components
+5. **Nginx Proxy** - External traffic routing (optional)
+
+Traffic flows:
+- External VPN clients → Port 443 (XRay)
+- Internal management → Port 8443 (MCP/API)
+- External web access → Nginx routes to appropriate service
 
 ### Alternative Installation (Universal)
 

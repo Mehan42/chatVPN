@@ -1,0 +1,9 @@
+{
+  "host": "127.0.0.1",
+  "port": 8443,
+  "ssl_enabled": true,
+  "ssl_cert_path": "/opt/xvpn/tls/cert.pem",
+  "ssl_key_path": "/opt/xvpn/tls/key.pem",
+  "log_level": "INFO",
+  "database_url": "sqlite:////opt/xvpn/data/xvpn.db"
+}

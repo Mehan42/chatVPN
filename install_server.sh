@@ -11,17 +11,37 @@ if ! command -v python3 &> /dev/null; then
     exit 1
 fi
 
-# Проверка pip
-if ! command -v pip3 &> /dev/null; then
-    echo "❌ pip3 не найден"
+# Функция установки зависимостей с резервными вариантами
+install_dependencies() {
+    echo "📦 Установка зависимостей для сервера..."
+    
+    # Попытка 1: Использовать uv если доступен
+    if command -v uv &> /dev/null; then
+        echo "✅ Найден uv, установка зависимостей через uv..."
+        uv pip install -r requirements_server.txt
+        return 0
+    else
+        echo "⚠️ uv не найден, проверяем pip..."
+    fi
+    
+    # Попытка 2: Использовать pip3
+    if command -v pip3 &> /dev/null; then
+        echo "✅ Найден pip3, установка зависимостей через pip3..."
+        pip3 install -r requirements_server.txt
+        return 0
+    else
+        echo "❌ Ни uv, ни pip3 не найдены"
+        exit 1
+    fi
+}
+
+# Попытка установки зависимостей
+if install_dependencies; then
+    echo "✅ Зависимости успешно установлены"
+else
+    echo "❌ Ошибка установки зависимостей"
     exit 1
 fi
-
-echo "✅ Python3 и pip3 найдены"
-
-# Установка зависимостей для сервера
-echo "📦 Установка зависимостей для сервера..."
-pip3 install -r requirements_server.txt
 
 # Создание необходимых директорий
 echo "📁 Создание системных директорий..."

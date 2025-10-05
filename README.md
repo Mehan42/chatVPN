@@ -76,16 +76,28 @@ cd chatVPN
 
 If you need to install all dependencies at once:
 
+Using uv (recommended - faster and more reliable):
+```bash
+# For server components only
+uv pip install -r requirements_server.txt
+
+# For client components only
+uv pip install -r requirements_client.txt
+
+# For development (both server and client)
+uv pip install -r requirements_server.txt -r requirements_client.txt
+```
+
+Using pip (fallback option):
 ```bash
 # For server components only
 pip install -r requirements_server.txt
 
-# For client components only
+# For client components only  
 pip install -r requirements_client.txt
 
 # For development (both server and client)
-pip install -r requirements_server.txt
-pip install -r requirements_client.txt
+pip install -r requirements_server.txt -r requirements_client.txt
 ```
 
 ## 🔧 Server Configuration

@@ -255,7 +255,7 @@ def create_new_client():
                     "ipv6": True,
                     "need_udp": False,
                     "config": {
-                        "server": os.getenv("SERVER_IP", "localhost"),
+                        "server": os.getenv("SERVER_IP", "77.110.123.27"),
                         "port": 443,
                         "protocol": "tcp",
                         "uuid": client_uuid  # Используем UUID клиента для идентификации
@@ -269,7 +269,7 @@ def create_new_client():
                     "ipv6": True,
                     "need_udp": False,
                     "config": {
-                        "server": os.getenv("SERVER_IP", "localhost"),
+                        "server": os.getenv("SERVER_IP", "77.110.123.27"),
                         "port": 443,
                         "protocol": "ws",
                         "path": f"/v2ray/{client_uuid}",

@@ -187,9 +187,50 @@ sudo systemctl status xvpn-api xvpn-agent xvpn-bot
 
 ## 🖥️ Client Configuration
 
+### Standard Client Setup
+
 1. Get client configuration from Telegram bot
 2. Place `client.json` in `~/chatvpn/client/clients/`
 3. Launch GUI: `python3 ~/chatvpn/client/chatvpn_gui.py`
+
+### New Client Architecture (Recommended)
+
+For the new client architecture with multi-server support, follow these steps:
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Mehan42/chatVPN.git
+   cd chatVPN/client
+   ```
+
+2. Install dependencies:
+   ```bash
+   # Ubuntu/Debian
+   sudo apt update && sudo apt install curl jq
+
+   # Install Xray for actual connection
+   bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
+   ```
+
+3. Configure client:
+   ```bash
+   ./scripts/configure_client.sh
+   ```
+
+4. Get UUID from Telegram bot and fetch configuration:
+   ```bash
+   ./scripts/get_config.sh
+   ```
+
+5. Start client:
+   ```bash
+   ./scripts/start_client.sh
+   ```
+
+Then use generated profile with Xray:
+```bash
+xray run -config profiles/[your-uuid].json
+```
 
 ## 🐳 Docker Deployment
 

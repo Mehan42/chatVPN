@@ -179,7 +179,9 @@ class XVPNBot:
         """Обработка команды /status"""
         try:
             # Получаем статус с API сервера
-            response = requests.get(f"{self.api_server}/mcp/v1/vpn.health", timeout=10)
+            url = f"{self.api_server}/mcp/v1/vpn.health"
+            self._log(f"Attempting to connect to: {url}", "INFO")
+            response = requests.get(url, timeout=10)
             if response.status_code == 200:
                 health_data = response.json()
                 mask_score = health_data.get("mask_score", "N/A")
@@ -192,10 +194,17 @@ class XVPNBot:
 <b>Версия:</b> {health_data.get('version', 'N/A')}
 <b>Время:</b> {datetime.fromtimestamp(health_data.get('timestamp', time.time())).strftime('%Y-%m-%d %H:%M:%S')}"""
             else:
-                return "❌ Не удалось получить статус системы"
+                self._log(f"Status API returned non-200 status: {response.status_code}", "ERROR")
+                return f"❌ Не удалось получить статус системы (код: {response.status_code})"
+        except requests.exceptions.ConnectionError as e:
+            self._log(f"Connection error when getting status: {e}", "ERROR")
+            return f"❌ Не удалось подключиться к API серверу: {self.api_server}"
+        except requests.exceptions.Timeout as e:
+            self._log(f"Timeout error when getting status: {e}", "ERROR")
+            return "❌ Время ожидания запроса к API истекло"
         except Exception as e:
             self._log(f"Error getting status: {e}", "ERROR")
-            return "❌ Ошибка при получении статуса системы"
+            return f"❌ Ошибка при получении статуса системы: {str(e)}"
     
     def _handle_stats_command(self):
         """Обработка команды /stats"""
@@ -270,6 +279,7 @@ class XVPNBot:
             
             # Получаем конфигурацию клиента
             url = f"{self.api_server}/clients/{client_uuid}.json"
+            self._log(f"Attempting to get config for UUID: {client_uuid} from {url}", "INFO")
             response = requests.get(url, timeout=10)
             
             if response.status_code == 200:
@@ -292,11 +302,21 @@ class XVPNBot:
 """
                 
                 return config_info
-            else:
+            elif response.status_code == 404:
+                self._log(f"Client with UUID {client_uuid} not found", "WARNING")
                 return f"❌ Клиент с UUID {client_uuid} не найден"
+            else:
+                self._log(f"Unexpected status code {response.status_code} when getting config for UUID {client_uuid}", "ERROR")
+                return f"❌ Ошибка получения конфигурации (код: {response.status_code})"
+        except requests.exceptions.ConnectionError as e:
+            self._log(f"Connection error when getting config for UUID {client_uuid}: {e}", "ERROR")
+            return f"❌ Не удалось подключиться к API серверу: {self.api_server}"
+        except requests.exceptions.Timeout as e:
+            self._log(f"Timeout error when getting config for UUID {client_uuid}: {e}", "ERROR")
+            return "❌ Время ожидания запроса к API истекло"
         except Exception as e:
             self._log(f"Error getting config: {e}", "ERROR")
-            return "❌ Ошибка при получении конфигурации"
+            return f"❌ Ошибка при получении конфигурации: {str(e)}"
     
     def _handle_help_command(self):
         """Обработка команды /help"""

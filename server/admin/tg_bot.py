@@ -181,7 +181,14 @@ class XVPNBot:
             # Получаем статус с API сервера
             url = f"{self.api_server}/mcp/v1/vpn.health"
             self._log(f"Attempting to connect to: {url}", "INFO")
-            response = requests.get(url, timeout=10)
+            
+            # Проверяем, если API сервер локальный (localhost), то можем игнорировать SSL проверки
+            verify_ssl = True
+            if "localhost" in self.api_server or "127.0.0.1" in self.api_server:
+                verify_ssl = False
+                self._log("Localhost API detected, disabling SSL verification", "INFO")
+            
+            response = requests.get(url, timeout=10, verify=verify_ssl)
             if response.status_code == 200:
                 health_data = response.json()
                 mask_score = health_data.get("mask_score", "N/A")
@@ -202,6 +209,9 @@ class XVPNBot:
         except requests.exceptions.Timeout as e:
             self._log(f"Timeout error when getting status: {e}", "ERROR")
             return "❌ Время ожидания запроса к API истекло"
+        except requests.exceptions.SSLError as e:
+            self._log(f"SSL error when getting status: {e}", "ERROR")
+            return f"❌ Ошибка SSL при подключении к API серверу: {str(e)}"
         except Exception as e:
             self._log(f"Error getting status: {e}", "ERROR")
             return f"❌ Ошибка при получении статуса системы: {str(e)}"
@@ -280,7 +290,14 @@ class XVPNBot:
             # Получаем конфигурацию клиента
             url = f"{self.api_server}/clients/{client_uuid}.json"
             self._log(f"Attempting to get config for UUID: {client_uuid} from {url}", "INFO")
-            response = requests.get(url, timeout=10)
+            
+            # Проверяем, если API сервер локальный (localhost), то можем игнорировать SSL проверки
+            verify_ssl = True
+            if "localhost" in self.api_server or "127.0.0.1" in self.api_server:
+                verify_ssl = False
+                self._log("Localhost API detected, disabling SSL verification", "INFO")
+            
+            response = requests.get(url, timeout=10, verify=verify_ssl)
             
             if response.status_code == 200:
                 config = response.json()
@@ -314,6 +331,9 @@ class XVPNBot:
         except requests.exceptions.Timeout as e:
             self._log(f"Timeout error when getting config for UUID {client_uuid}: {e}", "ERROR")
             return "❌ Время ожидания запроса к API истекло"
+        except requests.exceptions.SSLError as e:
+            self._log(f"SSL error when getting config for UUID {client_uuid}: {e}", "ERROR")
+            return f"❌ Ошибка SSL при подключении к API серверу: {str(e)}"
         except Exception as e:
             self._log(f"Error getting config: {e}", "ERROR")
             return f"❌ Ошибка при получении конфигурации: {str(e)}"

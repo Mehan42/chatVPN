@@ -257,7 +257,7 @@ class XVPNBot:
         try:
             parts = command.split(" ")
             if len(parts) < 2:
-                return "❌ Укажите UUID клиента: /get_config UUID"
+                return "❌ Укажите UUID клиента: /get_config UUID\n\nПример: <code>/get_config 123e4567-e89b-12d3-a456-426614174000</code>"
             
             client_uuid = parts[1].strip()
             

@@ -248,7 +248,15 @@ class XVPNBot:
         try:
             # Отправляем запрос на создание клиента через API
             url = f"{self.api_server}/mcp/v1/admin.newclient"
-            response = requests.post(url, timeout=10)
+            self._log(f"Attempting to create client at: {url}", "INFO")
+            
+            # Проверяем, если API сервер локальный (localhost), то можем игнорировать SSL проверки
+            verify_ssl = True
+            if "localhost" in self.api_server or "127.0.0.1" in self.api_server:
+                verify_ssl = False
+                self._log("Localhost API detected, disabling SSL verification", "INFO")
+            
+            response = requests.post(url, timeout=10, verify=verify_ssl)
             
             if response.status_code == 200:
                 client_data = response.json()
@@ -266,10 +274,20 @@ class XVPNBot:
                 else:
                     return "❌ Ошибка при создании клиента"
             else:
-                return "❌ Сервер недоступен для создания клиента"
+                self._log(f"Create client API returned non-200 status: {response.status_code}", "ERROR")
+                return f"❌ Сервер недоступен для создания клиента (код: {response.status_code})"
+        except requests.exceptions.ConnectionError as e:
+            self._log(f"Connection error when creating client: {e}", "ERROR")
+            return f"❌ Не удалось подключиться к API серверу: {self.api_server}"
+        except requests.exceptions.Timeout as e:
+            self._log(f"Timeout error when creating client: {e}", "ERROR")
+            return "❌ Время ожидания запроса к API истекло"
+        except requests.exceptions.SSLError as e:
+            self._log(f"SSL error when creating client: {e}", "ERROR")
+            return f"❌ Ошибка SSL при подключении к API серверу: {str(e)}"
         except Exception as e:
             self._log(f"Error creating client: {e}", "ERROR")
-            return "❌ Ошибка при создании клиента"
+            return f"❌ Ошибка при создании клиента: {str(e)}"
     
     def _handle_get_config_command(self, command):
         """Обработка команды /get_config UUID"""

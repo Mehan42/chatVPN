@@ -34,6 +34,7 @@ rich>=13.0.0
 
 # Proxy support
 PyOpenSSL>=23.0.0
+git+https://github.com/bluet/proxybroker2.git
 
 # Xray support (только Python API если используется)
 # xray устанавливается отдельно как бинарный файл

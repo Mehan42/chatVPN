@@ -1,0 +1,1 @@
+{"uuid": "test-uuid-123", "transports": [{"id": "transport-1", "name": "Test Transport 1", "type": "vless", "priority": 1, "config": {"server": "example.com", "port": 443, "protocol": "tcp"}}]}

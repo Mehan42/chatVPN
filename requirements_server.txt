@@ -34,3 +34,9 @@ configparser>=6.0.0
 python-dotenv>=1.0.0
 click>=8.1.0
 schedule>=1.2.0
+
+# Proxy support
+git+https://github.com/bluet/proxybroker2.git
+
+# Proxy support
+git+https://github.com/bluet/proxybroker2.git

@@ -213,7 +213,7 @@ def health_check():
 @app.route("/transports/manifest.json", methods=["GET"])
 def get_transport_manifest():
     """Получение манифеста транспортов"""
-    # Для тестирования возвращаем заглушку
+    # Возвращаем полный список доступных транспортов
     manifest = {
         "version": 1,
         "transports": [
@@ -224,10 +224,88 @@ def get_transport_manifest():
                 "priority": 1,
                 "ipv6": True,
                 "need_udp": False,
+                "ru_traffic": True,  # Поддерживает российский трафик
+                "non_ru_traffic": True,  # Поддерживает международный трафик
                 "config": {
-                    "server": "localhost",
+                    "server": os.getenv("SERVER_IP", "77.110.123.27"),
                     "port": 443,
                     "protocol": "tcp"
+                }
+            },
+            {
+                "id": "v2ray-websocket",
+                "name": "V2Ray WebSocket",
+                "type": "v2ray-websocket",
+                "priority": 2,
+                "ipv6": True,
+                "need_udp": False,
+                "ru_traffic": False,  # Поддерживает только международный трафик
+                "non_ru_traffic": True,
+                "config": {
+                    "server": os.getenv("SERVER_IP", "77.110.123.27"),
+                    "port": 443,
+                    "protocol": "ws",
+                    "path": "/v2ray"
+                }
+            },
+            {
+                "id": "wireguard-tls",
+                "name": "WireGuard-over-TLS",
+                "type": "wireguard-tls",
+                "priority": 3,
+                "ipv6": True,
+                "need_udp": True,
+                "ru_traffic": False,
+                "non_ru_traffic": True,
+                "config": {
+                    "server": os.getenv("SERVER_IP", "77.110.123.27"),
+                    "port": 51820,
+                    "protocol": "udp"
+                }
+            },
+            {
+                "id": "trojan-tcp",
+                "name": "Trojan TCP",
+                "type": "trojan-tcp",
+                "priority": 4,
+                "ipv6": True,
+                "need_udp": False,
+                "ru_traffic": True,
+                "non_ru_traffic": True,
+                "config": {
+                    "server": os.getenv("SERVER_IP", "77.110.123.27"),
+                    "port": 443,
+                    "protocol": "tcp"
+                }
+            },
+            {
+                "id": "shadowsocks-aead",
+                "name": "ShadowSocks AEAD",
+                "type": "shadowsocks-aead",
+                "priority": 5,
+                "ipv6": True,
+                "need_udp": True,
+                "ru_traffic": False,
+                "non_ru_traffic": True,
+                "config": {
+                    "server": os.getenv("SERVER_IP", "77.110.123.27"),
+                    "port": 8484,
+                    "protocol": "udp"
+                }
+            },
+            {
+                "id": "hysteria2",
+                "name": "Hysteria 2",
+                "type": "hysteria2",
+                "priority": 6,
+                "ipv6": True,
+                "need_udp": True,
+                "ru_traffic": False,
+                "non_ru_traffic": True,
+                "config": {
+                    "server": os.getenv("SERVER_IP", "77.110.123.27"),
+                    "port": 2096,
+                    "protocol": "udp"
                 }
             }
         ]
@@ -242,10 +320,21 @@ def create_new_client():
     try:
         client_uuid = str(uuid.uuid4())
         
-        # Создание конфига клиента с поддержкой различных транспортов
+        # Создание конфига клиента с полной системой транспортов и маршрутизацией
         client_config = {
             "uuid": client_uuid,
             "created_at": time.time(),
+            "routing": {
+                # Правила маршрутизации трафика
+                "rules": {
+                    # Трафик внутри России направляем через транспорты с ru_traffic: True
+                    "ru_traffic_transport": ["vless-reality", "trojan-tcp"],
+                    # Международный трафик направляем через все доступные транспорты
+                    "non_ru_traffic_transport": ["v2ray-websocket", "hysteria2", "wireguard-tls"],
+                    # Резервные транспорты при проблемах с основным
+                    "fallback_transports": ["trojan-tcp", "hysteria2", "shadowsocks-aead"]
+                }
+            },
             "transports": [
                 {
                     "id": "vless-reality",
@@ -254,6 +343,8 @@ def create_new_client():
                     "priority": 1,
                     "ipv6": True,
                     "need_udp": False,
+                    "ru_traffic": True,  # Поддерживает российский трафик
+                    "non_ru_traffic": True,  # Поддерживает международный трафик
                     "config": {
                         "server": os.getenv("SERVER_IP", "77.110.123.27"),
                         "port": 443,
@@ -268,12 +359,82 @@ def create_new_client():
                     "priority": 2,
                     "ipv6": True,
                     "need_udp": False,
+                    "ru_traffic": False,  # Для международного трафика
+                    "non_ru_traffic": True,
                     "config": {
                         "server": os.getenv("SERVER_IP", "77.110.123.27"),
                         "port": 443,
                         "protocol": "ws",
                         "path": f"/v2ray/{client_uuid}",
                         "uuid": client_uuid
+                    }
+                },
+                {
+                    "id": "wireguard-tls",
+                    "name": "WireGuard-over-TLS",
+                    "type": "wireguard-tls",
+                    "priority": 3,
+                    "ipv6": True,
+                    "need_udp": True,
+                    "ru_traffic": False,
+                    "non_ru_traffic": True,
+                    "config": {
+                        "server": os.getenv("SERVER_IP", "77.110.123.27"),
+                        "port": 51820,
+                        "protocol": "udp",
+                        "public_key": "PLACEHOLDER_PUBLIC_KEY",  # В реальной системе будет сгенерирован
+                        "uuid": client_uuid
+                    }
+                },
+                {
+                    "id": "trojan-tcp",
+                    "name": "Trojan TCP",
+                    "type": "trojan-tcp",
+                    "priority": 4,
+                    "ipv6": True,
+                    "need_udp": False,
+                    "ru_traffic": True,
+                    "non_ru_traffic": True,
+                    "config": {
+                        "server": os.getenv("SERVER_IP", "77.110.123.27"),
+                        "port": 443,
+                        "protocol": "tcp",
+                        "password": client_uuid,  # Используем UUID как пароль
+                        "sni": os.getenv("SERVER_NAME", "77.110.123.27")
+                    }
+                },
+                {
+                    "id": "shadowsocks-aead",
+                    "name": "ShadowSocks AEAD",
+                    "type": "shadowsocks-aead",
+                    "priority": 5,
+                    "ipv6": True,
+                    "need_udp": True,
+                    "ru_traffic": False,
+                    "non_ru_traffic": True,
+                    "config": {
+                        "server": os.getenv("SERVER_IP", "77.110.123.27"),
+                        "port": 8484,
+                        "protocol": "udp",
+                        "method": "2022-blake3-aes-256-gcm",
+                        "password": client_uuid  # Используем UUID как пароль
+                    }
+                },
+                {
+                    "id": "hysteria2",
+                    "name": "Hysteria 2",
+                    "type": "hysteria2",
+                    "priority": 6,
+                    "ipv6": True,
+                    "need_udp": True,
+                    "ru_traffic": False,
+                    "non_ru_traffic": True,
+                    "config": {
+                        "server": os.getenv("SERVER_IP", "77.110.123.27"),
+                        "port": 2096,
+                        "protocol": "udp",
+                        "password": client_uuid,  # Используем UUID как пароль
+                        "sni": os.getenv("SERVER_NAME", "77.110.123.27")
                     }
                 }
             ]

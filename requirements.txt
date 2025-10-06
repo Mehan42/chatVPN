@@ -11,3 +11,9 @@ pytest-asyncio>=0.21.0
 # Общие утилиты
 python-dotenv>=1.0.0
 click>=8.1.0
+
+# Proxy support
+git+https://github.com/bluet/proxybroker2.git
+
+# Proxy support
+git+https://github.com/bluet/proxybroker2.git

@@ -1,0 +1,306 @@
+# XVPN Docker Compose for Development
+# Конфигурация для локальной разработки
+
+version: '3.8'
+
+services:
+  # === XVPN API Service (Development) ===
+  xvpn-api-dev:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+      target: development
+    container_name: xvpn-api-dev
+    ports:
+      - "8443:8443"
+      - "5678:5678"  # Debug port
+    volumes:
+      - .:/app:cached
+      - ./data:/data
+      - ./logs:/var/log/xvpn
+      - ./config:/config:ro
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=true
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=DEBUG
+      - DATABASE_URL=sqlite:////data/xvpn.db
+      - REDIS_URL=redis://redis:6379/0
+      - BOT_TOKEN=${BOT_TOKEN}
+      - CHAT_ID=${CHAT_ID}
+    command: >
+      bash -c "
+        pip install debugpy
+        && python -m debugpy --listen 0.0.0.0:5678 -m flask run --host=0.0.0.0 --port=8443 --debug --reload"
+    depends_on:
+      - redis-dev
+      - postgres-dev
+    networks:
+      - xvpn-dev-network
+
+  # === XVPN Agent Service (Development) ===
+  xvpn-agent-dev:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.agent
+      target: development
+    container_name: xvpn-agent-dev
+    volumes:
+      - .:/app:cached
+      - ./data:/data
+      - ./logs:/var/log/xvpn
+      - ./config:/config:ro
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=DEBUG
+      - DATABASE_URL=sqlite:////data/agent.db
+      - MANIFEST_URL=http://xvpn-api-dev:8443/transports/manifest.json
+      - HEALTH_URL=http://xvpn-api-dev:8443/mcp/v1/vpn.health
+    command: >
+      bash -c "
+        pip install debugpy
+        && python -m debugpy --listen 0.0.0.0:5679 server/agent/agent.py"
+    depends_on:
+      - xvpn-api-dev
+      - redis-dev
+    networks:
+      - xvpn-dev-network
+
+  # === XVPN Bot Service (Development) ===
+  xvpn-bot-dev:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.bot
+      target: development
+    container_name: xvpn-bot-dev
+    volumes:
+      - .:/app:cached
+      - ./config:/config:ro
+      - ./logs:/var/log/xvpn
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=DEBUG
+      - BOT_TOKEN=${BOT_TOKEN}
+      - CHAT_ID=${CHAT_ID}
+      - API_BASE_URL=https://xvpn-api-dev:8443
+    command: >
+      bash -c "
+        pip install debugpy
+        && python -m debugpy --listen 0.0.0.0:5680 server/admin/tg_bot.py"
+    depends_on:
+      - xvpn-api-dev
+    networks:
+      - xvpn-dev-network
+
+  # === Redis Cache (Development) ===
+  redis-dev:
+    image: redis:7-alpine
+    container_name: xvpn-redis-dev
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis-data-dev:/data
+      - ./config/redis.conf:/etc/redis/redis.conf:ro
+    networks:
+      - xvpn-dev-network
+
+  # === PostgreSQL Database (Development) ===
+  postgres-dev:
+    image: postgres:15-alpine
+    container_name: xvpn-postgres-dev
+    environment:
+      - POSTGRES_DB=xvpn_dev
+      - POSTGRES_USER=xvpn_dev
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-xvpn_dev_password}
+    volumes:
+      - postgres-data-dev:/var/lib/postgresql/data
+      - ./config/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - xvpn-dev-network
+
+  # === XVPN Core VPN Service (Development) ===
+  xvpn-core-dev:
+    image: teddysun/xray:latest
+    container_name: xvpn-core-dev
+    command: xray run -c /config/xray/xray.json
+    volumes:
+      - ./config/xray:/config:ro
+      - ./data:/data
+    networks:
+      - xvpn-dev-network
+    ports:
+      - "443:443"
+      - "80:80"
+      - "8443:8443"
+
+  # === XVPN Worker Service (Development) ===
+  xvpn-worker-dev:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.worker
+      target: development
+    container_name: xvpn-worker-dev
+    volumes:
+      - .:/app:cached
+      - ./data:/data
+      - ./logs:/var/log/xvpn
+      - ./config:/config:ro
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=DEBUG
+      - WORKER_COUNT=1
+      - REDIS_URL=redis://redis-dev:6379/0
+    command: >
+      bash -c "
+        pip install debugpy
+        && python -m debugpy --listen 0.0.0.0:5681 server/worker/worker.py"
+    depends_on:
+      - redis-dev
+    networks:
+      - xvpn-dev-network
+
+  # === XVPN Orchestrator Service (Development) ===
+  xvpn-orchestrator-dev:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.orchestrator
+      target: development
+    container_name: xvpn-orchestrator-dev
+    volumes:
+      - .:/app:cached
+      - ./data:/data
+      - ./logs:/var/log/xvpn
+      - ./config:/config:ro
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=DEBUG
+    command: >
+      bash -c "
+        pip install debugpy
+        && python -m debugpy --listen 0.0.0.0:5682 server/agent/orchestrator.py"
+    depends_on:
+      - xvpn-api-dev
+    networks:
+      - xvpn-dev-network
+
+  # === Traefik Load Balancer (Development) ===
+  traefik-dev:
+    image: traefik:v2.10
+    container_name: xvpn-traefik-dev
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.xvpn.address=:8443"
+      - "--log.level=DEBUG"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8443:8443"
+      - "8080:8080"  # Traefik dashboard
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./traefik/letsencrypt:/letsencrypt"
+      - "./traefik/traefik.yml:/etc/traefik/traefik.yml:ro"
+      - "./traefik/tls.yml:/etc/traefik/tls.yml:ro"
+    networks:
+      - xvpn-dev-network
+
+  # === Monitoring Services (Development) ===
+  prometheus-dev:
+    image: prom/prometheus:latest
+    container_name: xvpn-prometheus-dev
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data-dev:/prometheus
+    networks:
+      - xvpn-dev-network
+    ports:
+      - "9090:9090"
+
+  grafana-dev:
+    image: grafana/grafana:latest
+    container_name: xvpn-grafana-dev
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana-data-dev:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+    networks:
+      - xvpn-dev-network
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus-dev
+
+# === Volumes для персистентного хранения (Development) ===
+volumes:
+  redis-data-dev:
+    driver: local
+  postgres-data-dev:
+    driver: local
+  prometheus-data-dev:
+    driver: local
+  grafana-data-dev:
+    driver: local
+
+# === Сеть для взаимодействия сервисов (Development) ===
+networks:
+  xvpn-dev-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16
+
+# === Environment Variables для разработки ===
+# Создайте .env.dev файл в корне проекта со следующими переменными:
+# BOT_TOKEN=ваш_токен_telegram_бота_для_разработки
+# CHAT_ID=ваш_chat_id_для_разработки
+# POSTGRES_PASSWORD=пароль_для_postgres_в_разработке
+# GRAFANA_PASSWORD=пароль_для_grafana_в_разработке
+# FLASK_SECRET_KEY=секретный_ключ_flask_для_разработки
+
+# === Команды для использования в разработке ===
+# Запуск всех сервисов для разработки
+# docker-compose -f docker-compose.dev.yml up -d
+
+# Остановка всех сервисов
+# docker-compose -f docker-compose.dev.yml down
+
+# Просмотр логов
+# docker-compose -f docker-compose.dev.yml logs -f [service_name]
+
+# Обновление сервисов
+# docker-compose -f docker-compose.dev.yml pull && docker-compose -f docker-compose.dev.yml up -d --force-recreate
+
+# Очистка неиспользуемых volumes
+# docker-compose -f docker-compose.dev.yml down -v
+
+# === Debugging ===
+# Подключение к debugger через VS Code:
+# 1. Установите Python extension
+# 2. Добавьте конфигурацию в launch.json:
+# {
+#   "version": "0.2.0",
+#   "configurations": [
+#     {
+#       "name": "Python: Remote Attach",
+#       "type": "python",
+#       "request": "attach",
+#       "connect": {
+#         "host": "localhost",
+#         "port": 5678
+#       },
+#       "pathMappings": [
+#         {
+#           "localRoot": "${workspaceFolder}",
+#           "remoteRoot": "/app"
+#         }
+#       ]
+#     }
+#   ]
+# }
+# 3. Запустите docker-compose с dev конфигурацией
+# 4. Запустите debug конфигурацию в VS Code

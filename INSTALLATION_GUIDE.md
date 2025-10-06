@@ -472,3 +472,54 @@ For support, please:
 2. Search existing issues
 3. Create a new issue with detailed information
 4. Contact the development team via Telegram
+## ProxyBroker2 Integration
+
+### Features
+- Automatic proxy discovery from 50+ sources
+- Real-time proxy validation and anonymity checking
+- Load balancing across multiple working proxies
+- Automatic failover when proxies become unavailable
+- Support for HTTP, HTTPS, SOCKS4, SOCKS5 protocols
+
+### Installation
+
+ProxyBroker2 provides enhanced proxy discovery capabilities:
+
+```bash
+# Install ProxyBroker2 from GitHub
+pip3 install git+https://github.com/bluet/proxybroker2.git
+
+# Or use the XVPN installation script
+./server/install_proxybroker2.sh
+```
+
+### Configuration
+
+ProxyBroker2 can be configured through environment variables:
+
+```bash
+# Proxy discovery settings
+export PROXY_TIMEOUT=8
+export PROXY_MAX_CONN=200
+export PROXY_MAX_TRIES=3
+export PROXY_VERIFY_SSL=false
+
+# Proxy validation settings
+export PROXY_MIN_REQ_PROXY=5
+export PROXY_MAX_ERROR_RATE=0.5
+export PROXY_MAX_RESP_TIME=8
+```
+
+### Usage
+
+Once installed, ProxyBroker2 integration is automatically available through XVPN's API:
+
+```bash
+# Find proxies through XVPN API
+curl -k https://localhost:8443/mcp/v1/admin.newclient
+
+# Get proxy configuration
+curl -k https://localhost:8443/clients/{uuid}.json
+```
+
+For detailed integration documentation, see [server/PROXY_INTEGRATION.md](server/PROXY_INTEGRATION.md)

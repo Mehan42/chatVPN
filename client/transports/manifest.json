@@ -1,0 +1,199 @@
+{
+  "version": "1.0",
+  "last_updated": "2025-10-02T00:00:00Z",
+  "description": "XVPN Transport Manifest - Available transport protocols and configurations",
+  "transports": [
+    {
+      "id": "reality_tcp",
+      "name": "Xray Reality TCP",
+      "type": "xray",
+      "protocol": "tcp",
+      "config": {
+        "server": "uss.hopto.org",
+        "port": 443,
+        "network": "tcp",
+        "tls": {
+          "enabled": true,
+          "sni": "uss.hopto.org",
+          "server_name": "uss.hopto.org"
+        },
+        "reality": {
+          "enabled": true,
+          "dest": "hysteria2.org:443",
+          "xver": 0,
+          "server_names": [
+            "hysteria2.org",
+            "www.hysteria2.org"
+          ],
+          "min_client": "",
+          "max_client": "",
+          "max_timediff": 0,
+          "max_server_udpdyn": 0,
+          "max_conn_client": 0,
+          "max_download": 0,
+          "max_upload": 0,
+          "method": "",
+          "auth": ""
+        }
+      },
+      "priority": 1,
+      "health_check": {
+        "enabled": true,
+        "timeout": 5,
+        "interval": 30
+      },
+      "metadata": {
+        "country": "US",
+        "location": "Los Angeles",
+        "asn": "AS16509",
+        "organization": "Amazon.com, Inc.",
+        "encryption": "AES-256-GCM",
+        "obfuscation": "Xray Reality"
+      }
+    },
+    {
+      "id": "hysteria2_udp",
+      "name": "Hysteria2 UDP",
+      "type": "hysteria2",
+      "protocol": "udp",
+      "config": {
+        "server": "uss.hopto.org",
+        "port": 443,
+        "network": "udp",
+        "up_mbps": 100,
+        "down_mbps": 100,
+        "obfs": {
+          "type": "salamander",
+          "password": "xvpn2024"
+        },
+        "tls": {
+          "enabled": true,
+          "sni": "uss.hopto.org",
+          "insecure": false,
+          "server_name": "uss.hopto.org"
+        }
+      },
+      "priority": 2,
+      "health_check": {
+        "enabled": true,
+        "timeout": 5,
+        "interval": 30
+      },
+      "metadata": {
+        "country": "US",
+        "location": "Los Angeles",
+        "asn": "AS16509",
+        "organization": "Amazon.com, Inc.",
+        "encryption": "ChaCha20-Poly1305",
+        "obfuscation": "Salamander"
+      }
+    },
+    {
+      "id": "vless_tcp",
+      "name": "VLESS TCP",
+      "type": "xray",
+      "protocol": "tcp",
+      "config": {
+        "server": "uss.hopto.org",
+        "port": 8080,
+        "network": "tcp",
+        "tls": {
+          "enabled": false
+        },
+        "headers": {
+          "type": "none"
+        }
+      },
+      "priority": 3,
+      "health_check": {
+        "enabled": true,
+        "timeout": 5,
+        "interval": 45
+      },
+      "metadata": {
+        "country": "US",
+        "location": "Los Angeles",
+        "asn": "AS16509",
+        "organization": "Amazon.com, Inc.",
+        "encryption": "None",
+        "obfuscation": "Direct TCP"
+      }
+    },
+    {
+      "id": "shadowsocks_tcp",
+      "name": "ShadowSocks TCP",
+      "type": "shadowsocks",
+      "protocol": "tcp",
+      "config": {
+        "server": "uss.hopto.org",
+        "port": 8388,
+        "password": "xvpn2024-secret",
+        "method": "chacha20-ietf-poly1305"
+      },
+      "priority": 4,
+      "health_check": {
+        "enabled": true,
+        "timeout": 5,
+        "interval": 60
+      },
+      "metadata": {
+        "country": "US",
+        "location": "Los Angeles",
+        "asn": "AS16509",
+        "organization": "Amazon.com, Inc.",
+        "encryption": "ChaCha20-Poly1305",
+        "obfuscation": "None"
+      }
+    },
+    {
+      "id": "wireguard_tcp",
+      "name": "WireGuard TCP",
+      "type": "wireguard",
+      "protocol": "tcp",
+      "config": {
+        "server": "uss.hopto.org",
+        "port": 51820,
+        "private_key": "PRIVATE_KEY_HERE",
+        "address": "10.0.0.2/24",
+        "peer_public_key": "PEER_PUBLIC_KEY_HERE",
+        "peer_endpoint": "uss.hopto.org:51820",
+        "dns": "8.8.8.8,8.8.4.4"
+      },
+      "priority": 5,
+      "health_check": {
+        "enabled": true,
+        "timeout": 10,
+        "interval": 30
+      },
+      "metadata": {
+        "country": "US",
+        "location": "Los Angeles",
+        "asn": "AS16509",
+        "organization": "Amazon.com, Inc.",
+        "encryption": "WireGuard (Curve25519)",
+        "obfuscation": "None"
+      }
+    }
+  ],
+  "fallback_policy": {
+    "enabled": true,
+    "max_failures": 3,
+    "retry_interval": 60,
+    "preferred_order": ["reality_tcp", "hysteria2_udp", "vless_tcp", "shadowsocks_tcp", "wireguard_tcp"]
+  },
+  "load_balancing": {
+    "enabled": true,
+    "algorithm": "round_robin",
+    "health_check_interval": 30
+  },
+  "ipv6_support": {
+    "enabled": true,
+    "preferred": false
+  },
+  "metadata": {
+    "generator": "XVPN Transport Manifest Generator",
+    "version": "1.0",
+    "created": "2025-10-02T00:00:00Z",
+    "updated": "2025-10-02T00:00:00Z"
+  }
+}

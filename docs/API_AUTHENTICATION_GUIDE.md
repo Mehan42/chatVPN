@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide explains how to use token-based authentication for XVPN API endpoints.
+This guide explains how to use token-based authentication for XVPN API endpoints and manage API tokens.
 
 ## Authentication Mechanism
 
@@ -19,7 +19,7 @@ First, generate an admin token to access protected endpoints:
 cd /home/uss/chatvpn
 
 # Generate admin token
-./scripts/manage_api_tokens.py generate
+python3 server/api/auth.py
 ```
 
 This will output an admin token that looks like:
@@ -34,7 +34,7 @@ Include the token in the `Authorization` header of your requests:
 ```bash
 # Using curl
 curl -H "Authorization: Bearer YOUR_TOKEN_HERE" \
-     https://77.110.123.27:8443/mcp/v1/admin.newclient
+     https://77.110.123.27:8443/mcp/v1/vpn.health
 
 # Using Python requests
 import requests
@@ -43,10 +43,10 @@ headers = {
     "Authorization": "Bearer YOUR_TOKEN_HERE"
 }
 
-response = requests.post(
-    "https://77.110.123.27:8443/mcp/v1/admin.newclient",
+response = requests.get(
+    "https://77.110.123.27:8443/mcp/v1/vpn.health",
     headers=headers,
-    json={"some": "data"}
+    verify=False  # For self-signed certificates
 )
 ```
 
@@ -54,28 +54,30 @@ response = requests.post(
 
 The following endpoints require authentication:
 
+- `GET /mcp/v1/vpn.health` - Health check endpoint
+- `GET /transports/manifest.json` - Transport manifest endpoint
+- `GET /clients/<uuid>.json` - Client configuration endpoint
 - `POST /mcp/v1/admin.newclient` - Create new client (requires admin permission)
-- Future endpoints for managing clients, transports, etc.
 
 ## Token Management
 
 ### List All Tokens
 
 ```bash
-./scripts/manage_api_tokens.py list
+python3 server/api/auth.py list
 ```
 
 ### Create New Token
 
 ```bash
 # Create a read-only token
-./scripts/manage_api_tokens.py create \
+python3 server/api/auth.py create \
     --name "readonly_client" \
     --permissions "read" \
     --description "Read-only access for monitoring"
 
 # Create a token with limited lifespan
-./scripts/manage_api_tokens.py create \
+python3 server/api/auth.py create \
     --name "temporary_admin" \
     --permissions "admin,read,write" \
     --expires 7 \
@@ -85,13 +87,13 @@ The following endpoints require authentication:
 ### Revoke Token
 
 ```bash
-./scripts/manage_api_tokens.py revoke --name "temporary_admin"
+python3 server/api/auth.py revoke --name "temporary_admin"
 ```
 
 ### Show Token Details
 
 ```bash
-./scripts/manage_api_tokens.py show --name "readonly_client"
+python3 server/api/auth.py show --name "readonly_client"
 ```
 
 ## Token Permissions
@@ -118,11 +120,11 @@ Tokens with `admin` permission automatically have access to all endpoints.
 # Good: Store token in environment variable
 export XVPN_API_TOKEN="your_token_here"
 curl -H "Authorization: Bearer $XVPN_API_TOKEN" \
-     https://77.110.123.27:8443/mcp/v1/admin.newclient
+     https://77.110.123.27:8443/mcp/v1/vpn.health
 
 # Bad: Hardcoded tokens in scripts
 curl -H "Authorization: Bearer eyJhbGciOiJIUzI1Ni..." \
-     https://77.110.123.27:8443/mcp/v1/admin.newclient
+     https://77.110.123.27:8443/mcp/v1/vpn.health
 ```
 
 ### 3. Token Revocation
@@ -130,7 +132,7 @@ curl -H "Authorization: Bearer eyJhbGciOiJIUzI1Ni..." \
 Revoke tokens immediately if they are compromised or no longer needed:
 
 ```bash
-./scripts/manage_api_tokens.py revoke --name "compromised_token"
+python3 server/api/auth.py revoke --name "compromised_token"
 ```
 
 ## Error Responses
@@ -165,18 +167,15 @@ Revoke tokens immediately if they are compromised or no longer needed:
 
 ## Example Usage
 
-### Create New Client
+### Health Check
 
 ```bash
 # Get admin token
-ADMIN_TOKEN=$(./scripts/manage_api_tokens.py generate | grep "Token:" | cut -d' ' -f2)
+ADMIN_TOKEN=$(python3 server/api/auth.py | grep "Admin Token:" | cut -d' ' -f3)
 
-# Create new client
-curl -X POST \
-     -H "Authorization: Bearer $ADMIN_TOKEN" \
-     -H "Content-Type: application/json" \
-     -d '{"client_name": "Test Client"}' \
-     https://77.110.123.27:8443/mcp/v1/admin.newclient
+# Check health
+curl -H "Authorization: Bearer $ADMIN_TOKEN" \
+     -k https://77.110.123.27:8443/mcp/v1/vpn.health
 ```
 
 ### Python Example
@@ -192,18 +191,17 @@ if not token:
 
 # Make authenticated request
 headers = {
-    "Authorization": f"Bearer {token}",
-    "Content-Type": "application/json"
+    "Authorization": f"Bearer {token}"
 }
 
-response = requests.post(
-    "https://77.110.123.27:8443/mcp/v1/admin.newclient",
+response = requests.get(
+    "https://77.110.123.27:8443/mcp/v1/vpn.health",
     headers=headers,
-    json={"client_name": "Test Client"}
+    verify=False  # For self-signed certificates
 )
 
 if response.status_code == 200:
-    print("Client created successfully!")
+    print("Health check successful!")
     print(response.json())
 else:
     print(f"Error: {response.status_code}")
@@ -222,7 +220,7 @@ else:
 
 1. Check token permissions with:
    ```bash
-   ./scripts/manage_api_tokens.py show --name "token_name"
+   python3 server/api/auth.py show --name "token_name"
    ```
 2. Create a new token with appropriate permissions if needed
 
@@ -243,7 +241,7 @@ If you encounter issues with the token file:
    sudo rm /opt/xvpn/data/api_tokens.json
    
    # Generate new tokens
-   ./scripts/manage_api_tokens.py generate
+   python3 server/api/auth.py
    ```
 
 ## Production Considerations

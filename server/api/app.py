@@ -26,6 +26,9 @@ except ImportError:
 app = Flask(__name__)
 CORS(app)  # В продакшене настроить более строго
 
+# Глобальный флаг для отключения аутентификации в разработке
+DISABLE_AUTH = os.getenv("DISABLE_AUTH", "false").lower() == "true"
+
 # Реализация базы данных XVPN
 class XVPNDatabase:
     def __init__(self, db_path=None):
@@ -165,6 +168,7 @@ class XVPNDatabase:
 db = XVPNDatabase()
 
 @app.route("/mcp/v1/vpn.health", methods=["GET"])
+@require_auth(required_permissions=["read"]) if not DISABLE_AUTH else lambda f: f
 def health_check():
     """Проверка здоровья VPN"""
     # Логируем событие
@@ -218,6 +222,7 @@ def health_check():
         }), 500
 
 @app.route("/transports/manifest.json", methods=["GET"])
+@require_auth(required_permissions=["read"]) if not DISABLE_AUTH else lambda f: f
 def get_transport_manifest():
     """Получение манифеста транспортов"""
     # Возвращаем полный список доступных транспортов
@@ -477,6 +482,7 @@ def create_new_client():
         }), 500
 
 @app.route("/clients/<uuid>.json", methods=["GET"])
+@require_auth(required_permissions=["read"]) if not DISABLE_AUTH else lambda f: f
 def get_client_config(uuid):
     """Получение конфигурации клиента"""
     config_file = Path("/opt/xvpn/data/clients") / uuid / "client.json"

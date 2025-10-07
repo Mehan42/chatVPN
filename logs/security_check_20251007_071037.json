@@ -1,0 +1,110 @@
+{
+  "timestamp": "2025-10-07T07:10:37.405567",
+  "checks": [
+    {
+      "category": "HTTPS/TLS",
+      "name": "Certificate Files",
+      "status": "fail",
+      "message": "Certificate or key files missing",
+      "details": {
+        "cert_path": "/opt/xvpn/tls/cert.pem",
+        "key_path": "/opt/xvpn/tls/key.pem"
+      },
+      "timestamp": "2025-10-07T07:10:37.405635"
+    },
+    {
+      "category": "Pinning",
+      "name": "Fingerprint Storage",
+      "status": "warn",
+      "message": "Certificate fingerprint file not found",
+      "details": {
+        "expected_location": "/home/uss/chatvpn/client/config/cert_fingerprints.json"
+      },
+      "timestamp": "2025-10-07T07:10:37.405780"
+    },
+    {
+      "category": "Auth",
+      "name": "Auth Module",
+      "status": "pass",
+      "message": "API authentication module exists",
+      "details": {
+        "auth_module": "/home/uss/chatvpn/server/api/auth.py"
+      },
+      "timestamp": "2025-10-07T07:10:37.405855"
+    },
+    {
+      "category": "Auth",
+      "name": "API Tokens",
+      "status": "warn",
+      "message": "API tokens file not found",
+      "details": {
+        "expected_location": "/opt/xvpn/data/api_tokens.json"
+      },
+      "timestamp": "2025-10-07T07:10:37.424859"
+    },
+    {
+      "category": "CertMgmt",
+      "name": "Script monitor_certificates.py",
+      "status": "pass",
+      "message": "Certificate management script exists",
+      "details": {
+        "script_path": "/home/uss/chatvpn/scripts/monitor_certificates.py"
+      },
+      "timestamp": "2025-10-07T07:10:37.425007"
+    },
+    {
+      "category": "CertMgmt",
+      "name": "Script renew_certificates.py",
+      "status": "pass",
+      "message": "Certificate management script exists",
+      "details": {
+        "script_path": "/home/uss/chatvpn/scripts/renew_certificates.py"
+      },
+      "timestamp": "2025-10-07T07:10:37.425048"
+    },
+    {
+      "category": "Perms",
+      "name": "File key.pem",
+      "status": "warn",
+      "message": "File not found",
+      "details": {
+        "file": "/opt/xvpn/tls/key.pem"
+      },
+      "timestamp": "2025-10-07T07:10:37.425074"
+    },
+    {
+      "category": "Perms",
+      "name": "File cert.pem",
+      "status": "warn",
+      "message": "File not found",
+      "details": {
+        "file": "/opt/xvpn/tls/cert.pem"
+      },
+      "timestamp": "2025-10-07T07:10:37.425090"
+    },
+    {
+      "category": "Perms",
+      "name": "File api_tokens.json",
+      "status": "warn",
+      "message": "File not found",
+      "details": {
+        "file": "/opt/xvpn/data/api_tokens.json"
+      },
+      "timestamp": "2025-10-07T07:10:37.425101"
+    },
+    {
+      "category": "Firewall",
+      "name": "iptables Available",
+      "status": "pass",
+      "message": "iptables is available for firewall rules",
+      "details": {},
+      "timestamp": "2025-10-07T07:10:37.427755"
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 1,
+    "warnings": 5,
+    "total": 10
+  }
+}

@@ -16,6 +16,13 @@ from flask_cors import CORS
 # Добавляем путь к серверным компонентам
 sys.path.append(str(Path(__file__).parent.parent))
 
+# Import authentication module
+try:
+    from .auth import auth_manager, require_auth
+except ImportError:
+    # If relative import fails, try absolute import
+    from server.api.auth import auth_manager, require_auth
+
 app = Flask(__name__)
 CORS(app)  # В продакшене настроить более строго
 
@@ -313,6 +320,7 @@ def get_transport_manifest():
     return jsonify(manifest)
 
 @app.route("/mcp/v1/admin.newclient", methods=["POST"])
+@require_auth(required_permissions=["admin", "write"])
 def create_new_client():
     """Создание нового клиента (для администраторов)"""
     import uuid
@@ -482,22 +490,40 @@ def get_client_config(uuid):
 
 def main():
     """Основная функция запуска API сервера"""
-    # Используем порт 443 для продакшена, если доступен, иначе 8443
-    port = int(os.getenv("XVPN_API_PORT", 443 if os.getenv("FLASK_ENV") != "development" else 8443))
+    # Используем порт 8443 для HTTPS в разработке, 443 для продакшена
+    port = int(os.getenv("XVPN_API_PORT", 443 if os.getenv("FLASK_ENV") == "production" else 8443))
     
-    app.run(
-        host="0.0.0.0",
-        port=port,
-        debug=False,
-        ssl_context=(
-            "/opt/xvpn/tls/cert.pem",  # Путь к SSL сертификату
-            "/opt/xvpn/tls/key.pem"    # Путь к приватному ключу
-        ) if os.path.exists("/opt/xvpn/tls/cert.pem") else None
-    ) if os.getenv("FLASK_ENV") != "development" else app.run(
-        host="0.0.0.0",
-        port=port,
-        debug=True
-    )
+    # Определяем пути к TLS сертификатам
+    cert_paths = [
+        "/opt/xvpn/tls/cert.pem",           # Продакшен путь
+        "/home/uss/chatvpn/security/tls/cert.pem",  # Разработка путь
+        "./security/tls/cert.pem"           # Локальный путь
+    ]
+    
+    ssl_context = None
+    for cert_path in cert_paths:
+        key_path = cert_path.replace("cert.pem", "key.pem")
+        if os.path.exists(cert_path) and os.path.exists(key_path):
+            ssl_context = (cert_path, key_path)
+            print(f"🔒 Using TLS certificates from: {cert_path}")
+            break
+    
+    # Запуск сервера с HTTPS если есть сертификаты, иначе HTTP
+    if ssl_context and os.getenv("FLASK_ENV") != "development":
+        print(f"🚀 Starting HTTPS server on port {port}")
+        app.run(
+            host="0.0.0.0",
+            port=port,
+            debug=False,
+            ssl_context=ssl_context
+        )
+    else:
+        print(f"🚀 Starting HTTP server on port {port} (development mode)")
+        app.run(
+            host="0.0.0.0",
+            port=port,
+            debug=True
+        )
 
 if __name__ == "__main__":
     main()

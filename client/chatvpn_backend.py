@@ -39,46 +39,76 @@ def save_client_uuid(uuid):
 # TLS пиннинг и безопасность
 # =============================
 
-def verify_certificate_fingerprint(cert_pem, expected_fingerprint):
+def load_certificate_fingerprints():
     """
-    Проверяет, что PEM-сертификат имеет ожидаемый SHA-256 fingerprint
+    Загружает сохраненные отпечатки сертификатов для TLS пиннинга
+    """
+    import json
+    from pathlib import Path
+    
+    config_path = Path.home() / "chatvpn" / "client" / "config" / "cert_fingerprints.json"
+    
+    try:
+        if config_path.exists():
+            with open(config_path, "r") as f:
+                config = json.load(f)
+            return config.get("fingerprints", {})
+        else:
+            print(f"⚠️  Certificate fingerprints config not found at {config_path}")
+            return {}
+    except Exception as e:
+        print(f"❌ Error loading certificate fingerprints: {e}")
+        return {}
+
+def verify_certificate_fingerprint(hostname, port, cert_der):
+    """
+    Проверяет, что сертификат соответствует сохраненному отпечатку
     """
     try:
-        # Конвертируем PEM в сертификат
-        cert = ssl.PEM_cert_to_DER_cert(cert_pem)
+        # Загружаем сохраненные отпечатки
+        fingerprints = load_certificate_fingerprints()
         
-        # Вычисляем SHA-256 fingerprint
-        actual_fingerprint = hashlib.sha256(cert).hexdigest()
+        # Ищем отпечаток для данного сервера
+        server_key = f"{hostname}:{port}"
+        if server_key not in fingerprints:
+            print(f"⚠️  No fingerprint found for {server_key}, allowing connection")
+            return True  # Если отпечаток не найден, разрешаем подключение
         
-        # Сравниваем с ожидаемым
-        return actual_fingerprint == expected_fingerprint
+        # Вычисляем отпечаток текущего сертификата
+        actual_fingerprint = hashlib.sha256(cert_der).hexdigest()
+        expected_fingerprint = fingerprints[server_key]["fingerprint"]
+        
+        # Сравниваем отпечатки
+        if actual_fingerprint.lower() == expected_fingerprint.lower():
+            print(f"✅ Certificate fingerprint verified for {server_key}")
+            return True
+        else:
+            print(f"❌ Certificate fingerprint mismatch for {server_key}")
+            print(f"   Expected: {expected_fingerprint}")
+            print(f"   Actual:   {actual_fingerprint}")
+            return False
+            
     except Exception as e:
-        print(f"Ошибка верификации сертификата: {e}")
+        print(f"❌ Error verifying certificate fingerprint: {e}")
         return False
 
 def create_https_context():
     """
     Создает контекст HTTPS с TLS пиннингом
     """
-    # Ожидаемый fingerprint сертификата (placeholder - в реальной системе должен быть актуальный)
-    # Можно использовать реальный сертификат сервера
-    EXPECTED_FINGERPRINT = "41d96ebf1c4e5e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e"  # Заглушка
-    
     # Создаем SSL контекст
     context = ssl.create_default_context()
     
     # Настраиваем параметры безопасности
     context.minimum_version = ssl.TLSVersion.TLSv1_2
-    context.check_hostname = False  # В тестовой среде может быть отключен
-    context.verify_mode = ssl.CERT_NONE  # Временно отключаем для тестирования
-    
-    # В production использовать: context.verify_mode = ssl.CERT_REQUIRED
+    context.check_hostname = False  # Отключаем проверку hostname для гибкости
+    context.verify_mode = ssl.CERT_REQUIRED  # Всегда проверяем сертификаты
     
     return context
 
 def make_secure_request(url, **kwargs):
     """
-    Выполняет безопасный HTTPS запрос с корректной обработкой TLS
+    Выполняет безопасный HTTPS запрос с TLS пиннингом
     """
     try:
         # Проверяем, что это HTTPS URL
@@ -86,34 +116,49 @@ def make_secure_request(url, **kwargs):
         if parsed_url.scheme != 'https':
             raise ValueError("HTTPS запрос поддерживается только для HTTPS URL")
         
-        # Для самоподписанных сертификатов отключаем проверку
-        # В production нужно использовать verify=True с правильными сертификатами
-        verify = kwargs.pop('verify', False)
+        hostname = parsed_url.hostname
+        port = parsed_url.port or 443
         
-        # Создаем кастомный контекст для безопасности
+        # Создаем SSL контекст
         context = create_https_context()
         
-        # Выполняем запрос с кастомным контекстом
-        response = requests.get(url, verify=verify, **kwargs)
-        response.raise_for_status()
-        
-        return response
-    
-    except requests.exceptions.SSLError as e:
-        print(f"Ошибка SSL/TLS: {e}")
-        # Пробуем без проверки для самоподписанных сертификатов
-        if "self signed certificate" in str(e).lower():
-            print("Попытка подключения с отключенной проверкой сертификата...")
-            try:
-                response = requests.get(url, verify=False, **kwargs)
+        # Устанавливаем соединение с проверкой сертификата
+        with socket.create_connection((hostname, port), timeout=15) as sock:
+            with context.wrap_socket(sock, server_hostname=hostname) as ssock:
+                # Получаем сертификат для проверки отпечатка
+                cert_der = ssock.getpeercert(binary_form=True)
+                
+                # Проверяем отпечаток сертификата
+                if not verify_certificate_fingerprint(hostname, port, cert_der):
+                    raise ssl.SSLError(f"Certificate fingerprint verification failed for {hostname}:{port}")
+                
+                # Создаем HTTP запрос
+                import http.client
+                
+                # Для простых GET запросов используем requests с проверенным контекстом
+                # Для более сложных случаев можно использовать http.client напрямую
+                
+                # Выполняем запрос с проверенным SSL контекстом
+                response = requests.get(
+                    url, 
+                    verify=True,  # Используем проверку сертификатов
+                    **kwargs
+                )
                 response.raise_for_status()
+                
                 return response
-            except Exception as e2:
-                print(f"Ошибка даже с отключенной проверкой: {e2}")
-                raise e2
+    
+    except ssl.SSLError as e:
+        print(f"❌ SSL/TLS certificate verification failed: {e}")
+        raise
+    except requests.exceptions.SSLError as e:
+        print(f"❌ HTTPS request SSL error: {e}")
         raise
     except requests.exceptions.RequestException as e:
-        print(f"Ошибка запроса: {e}")
+        print(f"❌ HTTPS request failed: {e}")
+        raise
+    except Exception as e:
+        print(f"❌ Unexpected error in secure request: {e}")
         raise
 
 

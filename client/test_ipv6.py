@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 # Тест IPv6 поддержки для XVPN
-# Абсолютный путь: ~/chatvpn/client/test_ipv6.py
+# Абсолютный путь: ~/chatvpn/client/ (может быть переустановлен в другое место)test_ipv6.py
 
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))from pathlib import Path
+
+# Определяем базовую директорию как директорию скрипта
+CLIENT_DIR = Path(__file__).parent if '__file__' in globals() else Path.cwd()
+
 
 from ipv6_manager import get_ipv6_manager
 from health import get_network_info

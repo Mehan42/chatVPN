@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # XVPN Health Monitoring Module
-# Абсолютный путь: ~/chatvpn/client/health.py
+# Абсолютный путь: ~/chatvpn/client/ (может быть переустановлен в другое место)health.py (может быть переустановлен в другое место)
 
 import os
 import json
@@ -13,10 +13,13 @@ import hashlib
 import logging
 import threading
 from datetime import datetime, timedelta
+from pathlib import Path
 from typing import Dict, Any, Optional, Tuple
 from ipv6_manager import get_ipv6_manager
 
-LOG_DIR = os.path.expanduser("~/chatvpn/client/logs")
+# Определяем базовую директорию как директорию скрипта
+CLIENT_DIR = Path(__file__).parent if '__file__' in globals() else Path.cwd()
+LOG_DIR = CLIENT_DIR / 'logs'
 LOG_FILE = os.path.join(LOG_DIR, "health.log")
 CACHE_DIR = os.path.join(LOG_DIR, "cache")
 CACHE_TTL = 300  # 5 минут кэширования

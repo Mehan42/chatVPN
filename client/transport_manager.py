@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # XVPN Transport Manager
 # Автоматическое переключение транспортов на основе доступности и производительности
-# Абсолютный путь: ~/chatvpn/client/transport_manager.py
+# Абсолютный путь: ~/chatvpn/client/ (может быть переустановлен в другое место)transport_manager.py
 
 import os
 import json
@@ -14,6 +14,9 @@ from pathlib import Path
 from typing import Dict, List, Optional, Any
 from .discover import discover_transports
 from chatvpn_backend import reload_xray_config
+# Определяем базовую директорию как директорию скрипта
+CLIENT_DIR = Path(__file__).parent if '__file__' in globals() else Path.cwd()
+
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
@@ -24,7 +27,7 @@ class TransportManager:
     
     def __init__(self, client_uuid: str):
         self.client_uuid = client_uuid
-        self.manifest_path = Path.home() / 'chatvpn' / 'client' / 'transports' / 'manifest.json'
+        self.manifest_path = CLIENT_DIR / "transports" / "manifest.json"
         self.current_transport = None
         self.fallback_transports = []
         self.health_check_interval = 30
@@ -34,8 +37,7 @@ class TransportManager:
         self.health_check_thread = None
         self.running = False
         
-        # Пути к логам
-        self.log_dir = Path.home() / 'chatvpn' / 'client' / 'logs'
+        self.log_dir = CLIENT_DIR / "logs"
         self.log_dir.mkdir(exist_ok=True)
         self.log_file = self.log_dir / 'transport_manager.log'
         
@@ -311,7 +313,7 @@ class TransportManager:
     def _discover_available_transports(self):
         """Обнаружение доступных транспортов с оценкой"""
         try:
-            manifest_path = Path.home() / 'chatvpn' / 'client' / 'transports' / 'manifest.json'
+            manifest_path = CLIENT_DIR / "transports" / "manifest.json"
             discovered = discover_transports(manifest_path)
             
             available_transports = []
@@ -344,7 +346,7 @@ class TransportManager:
             }
             
             # Сохраняем конфигурацию
-            config_path = Path.home() / 'chatvpn' / 'client' / 'current_transport.json'
+            config_path = CLIENT_DIR / "current_transport.json"
             config_path.parent.mkdir(parents=True, exist_ok=True)
             with open(config_path, 'w') as f:
                 json.dump(vpn_config, f, indent=2)

@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 # Тест режимов прокси для XVPN
-# Абсолютный путь: ~/chatvpn/client/test_proxy_modes.py
+# Абсолютный путь: ~/chatvpn/client/ (может быть переустановлен в другое место)test_proxy_modes.py
 
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))from pathlib import Path
+
+# Определяем базовую директорию как директорию скрипта
+CLIENT_DIR = Path(__file__).parent if '__file__' in globals() else Path.cwd()
+
 
 from proxy_modes import get_proxy_modes_manager, ProxyMode
 import json

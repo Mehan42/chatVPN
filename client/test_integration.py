@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
 # Тест интеграции state machine с GUI
-# Абсолютный путь: ~/chatvpn/client/test_integration.py
+# Абсолютный путь: ~/chatvpn/client/ (может быть переустановлен в другое место)test_integration.py
 
 import sys
 import os
 import time
 import threading
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messageboxfrom pathlib import Path
+
+# Определяем базовую директорию как директорию скрипта
+CLIENT_DIR = Path(__file__).parent if '__file__' in globals() else Path.cwd()
+
 
 # Добавление пути к модулям
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))

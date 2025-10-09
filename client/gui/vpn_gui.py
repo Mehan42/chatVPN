@@ -1,7 +1,7 @@
 
 #!/usr/bin/env python3
 # Улучшенный GUI для XVPN с интеграцией state machine
-# Абсолютный путь: ~/chatvpn/client/gui/vpn_gui.py
+# Абсолютный путь: ~/chatvpn/client/ (может быть переустановлен в другое место)gui/vpn_gui.py
 
 import tkinter as tk
 from tkinter import ttk, messagebox, scrolledtext
@@ -16,6 +16,9 @@ from pathlib import Path
 import sys
 import os
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__))))
+# Определяем базовую директорию как директорию скрипта
+CLIENT_DIR = Path(__file__).parent if '__file__' in globals() else Path.cwd()
+
 
 from vpn_client import get_vpn_client
 from state_machine import State, Event
@@ -609,7 +612,7 @@ class XVPNGUI:
     def refresh_logs(self):
         """Обновление логов"""
         try:
-            log_dir = Path.home() / 'chatvpn' / 'client' / 'logs'
+            log_dir = CLIENT_DIR / "logs'
             
             if log_dir.exists():
                 log_files = list(log_dir.glob("*.log"))
@@ -685,7 +688,6 @@ class XVPNGUI:
                 pass
         self.root.destroy()
 
-
 def main():
     """Главная функция для запуска GUI"""
     root = tk.Tk()
@@ -696,7 +698,6 @@ def main():
     
     # Запуск главного цикла
     root.mainloop()
-
 
 if __name__ == "__main__":
     main()

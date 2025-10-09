@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ChatVPN backend
-# Абсолютный путь: ~/chatvpn/client/chatvpn_backend.py
+# Абсолютный путь: ~/chatvpn/client/ (может быть переустановлен в другое место)chatvpn_backend.py (может быть переустановлен в другое место)
 
 import os
 import subprocess
@@ -9,16 +9,18 @@ import time
 import ssl
 import hashlib
 from urllib.parse import urlparse
+from pathlib import Path
 
-CONFIG_PATH = os.path.expanduser("~/chatvpn/client/client.json")
-CONF_UUID_PATH = os.path.expanduser("~/chatvpn/client/client.conf")
+# Определяем базовую директорию как директорию скрипта
+CLIENT_DIR = Path(__file__).parent if '__file__' in globals() else Path.cwd()
+CONFIG_PATH = CLIENT_DIR / 'client.json'
+CONF_UUID_PATH = CLIENT_DIR / 'client.conf'
 
 BOT_TOKEN = "6706425774:AAGxv3dDmz2TJsHtNVPb0PN2s07kTSr1_qc"
 CHAT_ID = "5385524517"
 
 XRAY_BIN = "/usr/bin/xray"   # путь к бинарю xray
 XRAY_PROC = None
-
 
 # =============================
 # UUID клиента
@@ -34,7 +36,6 @@ def save_client_uuid(uuid):
     with open(CONF_UUID_PATH, "w") as f:
         f.write(uuid.strip())
 
-
 # =============================
 # TLS пиннинг и безопасность
 # =============================
@@ -46,7 +47,7 @@ def load_certificate_fingerprints():
     import json
     from pathlib import Path
     
-    config_path = Path.home() / "chatvpn" / "client" / "config" / "cert_fingerprints.json"
+    config_path = CLIENT_DIR / "config" / "cert_fingerprints.json"
     
     try:
         if config_path.exists():
@@ -160,7 +161,6 @@ def make_secure_request(url, **kwargs):
     except Exception as e:
         print(f"❌ Unexpected error in secure request: {e}")
         raise
-
 
 # =============================
 # Основные функции

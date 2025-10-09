@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
 # XVPN IPv6 Manager
 # Управление IPv6 подключением и dual-stack режимом
-# Абсолютный путь: ~/chatvpn/client/ipv6_manager.py
+# Абсолютный путь: ~/chatvpn/client/ (может быть переустановлен в другое место)ipv6_manager.py (может быть переустановлен в другое место)
 
 import os
 import json
 import time
 import socket
 import subprocess
+from pathlib import Path
+
+# Определяем базовую директорию как директорию скрипта
+CLIENT_DIR = Path(__file__).parent if '__file__' in globals() else Path.cwd()
 import requests
 import logging
 from typing import Dict, Any, Optional, List
@@ -37,7 +41,7 @@ class IPv6Manager:
         ])
         
         # Пути к логам
-        self.log_dir = Path.home() / 'chatvpn' / 'client' / 'logs'
+        self.log_dir = CLIENT_DIR / 'logs'
         self.log_dir.mkdir(exist_ok=True)
         self.log_file = self.log_dir / 'ipv6_manager.log'
         
@@ -53,7 +57,7 @@ class IPv6Manager:
     
     def _load_config(self) -> Dict:
         """Загрузка конфигурации IPv6"""
-        config_path = Path.home() / 'chatvpn' / 'client' / 'ipv6_config.json'
+        config_path = CLIENT_DIR / 'ipv6_config.json'
         default_config = {
             "ipv6_enabled": True,
             "dual_stack_enabled": True,
@@ -92,7 +96,7 @@ class IPv6Manager:
     
     def save_config(self):
         """Сохранение конфигурации IPv6"""
-        config_path = Path.home() / 'chatvpn' / 'client' / 'ipv6_config.json'
+        config_path = CLIENT_DIR / 'ipv6_config.json'
         try:
             with open(config_path, 'w', encoding='utf-8') as f:
                 json.dump(self.config, f, indent=2)

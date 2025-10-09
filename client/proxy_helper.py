@@ -13,6 +13,9 @@ import json
 import threading
 from pathlib import Path
 from typing import Dict, Optional, Any
+# Определяем базовую директорию как директорию скрипта
+CLIENT_DIR = Path(__file__).parent if '__file__' in globals() else Path.cwd()
+
 
 def find_free_port():
     """Поиск свободного порта"""
@@ -93,7 +96,7 @@ class ProxyModeManager:
         self.transparent_proxy_port = None
         self.active_mode = "tun"  # tun, socks5, http, transparent, auto
         self.proxy_process = None
-        self.config_file = os.path.expanduser("~/chatvpn/client/proxy_config.json")
+        self.config_file = CLIENT_DIR / "proxy_config.json"
         self.load_config()
 
     def load_config(self):

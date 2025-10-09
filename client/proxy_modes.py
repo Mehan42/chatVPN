@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # XVPN Proxy Modes Manager
 # Управление различными режимами прокси для XVPN
-# Абсолютный путь: ~/chatvpn/client/proxy_modes.py
+# Абсолютный путь: ~/chatvpn/client/ (может быть переустановлен в другое место)proxy_modes.py
 
 import os
 import json
@@ -11,6 +11,9 @@ import logging
 from typing import Dict, Any, Optional, List
 from pathlib import Path
 from enum import Enum
+# Определяем базовую директорию как директорию скрипта
+CLIENT_DIR = Path(__file__).parent if '__file__' in globals() else Path.cwd()
+
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
@@ -37,7 +40,7 @@ class ProxyModesManager:
         self.transparent_enabled = self.config.get('transparent_enabled', False)
         
         # Пути к логам
-        self.log_dir = Path.home() / 'chatvpn' / 'client' / 'logs'
+        self.log_dir = CLIENT_DIR / "logs"
         self.log_dir.mkdir(exist_ok=True)
         self.log_file = self.log_dir / 'proxy_modes.log'
         
@@ -53,7 +56,7 @@ class ProxyModesManager:
     
     def _load_config(self) -> Dict:
         """Загрузка конфигурации режимов прокси"""
-        config_path = Path.home() / 'chatvpn' / 'client' / 'proxy_modes_config.json'
+        config_path = CLIENT_DIR / "proxy_modes_config.json"
         default_config = {
             "current_mode": "system",
             "auto_detect_enabled": True,
@@ -98,7 +101,7 @@ class ProxyModesManager:
     
     def save_config(self):
         """Сохранение конфигурации режимов прокси"""
-        config_path = Path.home() / 'chatvpn' / 'client' / 'proxy_modes_config.json'
+        config_path = CLIENT_DIR / "proxy_modes_config.json"
         try:
             with open(config_path, 'w', encoding='utf-8') as f:
                 json.dump(self.config, f, indent=2)

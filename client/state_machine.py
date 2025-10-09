@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # XVPN State Machine
 # Полная машина состояний клиента
-# Абсолютный путь: ~/chatvpn/client/state_machine.py
+# Абсолютный путь: ~/chatvpn/client/ (может быть переустановлен в другое место)state_machine.py (может быть переустановлен в другое место)
 
 import json
 import time
@@ -12,6 +12,9 @@ from enum import Enum
 from typing import Dict, List, Optional, Any, Callable
 from pathlib import Path
 from dataclasses import dataclass, asdict, field
+
+# Определяем базовую директорию как директорию скрипта
+CLIENT_DIR = Path(__file__).parent if '__file__' in globals() else Path.cwd()
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
@@ -95,7 +98,7 @@ class VPNStateMachine:
         self.last_state = None  # Инициализация переменной для отслеживания предыдущего состояния
         
         # Инициализация путей
-        self.state_dir = Path.home() / 'chatvpn' / 'client' / 'states'
+        self.state_dir = CLIENT_DIR / 'states'
         self.state_dir.mkdir(parents=True, exist_ok=True)
         
         # Определение правил переходов
@@ -261,7 +264,7 @@ class VPNStateMachine:
         logger.info("Initializing VPN client...")
         
         # Загрузка конфигурации
-        config_path = Path.home() / 'chatvpn' / 'client' / 'client.json'
+        config_path = CLIENT_DIR / 'client.json'
         if config_path.exists():
             with open(config_path, 'r') as f:
                 context.config_data = json.load(f)
@@ -290,7 +293,7 @@ class VPNStateMachine:
             success = load_config_from_server()
             if success:
                 # Загружаем конфигурацию 
-                config_path = Path.home() / 'chatvpn' / 'client' / 'client.json'
+                config_path = CLIENT_DIR / 'client.json'
                 if config_path.exists():
                     with open(config_path, 'r') as f:
                         context.config_data = json.load(f)
@@ -303,7 +306,7 @@ class VPNStateMachine:
             else:
                 logger.warning("Failed to fetch configuration from server, trying local config...")
                 # Попробуем использовать локальный конфиг
-                config_path = Path.home() / 'chatvpn' / 'client' / 'client.json'
+                config_path = CLIENT_DIR / 'client.json'
                 if config_path.exists():
                     with open(config_path, 'r') as f:
                         context.config_data = json.load(f)
@@ -380,7 +383,7 @@ class VPNStateMachine:
         # Попробовать обновить список транспортов
         try:
             from .discover import discover_transports
-            manifest_path = Path.home() / 'chatvpn' / 'client' / 'transports' / 'manifest.json'
+            manifest_path = CLIENT_DIR / 'transports' / 'manifest.json'
             discovered = discover_transports(manifest_path)
             if discovered:
                 context.fallback_transports = [result['transport'] for result in discovered if result['score'] > 0]

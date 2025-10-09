@@ -6,10 +6,13 @@ import os
 from pathlib import Path
 from datetime import datetime, timedelta
 import sys
+# Определяем базовую директорию как директорию скрипта
+CLIENT_DIR = Path(__file__).parent if '__file__' in globals() else Path.cwd()
+
 
 def analyze_health_logs(days=1):
     """Анализ логов здоровья за последние N дней"""
-    health_log_path = Path.home() / 'chatvpn' / 'client' / 'logs' / 'health.log'
+    health_log_path = CLIENT_DIR / "logs' / 'health.log'
 
     if not health_log_path.exists():
         print("Файл лога здоровья не найден")
@@ -63,7 +66,7 @@ def analyze_health_logs(days=1):
 
 def analyze_state_logs(days=1):
     """Анализ логов состояния за последние N дней"""
-    state_log_path = Path.home() / 'chatvpn' / 'client' / 'logs' / 'state.log'
+    state_log_path = CLIENT_DIR / "logs' / 'state.log'
 
     if not state_log_path.exists():
         print("Файл лога состояния не найден")

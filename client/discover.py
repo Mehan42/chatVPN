@@ -4,6 +4,9 @@ import json
 from pathlib import Path
 
 
+# Определяем базовую директорию как директорию скрипта
+CLIENT_DIR = Path(__file__).parent if '__file__' in globals() else Path.cwd()
+
 def test_ipv4_connectivity(host, port, timeout=5):
     """Тестирование IPv4 подключения"""
     try:
@@ -18,7 +21,6 @@ def test_ipv4_connectivity(host, port, timeout=5):
         return result == 0, rtt
     except Exception:
         return False, None
-
 
 def test_ipv6_connectivity(host, port, timeout=5):
     """Тестирование IPv6 подключения"""
@@ -35,7 +37,6 @@ def test_ipv6_connectivity(host, port, timeout=5):
     except Exception:
         return False, None
 
-
 def discover_transports(manifest_path=None):
     """Обнаружение доступных транспортов с проверкой IPv4/IPv6.
     
@@ -47,8 +48,7 @@ def discover_transports(manifest_path=None):
         Список результатов обнаружения транспортов с оценками.
     """
     if manifest_path is None:
-        manifest_path = (Path.home() / 'chatvpn' / 'client' /
-                        'transports' / 'manifest.json')
+        manifest_path = CLIENT_DIR / "transports" / "manifest.json"
 
     if not manifest_path.exists():
         print("Manifest file not found")
@@ -111,7 +111,6 @@ def discover_transports(manifest_path=None):
     results.sort(key=lambda x: x["score"], reverse=True)
 
     return results
-
 
 if __name__ == "__main__":
     results = discover_transports()

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # XVPN Client - Основной клиент с интеграцией state machine
-# Абсолютный путь: ~/chatvpn/client/vpn_client.py
+# Абсолютный путь: ~/chatvpn/client/ (может быть переустановлен в другое место)vpn_client.py
 
 import os
 import sys
@@ -12,6 +12,9 @@ import threading
 import traceback
 from pathlib import Path
 from typing import Dict, Optional, Any, Callable
+# Определяем базовую директорию как директорию скрипта
+CLIENT_DIR = Path(__file__).parent if '__file__' in globals() else Path.cwd()
+
 
 # Импорт модулей
 from state_machine import VPNStateMachine, State, Event
@@ -25,7 +28,7 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
         logging.StreamHandler(),
-        logging.FileHandler(Path.home() / 'chatvpn' / 'client' / 'logs' / 'vpn_client.log')
+        logging.FileHandler(CLIENT_DIR / "logs" / "vpn_client.log")
     ]
 )
 logger = logging.getLogger(__name__)
@@ -39,9 +42,9 @@ class VPNClient:
         self.client_uuid = client_uuid or self._get_or_create_uuid()
         
         # Пути
-        self.config_path = Path.home() / 'chatvpn' / 'client' / 'client.json'
-        self.state_dir = Path.home() / 'chatvpn' / 'client' / 'states'
-        self.log_dir = Path.home() / 'chatvpn' / 'client' / 'logs'
+        self.config_path = CLIENT_DIR / "client.json"
+        self.state_dir = CLIENT_DIR / "states"
+        self.log_dir = CLIENT_DIR / "logs"
         
         # Создание директорий
         try:
@@ -65,7 +68,7 @@ class VPNClient:
     
     def _get_or_create_uuid(self) -> str:
         """Получение или создание UUID клиента"""
-        uuid_file = Path.home() / 'chatvpn' / 'client' / 'client.conf'
+        uuid_file = CLIENT_DIR / "client.conf"
         
         if uuid_file.exists():
             with open(uuid_file, 'r') as f:

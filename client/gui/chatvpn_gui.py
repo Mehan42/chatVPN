@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # GUI для ChatVPN клиента (гибридная схема)
-# Абсолютный путь: ~/chatvpn/client/chatvpn_gui.py
+# Абсолютный путь: ~/chatvpn/client/ (может быть переустановлен в другое место)chatvpn_gui.py
 
 import tkinter as tk
 from tkinter import messagebox, simpledialog
@@ -18,10 +18,14 @@ if sys.platform.startswith('linux'):
 elif sys.platform.startswith('win'):
     os.environ["PYSTRAY_BACKEND"] = "win32"
 elif sys.platform.startswith('darwin'):
-    os.environ["PYSTRAY_BACKEND"] = "quartz"
+    os.environ["PYSTRAY_BACKEND"] = "quartz"from pathlib import Path
 
-ICON_GREEN_PATH = os.path.expanduser("~/chatvpn/client/icon_green.png")
-ICON_RED_PATH   = os.path.expanduser("~/chatvpn/client/icon_red.png")
+# Определяем базовую директорию как директорию скрипта
+CLIENT_DIR = Path(__file__).parent if '__file__' in globals() else Path.cwd()
+
+
+ICON_GREEN_PATH = CLIENT_DIR / "icon_green.png")
+ICON_RED_PATH   = CLIENT_DIR / "icon_red.png")
 
 def load_icon(path):
     try:

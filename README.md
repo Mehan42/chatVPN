@@ -10,8 +10,7 @@
 [English](#english) | [Русский](#russian)
 
 ---
-
-## English {#english}
+## English
 
 Complete VPN system with intelligent agents for automatic transport management, monitoring and self-healing, plus ProxyBroker2 integration for enhanced proxy discovery.
 
@@ -79,7 +78,7 @@ See [FLEXIBLE_DEPLOYMENT_GUIDE.md](FLEXIBLE_DEPLOYMENT_GUIDE.md) for detailed do
 
 ---
 
-## Russian {#russian}
+## Russian
 
 Полная VPN-система с интеллектуальными агентами для автоматического управления транспортами, мониторинга и самовосстановления, а также интеграция с ProxyBroker2 для расширенного обнаружения прокси.
 

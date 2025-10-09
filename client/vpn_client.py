@@ -433,25 +433,22 @@ class VPNClient:
             self._handle_error(e, "force_transport_switch")
             return False
     
-    def reload_config(self) -> bool:
+    def reload_config(self) -> tuple[bool, str]:
         """Перезагрузка конфигурации"""
         try:
             if not self.state_machine:
-                logger.warning("State machine not initialized")
-                return False
+                return (False, "State machine not initialized")
             
             if not self.running:
-                logger.warning("VPN Client is not running")
-                return False
+                return (False, "VPN Client is not running")
             
             self.state_machine.trigger_event(Event.START_REQUESTED)
-            logger.info("Config reload requested")
-            return True
+            return (True, "Config reload requested")
         except Exception as e:
             logger.error(f"Error reloading config: {e}")
             self._handle_error(e, "reload_config")
-            return False
-    
+            return (False, f"Error reloading config: {e}")
+
     def get_client_uuid(self) -> str:
         """Получение UUID клиента"""
         return self.client_uuid

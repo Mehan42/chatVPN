@@ -1,8 +1,64 @@
 # XVPN Client
 
-Клиентская часть XVPN системы.
+[English](#english) | [Русский](#russian)
 
-## Установка и запуск "из коробки"
+---
+
+## English {#english}
+
+Client component of the XVPN system.
+
+### Installation and "out-of-the-box" startup
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Mehan42/chatVPN.git
+   cd chatVPN
+   ```
+
+2. Install dependencies:
+   ```bash
+   pip install -r requirements_client.txt
+   ```
+
+3. Run the client:
+   ```bash
+   python3 client/chatvpn_gui.py
+   ```
+
+### Flexible Installation
+
+For installation in custom directories:
+```bash
+./install_client_flexible.sh -d /opt/my_xvpn_client
+```
+
+Then run:
+```bash
+cd /opt/my_xvpn_client
+python3 run_client.py
+```
+
+### Configuration
+
+The client configuration is stored in `client.json` and `client.conf` files.
+The client UUID is automatically generated on first run and saved to `client.conf`.
+
+### Dependencies
+
+- Python 3.10+
+- tkinter (for GUI)
+- requests
+- Pillow (for icons)
+- pystray (for tray icon)
+
+---
+
+## Russian {#russian}
+
+Клиентская часть системы XVPN.
+
+### Установка и запуск "из коробки"
 
 1. Клонируйте репозиторий:
    ```bash
@@ -10,49 +66,38 @@
    cd chatVPN
    ```
 
-2. Перейдите в директорию клиента:
+2. Установите зависимости:
    ```bash
-   cd client
+   pip install -r requirements_client.txt
    ```
 
-3. Установите зависимости:
+3. Запустите клиент:
    ```bash
-   # Ubuntu/Debian
-   sudo apt update && sudo apt install curl jq
-
-   # Установка Xray для подключения (опционально)
-   # См. https://github.com/XTLS/Xray-core
+   python3 client/chatvpn_gui.py
    ```
 
-## Использование
+### Гибкая установка
 
-### 1. Настройка клиента
+Для установки в произвольные директории:
 ```bash
-./scripts/configure_client.sh
+./install_client_flexible.sh -d /opt/my_xvpn_client
 ```
 
-### 2. Добавление дополнительных серверов (опционально)
+Затем запустите:
 ```bash
-./scripts/add_server.sh
+cd /opt/my_xvpn_client
+python3 run_client.py
 ```
 
-### 3. Получение конфигурации от сервера
-```bash
-./scripts/get_config.sh
-```
+### Конфигурация
 
-### 4. Запуск клиента
-```bash
-./scripts/start_client.sh
-```
+Конфигурация клиента хранится в файлах `client.json` и `client.conf`.
+UUID клиента автоматически генерируется при первом запуске и сохраняется в `client.conf`.
 
-## Архитектура
+### Зависимости
 
-- `config/` - конфигурационные файлы
-- `scripts/` - скрипты установки и управления
-- `profiles/` - профили подключения
-- `logs/` - логи подключений
-
-## Многосерверная архитектура
-
-Конфигурационный файл поддерживает подключение к нескольким серверам с возможностью автоматического переключения.
+- Python 3.10+
+- tkinter (для GUI)
+- requests
+- Pillow (для иконок)
+- pystray (для иконки в трее)

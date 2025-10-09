@@ -1,0 +1,38 @@
+{
+  "repositories": [
+    {
+      "name": "main",
+      "path": "/home/uss/chatvpn",
+      "branches": ["main", "master", "develop"],
+      "targets": {
+        "server": {
+          "files": ["server/", "api/", "bot/", "agent/", "admin/", "requirements_server.txt", "docker/", "traefik/", "install_server.sh", "post_install_setup.sh"],
+          "actions": [
+            {"type": "pip_install", "requirements": "requirements_server.txt"},
+            {"type": "systemctl", "services": ["xvpn-api", "xvpn-agent", "xvpn-bot"], "sudo": true}
+          ]
+        },
+        "client": {
+          "files": ["client/", "requirements_client.txt", "install_client.sh"],
+          "actions": [
+            {"type": "pip_install", "requirements": "requirements_client.txt"},
+            {"type": "systemctl", "services": ["xvpn-client"], "sudo": false, "user": true}
+          ]
+        }
+      }
+    }
+  ],
+  "check_interval": 30,
+  "webhook_url": null,
+  "logging": {
+    "level": "INFO",
+    "file": "deployment_watcher.log"
+  },
+  "notification": {
+    "enabled": true,
+    "telegram": {
+      "bot_token": null,
+      "chat_id": null
+    }
+  }
+}

@@ -60,6 +60,29 @@ XVPN now includes integration with ProxyBroker2 for enhanced proxy discovery and
 - Python 3.10+
 - Git
 - Docker (optional, for containerized deployment)
+\n## 🚀 Flexible Deployment
+
+XVPN now supports flexible deployment in arbitrary directories with automatic update capabilities:
+
+### Client Installation in Custom Directory
+```bash
+./install_client_flexible.sh -d /opt/my_xvpn_client
+```
+
+### Server Installation
+```bash
+sudo ./install_server_flexible.sh
+```
+
+### Automatic Updates
+The system includes advanced deployment watcher that monitors repository changes and automatically updates clients and servers:
+
+```bash
+python3 advanced_deployment_watcher.py --config deployment_config.json
+```
+
+See [FLEXIBLE_DEPLOYMENT_GUIDE.md](FLEXIBLE_DEPLOYMENT_GUIDE.md) for detailed documentation.
+
 
 ### Installation
 

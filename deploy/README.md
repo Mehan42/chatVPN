@@ -4,7 +4,7 @@
 
 ---
 
-## English {#english}
+## English
 
 This directory contains deployment scripts and configuration for the XVPN system.
 
@@ -64,7 +64,7 @@ Edit `deployment_config.py` to customize deployment settings.
 
 ---
 
-## Russian {#russian}
+## Russian
 
 Эта директория содержит скрипты развертывания и конфигурацию для системы XVPN.
 

@@ -4,7 +4,7 @@
 
 ---
 
-## English {#english}
+## English
 
 Client component of the XVPN system.
 
@@ -54,7 +54,7 @@ The client UUID is automatically generated on first run and saved to `client.con
 
 ---
 
-## Russian {#russian}
+## Russian
 
 Клиентская часть системы XVPN.
 

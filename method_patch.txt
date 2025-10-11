@@ -1,0 +1,17 @@
+    def reload_config(self) -> tuple[bool, str]:
+        """Перезагрузка конфигурации"""
+        try:
+            if not self.state_machine:
+                return (False, "State machine not initialized")
+            
+            if not self.running:
+                return (False, "VPN Client is not running")
+            
+            self.state_machine.trigger_event(Event.START_REQUESTED)
+            return (True, "Config reload requested")
+        except Exception as e:
+            logger.error(f"Error reloading config: {e}")
+            self._handle_error(e, "reload_config")
+            return (False, f"Error reloading config: {e}")
+
+    def get_client_uuid(self) -> str:

@@ -1,0 +1,54 @@
+{
+  "uuid": "",
+  "transports": null,
+  "routing_rules": null,
+  "server_config": {
+    "api_endpoint": "https://example.com:8443",
+    "manifest_url": "/transports/manifest.json",
+    "health_check_url": "/mcp/v1/vpn.health",
+    "timeout": 30,
+    "retry_attempts": 3,
+    "allowed_domains": null,
+    "ipv6_support": true,
+    "certificate_pin": ""
+  },
+  "client_options": {
+    "auto_connect": false,
+    "auto_update": true,
+    "minimize_to_tray": true,
+    "show_notifications": true,
+    "log_level": "info",
+    "log_to_file": true,
+    "log_directory": "~/xvpn-client/logs",
+    "auto_switch": true,
+    "switch_threshold": 30,
+    "max_retries": 3
+  },
+  "proxy_modes": {
+    "enabled": true,
+    "mode": "auto",
+    "local_socks_port": 1080,
+    "local_http_port": 8080,
+    "auth_required": false,
+    "allowed_networks": null
+  },
+  "geoip_settings": {
+    "ru_countries": [
+      "RU",
+      "BY",
+      "KZ",
+      "KG",
+      "MD",
+      "TJ",
+      "TM",
+      "UZ",
+      "AM",
+      "AZ",
+      "GE"
+    ],
+    "auto_update": true,
+    "update_interval": 24,
+    "cache_ttl": 60,
+    "database_path": "~/xvpn-client/geoip.db"
+  }
+}

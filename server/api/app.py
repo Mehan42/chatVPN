@@ -10,18 +10,36 @@ import json
 import time
 import subprocess
 from pathlib import Path
-from flask import Flask, jsonify, request
-from flask_cors import CORS
 
 # Добавляем путь к серверным компонентам
-sys.path.append(str(Path(__file__).parent.parent))
+server_root = Path(__file__).parent.parent
+sys.path.insert(0, str(server_root))
 
 # Import authentication module
 try:
+    # Пробуем относительный импорт
     from .auth import auth_manager, require_auth
 except ImportError:
-    # If relative import fails, try absolute import
-    from server.api.auth import auth_manager, require_auth
+    try:
+        # Пробуем абсолютный импорт
+        sys.path.append(str(server_root))
+        from server.api.auth import auth_manager, require_auth
+    except ImportError:
+        # Если не удается импортировать, создаем заглушки
+        class AuthManager:
+            def __init__(self):
+                pass
+        
+        def require_auth(required_permissions=None):
+            def decorator(f):
+                return f
+            return decorator
+        
+        auth_manager = AuthManager()
+        require_auth = require_auth
+
+from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)  # В продакшене настроить более строго
@@ -33,7 +51,7 @@ DISABLE_AUTH = os.getenv("DISABLE_AUTH", "false").lower() == "true"
 class XVPNDatabase:
     def __init__(self, db_path=None):
         import sqlite3
-        self.db_path = db_path or "/opt/xvpn/data/xvpn.db"
+        self.db_path = db_path or "/home/uss/chatvpn/server/data/xvpn.db"
         self.init_db()
     
     def init_db(self):

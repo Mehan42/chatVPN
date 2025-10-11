@@ -1,0 +1,12 @@
+2025-10-02 13:05:44,530 - STATE - INFO - State Machine initialized for client interactive-test-uuid
+2025-10-02 13:05:44,531 - STATE - INFO - Initializing VPN client...
+2025-10-02 13:05:46,199 - STATE - INFO - Event queued: start_requested
+2025-10-02 13:05:46,300 - STATE - INFO - State transition: initializing -> config_fetching
+2025-10-02 13:05:46,301 - STATE - INFO - Fetching configuration from server...
+2025-10-02 13:05:46,364 - STATE - ERROR - Config fetch failed: Failed to fetch configuration
+2025-10-02 13:05:46,364 - STATE - INFO - Event queued: error_occurred
+2025-10-02 13:05:46,465 - STATE - INFO - State transition: config_fetching -> error
+2025-10-02 13:05:46,466 - STATE - ERROR - VPN client in error state: Failed to fetch configuration
+2025-10-02 13:05:46,466 - STATE - INFO - Event queued: start_requested
+2025-10-02 13:05:46,566 - STATE - INFO - State transition: error -> recovering
+2025-10-02 13:05:46,567 - STATE - INFO - Attempting recovery...

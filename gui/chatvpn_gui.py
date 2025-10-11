@@ -1,0 +1,149 @@
+#!/usr/bin/env python3
+# GUI для ChatVPN клиента (гибридная схема)
+# Абсолютный путь: ~/chatvpn/client/ (может быть переустановлен в другое место)chatvpn_gui.py
+
+import tkinter as tk
+from tkinter import messagebox, simpledialog
+import threading
+from PIL import Image
+import pystray
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import chatvpn_backend as be
+import os
+# Установка бэкенда pystray в зависимости от платформы
+if sys.platform.startswith('linux'):
+    os.environ["PYSTRAY_BACKEND"] = "xorg"
+elif sys.platform.startswith('win'):
+    os.environ["PYSTRAY_BACKEND"] = "win32"
+elif sys.platform.startswith('darwin'):
+    os.environ["PYSTRAY_BACKEND"] = "quartz"from pathlib import Path
+
+# Определяем базовую директорию как директорию скрипта
+CLIENT_DIR = Path(__file__).parent if '__file__' in globals() else Path.cwd()
+
+
+ICON_GREEN_PATH = CLIENT_DIR / "icon_green.png")
+ICON_RED_PATH   = CLIENT_DIR / "icon_red.png")
+
+def load_icon(path):
+    try:
+        img = Image.open(path)
+        return img.resize((128, 128))   # крупная иконка
+    except:
+        return None
+
+class App(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title("ChatVPN")
+        self.geometry("420x320")
+        self.resizable(False, False)
+
+        # проверка UUID
+        if not be.get_client_uuid():
+            uuid = simpledialog.askstring("Регистрация", "Введите ваш Client UUID:")
+            if uuid:
+                be.save_client_uuid(uuid)
+
+        # метки
+        self.status_lbl = tk.Label(self, text="Статус: OFF", font=("Sans", 12))
+        self.status_lbl.pack(pady=8)
+
+        self.ip_lbl = tk.Label(self, text="IPv4: -", font=("Sans", 11))
+        self.ip_lbl.pack(pady=2)
+
+        self.ipv6_lbl = tk.Label(self, text="IPv6: -", font=("Sans", 11))
+        self.ipv6_lbl.pack(pady=2)
+
+        self.speed_lbl = tk.Label(self, text="Скорость: 0 ↓ / 0 ↑ КБ/с", font=("Sans", 11))
+        self.speed_lbl.pack(pady=4)
+
+        # кнопки
+        self.toggle_btn = tk.Button(self, text="Включить VPN", width=20, command=self.on_toggle)
+        self.toggle_btn.pack(pady=10)
+
+        self.cfg_btn = tk.Button(self, text="Запросить конфиг", width=20, command=self.on_fetch_config)
+        self.cfg_btn.pack(pady=6)
+
+        self.uuid_btn = tk.Button(self, text="Сменить UUID", width=20, command=self.on_change_uuid)
+        self.uuid_btn.pack(pady=6)
+
+        # создаём трэй-иконку
+        self.current_icon = load_icon(ICON_RED_PATH)
+        self.tray_icon = pystray.Icon("ChatVPN", self.current_icon, "ChatVPN")
+        threading.Thread(target=self.tray_icon.run, daemon=True).start()
+
+        # автозагрузка client.json при старте
+        ok, msg = be.load_config()
+        print("[INIT]", msg)
+
+        # цикл обновления статуса
+        self.after(1500, self.refresh_status_loop)
+
+    def set_tray_icon(self, on: bool):
+        img = load_icon(ICON_GREEN_PATH if on else ICON_RED_PATH)
+        if img:
+            self.current_icon = img
+            if self.tray_icon:
+                self.tray_icon.icon = img
+
+    def on_toggle(self):
+        if be.is_running():
+            ok, msg = be.stop_vpn()
+            self.toggle_btn.config(text="Включить VPN")
+        else:
+            ok, msg = be.start_vpn()
+            self.toggle_btn.config(text="Выключить VPN")
+        messagebox.showinfo("ChatVPN", msg)
+        self.refresh_status()
+
+    def on_fetch_config(self):
+        ok, msg = be.load_config()
+        messagebox.showinfo("ChatVPN", msg)
+
+    def on_change_uuid(self):
+        uuid = simpledialog.askstring("Смена UUID", "Введите новый Client UUID:")
+        if uuid:
+            be.save_client_uuid(uuid)
+            messagebox.showinfo("ChatVPN", f"UUID изменён на:\n{uuid}")
+
+    def refresh_status(self):
+        running = be.is_running()
+        self.status_lbl.config(text="Статус: ON" if running else "Статус: OFF")
+        self.set_tray_icon(running)
+        
+        # Получаем информацию о сети
+        try:
+            from health import get_network_info
+            network_info = get_network_info()
+            
+            # IPv4 информация
+            ipv4 = network_info.get("external_ips", {}).get("ipv4", "-")
+            self.ip_lbl.config(text=f"IPv4: {ipv4}")
+            
+            # IPv6 информация
+            ipv6 = network_info.get("external_ips", {}).get("ipv6", "-")
+            if ipv6 != "-":
+                self.ipv6_lbl.config(text=f"IPv6: {ipv6}")
+                self.ipv6_lbl.config(fg="green")  # Зеленый цвет для активного IPv6
+            else:
+                self.ipv6_lbl.config(text="IPv6: Не поддерживается")
+                self.ipv6_lbl.config(fg="gray")  # Серый цвет для неактивного IPv6
+                
+        except Exception as e:
+            self.ip_lbl.config(text="IPv4: Ошибка")
+            self.ipv6_lbl.config(text="IPv6: Ошибка")
+        
+        # Скорость
+        rx, tx = be.get_speed()
+        self.speed_lbl.config(text=f"Скорость: {rx} ↓ / {tx} ↑ КБ/с")
+
+    def refresh_status_loop(self):
+        self.refresh_status()
+        self.after(2000, self.refresh_status_loop)
+
+if __name__ == "__main__":
+    app = App()
+    app.mainloop()

@@ -1,0 +1,616 @@
+{"timestamp": "2025-10-02T12:18:20.623273", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-02T12:18:20.816550", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-02T12:18:20.816702", "level": "INFO", "message": "Calculating mask score..."}
+{"timestamp": "2025-10-02T12:18:20.816785", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-02T12:18:21.293004", "level": "INFO", "message": "External IP detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-02T12:18:21.293197", "level": "INFO", "message": "IP leak check passed. Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-02T12:18:21.293294", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-02T12:18:21.702025", "level": "ERROR", "message": "TLS analysis failed: tuple index out of range"}
+{"timestamp": "2025-10-02T12:18:21.703366", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-02T12:18:22.384596", "level": "INFO", "message": "Connectivity check: DNS=True, TCP=True, HTTP=True"}
+{"timestamp": "2025-10-02T12:18:22.385316", "level": "INFO", "message": "Mask score calculated: 0/5"}
+{"timestamp": "2025-10-02T12:18:22.385449", "level": "WARNING", "message": "Deductions applied: Weak TLS profile: error"}
+{"timestamp": "2025-10-02T12:18:22.563588", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-02T12:18:22.563783", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-02T12:18:22.563868", "level": "INFO", "message": "Getting comprehensive health status..."}
+{"timestamp": "2025-10-02T12:18:22.563935", "level": "INFO", "message": "Calculating mask score..."}
+{"timestamp": "2025-10-02T12:18:22.564003", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-02T12:18:22.956170", "level": "INFO", "message": "External IP detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-02T12:18:22.956388", "level": "INFO", "message": "IP leak check passed. Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-02T12:18:22.956497", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-02T12:18:23.346318", "level": "ERROR", "message": "TLS analysis failed: tuple index out of range"}
+{"timestamp": "2025-10-02T12:18:23.347558", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-02T12:18:24.084565", "level": "INFO", "message": "Connectivity check: DNS=True, TCP=True, HTTP=True"}
+{"timestamp": "2025-10-02T12:18:24.085139", "level": "INFO", "message": "Mask score calculated: 0/5"}
+{"timestamp": "2025-10-02T12:18:24.085292", "level": "WARNING", "message": "Deductions applied: Weak TLS profile: error"}
+{"timestamp": "2025-10-02T12:18:24.085446", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-02T12:18:24.255771", "level": "INFO", "message": "External IP detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-02T12:18:24.256020", "level": "INFO", "message": "IP leak check passed. Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-02T12:18:24.256156", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-02T12:18:24.669821", "level": "ERROR", "message": "TLS analysis failed: tuple index out of range"}
+{"timestamp": "2025-10-02T12:18:24.671035", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-02T12:18:24.979965", "level": "INFO", "message": "Connectivity check: DNS=True, TCP=True, HTTP=True"}
+{"timestamp": "2025-10-02T12:18:24.980289", "level": "INFO", "message": "Health status: critical (Score: 0)"}
+{"timestamp": "2025-10-02T12:18:25.172081", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-02T12:18:25.172298", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-02T12:18:25.172409", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-02T12:18:25.565870", "level": "INFO", "message": "External IP detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-02T12:18:25.566070", "level": "INFO", "message": "IP leak check passed. Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-02T12:18:25.739638", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-02T12:18:25.739836", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-02T12:18:25.739922", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-02T12:18:26.128103", "level": "ERROR", "message": "TLS analysis failed: tuple index out of range"}
+{"timestamp": "2025-10-02T13:00:09.640097", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-02T13:00:09.799060", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-02T13:00:09.958721", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-02T13:00:10.123743", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-02T13:05:40.793710", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-02T13:05:40.960503", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-02T13:05:41.132653", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-02T13:05:41.136750", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-02T13:05:41.531962", "level": "INFO", "message": "External IP detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-02T13:05:41.532137", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-02T13:05:41.704413", "level": "INFO", "message": "External IP detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-02T13:05:41.704677", "level": "INFO", "message": "IP leak check passed. Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-02T13:05:41.704806", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-02T13:05:42.426723", "level": "INFO", "message": "Connectivity check: DNS=True, TCP=True, HTTP=True"}
+{"timestamp": "2025-10-02T13:05:42.599507", "level": "INFO", "message": "External IP detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-02T13:05:42.772019", "level": "INFO", "message": "External IP detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-02T13:05:42.775567", "level": "INFO", "message": "Calculating mask score..."}
+{"timestamp": "2025-10-02T13:05:42.777014", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-02T13:05:43.211879", "level": "INFO", "message": "External IP detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-02T13:05:43.212177", "level": "INFO", "message": "IP leak check passed. Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-02T13:05:43.212347", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-02T13:05:43.621590", "level": "ERROR", "message": "TLS analysis failed: tuple index out of range"}
+{"timestamp": "2025-10-02T13:05:43.623065", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-02T13:05:44.327983", "level": "INFO", "message": "Connectivity check: DNS=True, TCP=True, HTTP=True"}
+{"timestamp": "2025-10-02T13:05:44.328686", "level": "INFO", "message": "Mask score calculated: 0/5"}
+{"timestamp": "2025-10-02T13:05:44.328902", "level": "WARNING", "message": "Deductions applied: Weak TLS profile: error"}
+{"timestamp": "2025-10-02T13:05:44.527336", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-02T13:05:44.531714", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-02T13:05:44.941935", "level": "INFO", "message": "External IP detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-02T13:05:44.942161", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-02T13:05:45.115165", "level": "INFO", "message": "External IP detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-02T13:05:45.115480", "level": "INFO", "message": "IP leak check passed. Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-02T13:05:45.115629", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-02T13:05:45.847097", "level": "INFO", "message": "Connectivity check: DNS=True, TCP=True, HTTP=True"}
+{"timestamp": "2025-10-02T13:05:46.020337", "level": "INFO", "message": "External IP detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-02T13:05:46.195498", "level": "INFO", "message": "External IP detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-02T13:05:48.403751", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-02T13:05:48.411139", "level": "INFO", "message": "Calculating mask score..."}
+{"timestamp": "2025-10-02T13:05:48.411268", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-02T13:05:48.810642", "level": "INFO", "message": "External IP detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-02T13:05:48.810823", "level": "INFO", "message": "IP leak check passed. Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-02T13:05:48.810919", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-02T13:05:49.203228", "level": "ERROR", "message": "TLS analysis failed: tuple index out of range"}
+{"timestamp": "2025-10-02T13:05:49.204896", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-02T13:05:49.922037", "level": "INFO", "message": "Connectivity check: DNS=True, TCP=True, HTTP=True"}
+{"timestamp": "2025-10-02T13:05:49.922743", "level": "INFO", "message": "Mask score calculated: 0/5"}
+{"timestamp": "2025-10-02T13:05:49.922938", "level": "WARNING", "message": "Deductions applied: Weak TLS profile: error"}
+{"timestamp": "2025-10-02T13:05:49.923233", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-02T13:05:50.349924", "level": "INFO", "message": "External IP detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-02T13:05:50.350158", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-02T13:05:50.518264", "level": "INFO", "message": "External IP detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-02T13:05:50.518527", "level": "INFO", "message": "IP leak check passed. Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-02T13:05:50.518673", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-02T13:05:51.241652", "level": "INFO", "message": "Connectivity check: DNS=True, TCP=True, HTTP=True"}
+{"timestamp": "2025-10-02T13:05:51.411932", "level": "INFO", "message": "External IP detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-02T13:05:51.581306", "level": "INFO", "message": "External IP detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-02T13:05:51.893321", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-02T13:18:46.902786", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-02T13:22:59.530253", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-02T13:22:59.530454", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-02T13:23:07.863646", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-02T23:42:14.743047", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-02T23:42:14.746699", "level": "INFO", "message": "Calculating mask score..."}
+{"timestamp": "2025-10-02T23:46:41.064684", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-02T23:46:41.068528", "level": "INFO", "message": "Calculating mask score..."}
+{"timestamp": "2025-10-02T23:46:41.068626", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-02T23:46:41.068787", "level": "ERROR", "message": "Failed to get local IPv6 IP: [Errno 101] Network is unreachable"}
+{"timestamp": "2025-10-02T23:46:41.483843", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-02T23:46:41.501336", "level": "WARNING", "message": "Failed to get IPv6 from https://api6.ipify.org: HTTPSConnectionPool(host='api6.ipify.org', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x74a4e9425ee0>: Failed to establish a new connection: [Errno 101] Network is unreachable'))"}
+{"timestamp": "2025-10-02T23:46:42.202849", "level": "ERROR", "message": "Failed to get external IPv6"}
+{"timestamp": "2025-10-02T23:46:42.203031", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-02T23:46:42.203121", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-02T23:46:42.203194", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-02T23:46:42.404089", "level": "ERROR", "message": "TLS analysis failed: tuple index out of range"}
+{"timestamp": "2025-10-02T23:46:42.405260", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-02T23:46:43.104586", "level": "INFO", "message": "Connectivity check: DNS=True, TCP=True, HTTP=True"}
+{"timestamp": "2025-10-02T23:46:43.105210", "level": "INFO", "message": "Mask score calculated: 0/5"}
+{"timestamp": "2025-10-02T23:46:43.105356", "level": "WARNING", "message": "Deductions applied: Weak TLS profile: error"}
+{"timestamp": "2025-10-02T23:46:43.105630", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-02T23:46:43.105863", "level": "ERROR", "message": "Failed to get local IPv6 IP: [Errno 101] Network is unreachable"}
+{"timestamp": "2025-10-02T23:46:43.533621", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-02T23:46:43.539481", "level": "WARNING", "message": "Failed to get IPv6 from https://api6.ipify.org: HTTPSConnectionPool(host='api6.ipify.org', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x74a4e9427290>: Failed to establish a new connection: [Errno 101] Network is unreachable'))"}
+{"timestamp": "2025-10-02T23:46:44.209577", "level": "ERROR", "message": "Failed to get external IPv6"}
+{"timestamp": "2025-10-02T23:46:44.209814", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-02T23:46:44.210087", "level": "ERROR", "message": "Failed to get local IPv6 IP: [Errno 101] Network is unreachable"}
+{"timestamp": "2025-10-02T23:46:44.388291", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-02T23:46:44.394531", "level": "WARNING", "message": "Failed to get IPv6 from https://api6.ipify.org: HTTPSConnectionPool(host='api6.ipify.org', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x74a4e94278f0>: Failed to establish a new connection: [Errno 101] Network is unreachable'))"}
+{"timestamp": "2025-10-02T23:46:44.593734", "level": "ERROR", "message": "Failed to get external IPv6"}
+{"timestamp": "2025-10-02T23:46:44.594009", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-02T23:46:44.594234", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-02T23:46:44.594462", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-02T23:46:45.260026", "level": "INFO", "message": "Connectivity check: DNS=True, TCP=True, HTTP=True"}
+{"timestamp": "2025-10-02T23:49:59.656102", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-02T23:49:59.660117", "level": "INFO", "message": "Calculating mask score..."}
+{"timestamp": "2025-10-02T23:49:59.660218", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-02T23:49:59.660390", "level": "ERROR", "message": "Failed to get local IPv6 IP: [Errno 101] Network is unreachable"}
+{"timestamp": "2025-10-02T23:50:00.071424", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-02T23:50:00.088691", "level": "WARNING", "message": "Failed to get IPv6 from https://api6.ipify.org: HTTPSConnectionPool(host='api6.ipify.org', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7db1c1961610>: Failed to establish a new connection: [Errno 101] Network is unreachable'))"}
+{"timestamp": "2025-10-02T23:50:00.737211", "level": "ERROR", "message": "Failed to get external IPv6"}
+{"timestamp": "2025-10-02T23:50:00.737444", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-02T23:50:00.737561", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-02T23:50:00.737661", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-02T23:50:00.946826", "level": "ERROR", "message": "TLS analysis failed: tuple index out of range"}
+{"timestamp": "2025-10-02T23:50:00.947870", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-02T23:50:01.560850", "level": "INFO", "message": "Connectivity check: DNS=True, TCP=True, HTTP=True"}
+{"timestamp": "2025-10-02T23:50:01.561445", "level": "INFO", "message": "Mask score calculated: 0/5"}
+{"timestamp": "2025-10-02T23:50:01.561591", "level": "WARNING", "message": "Deductions applied: Weak TLS profile: error"}
+{"timestamp": "2025-10-02T23:50:01.561823", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-02T23:50:01.562070", "level": "ERROR", "message": "Failed to get local IPv6 IP: [Errno 101] Network is unreachable"}
+{"timestamp": "2025-10-02T23:50:02.006173", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-02T23:50:02.012040", "level": "WARNING", "message": "Failed to get IPv6 from https://api6.ipify.org: HTTPSConnectionPool(host='api6.ipify.org', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7db1c17986e0>: Failed to establish a new connection: [Errno 101] Network is unreachable'))"}
+{"timestamp": "2025-10-02T23:50:02.679031", "level": "ERROR", "message": "Failed to get external IPv6"}
+{"timestamp": "2025-10-02T23:50:02.679309", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-02T23:50:02.679713", "level": "ERROR", "message": "Failed to get local IPv6 IP: [Errno 101] Network is unreachable"}
+{"timestamp": "2025-10-02T23:50:02.858022", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-02T23:50:02.863478", "level": "WARNING", "message": "Failed to get IPv6 from https://api6.ipify.org: HTTPSConnectionPool(host='api6.ipify.org', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7db1c1963980>: Failed to establish a new connection: [Errno 101] Network is unreachable'))"}
+{"timestamp": "2025-10-02T23:50:03.072723", "level": "ERROR", "message": "Failed to get external IPv6"}
+{"timestamp": "2025-10-02T23:50:03.072988", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-02T23:50:03.073229", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-02T23:50:03.073484", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-02T23:50:03.739199", "level": "INFO", "message": "Connectivity check: DNS=True, TCP=True, HTTP=True"}
+{"timestamp": "2025-10-03T10:18:40.664504", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-03T10:18:40.688074", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-03T12:34:58.291260", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-03T12:34:58.379347", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-03T12:35:38.553524", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-03T12:35:38.553812", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-03T12:35:38.553927", "level": "INFO", "message": "Calculating mask score..."}
+{"timestamp": "2025-10-03T12:35:38.554018", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-03T12:35:38.554203", "level": "ERROR", "message": "Failed to get local IPv6 IP: [Errno 101] Network is unreachable"}
+{"timestamp": "2025-10-03T12:35:39.480209", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-03T12:35:39.497810", "level": "WARNING", "message": "Failed to get IPv6 from https://api6.ipify.org: HTTPSConnectionPool(host='api6.ipify.org', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7f8547741bb0>: Failed to establish a new connection: [Errno 101] Network is unreachable'))"}
+{"timestamp": "2025-10-03T12:35:40.126728", "level": "ERROR", "message": "Failed to get external IPv6"}
+{"timestamp": "2025-10-03T12:35:40.126900", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-03T12:35:40.127005", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-03T12:35:40.127096", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-03T12:35:40.343791", "level": "ERROR", "message": "TLS analysis failed: tuple index out of range"}
+{"timestamp": "2025-10-03T12:35:40.345632", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-03T12:35:40.747235", "level": "INFO", "message": "Connectivity check: DNS=True, TCP=True, HTTP=True"}
+{"timestamp": "2025-10-03T12:35:40.747858", "level": "INFO", "message": "Mask score calculated: 0/5"}
+{"timestamp": "2025-10-03T12:35:40.748017", "level": "WARNING", "message": "Deductions applied: Weak TLS profile: error"}
+{"timestamp": "2025-10-03T12:35:40.748183", "level": "INFO", "message": "Getting comprehensive health status..."}
+{"timestamp": "2025-10-03T12:35:40.748336", "level": "INFO", "message": "Calculating mask score..."}
+{"timestamp": "2025-10-03T12:35:40.748461", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-03T12:35:40.748683", "level": "ERROR", "message": "Failed to get local IPv6 IP: [Errno 101] Network is unreachable"}
+{"timestamp": "2025-10-03T12:35:41.146082", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-03T12:35:41.152045", "level": "WARNING", "message": "Failed to get IPv6 from https://api6.ipify.org: HTTPSConnectionPool(host='api6.ipify.org', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7f85477438c0>: Failed to establish a new connection: [Errno 101] Network is unreachable'))"}
+{"timestamp": "2025-10-03T12:35:41.757280", "level": "ERROR", "message": "Failed to get external IPv6"}
+{"timestamp": "2025-10-03T12:35:41.757481", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-03T12:35:41.757611", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-03T12:35:41.757708", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-03T12:35:41.968054", "level": "ERROR", "message": "TLS analysis failed: tuple index out of range"}
+{"timestamp": "2025-10-03T12:35:41.969531", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-03T12:35:42.396392", "level": "INFO", "message": "Connectivity check: DNS=True, TCP=True, HTTP=True"}
+{"timestamp": "2025-10-03T12:35:42.396988", "level": "INFO", "message": "Mask score calculated: 0/5"}
+{"timestamp": "2025-10-03T12:35:42.397157", "level": "WARNING", "message": "Deductions applied: Weak TLS profile: error"}
+{"timestamp": "2025-10-03T12:35:42.397333", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-03T12:35:42.397602", "level": "ERROR", "message": "Failed to get local IPv6 IP: [Errno 101] Network is unreachable"}
+{"timestamp": "2025-10-03T12:35:42.601253", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-03T12:35:42.608828", "level": "WARNING", "message": "Failed to get IPv6 from https://api6.ipify.org: HTTPSConnectionPool(host='api6.ipify.org', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7f8547743e00>: Failed to establish a new connection: [Errno 101] Network is unreachable'))"}
+{"timestamp": "2025-10-03T12:35:42.788766", "level": "ERROR", "message": "Failed to get external IPv6"}
+{"timestamp": "2025-10-03T12:35:42.789028", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-03T12:35:42.789177", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-03T12:35:42.789335", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-03T12:35:43.014850", "level": "ERROR", "message": "TLS analysis failed: tuple index out of range"}
+{"timestamp": "2025-10-03T12:35:43.016160", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-03T12:35:43.256824", "level": "INFO", "message": "Connectivity check: DNS=True, TCP=True, HTTP=True"}
+{"timestamp": "2025-10-03T12:35:43.257124", "level": "INFO", "message": "Health status: critical (Score: 0)"}
+{"timestamp": "2025-10-03T12:51:45.035446", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-03T16:19:08.659929", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-03T16:19:08.660518", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-03T16:19:08.660632", "level": "INFO", "message": "Calculating mask score..."}
+{"timestamp": "2025-10-03T16:19:08.660701", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-03T16:19:08.660834", "level": "ERROR", "message": "Failed to get local IPv6 IP: [Errno 101] Network is unreachable"}
+{"timestamp": "2025-10-03T16:19:09.210725", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-03T16:19:09.227805", "level": "WARNING", "message": "Failed to get IPv6 from https://api6.ipify.org: HTTPSConnectionPool(host='api6.ipify.org', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x768a81a71dc0>: Failed to establish a new connection: [Errno 101] Network is unreachable'))"}
+{"timestamp": "2025-10-03T16:19:14.878506", "level": "ERROR", "message": "Failed to get external IPv6"}
+{"timestamp": "2025-10-03T16:19:14.878743", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-03T16:19:14.878873", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-03T16:19:14.878984", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-03T16:19:15.104173", "level": "ERROR", "message": "TLS analysis failed: tuple index out of range"}
+{"timestamp": "2025-10-03T16:19:15.105480", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-03T16:19:15.663184", "level": "INFO", "message": "Connectivity check: DNS=True, TCP=True, HTTP=True"}
+{"timestamp": "2025-10-03T16:19:15.663869", "level": "INFO", "message": "Mask score calculated: 0/5"}
+{"timestamp": "2025-10-03T16:19:15.664034", "level": "WARNING", "message": "Deductions applied: Weak TLS profile: error"}
+{"timestamp": "2025-10-03T16:19:15.664176", "level": "INFO", "message": "Calculating mask score..."}
+{"timestamp": "2025-10-03T16:19:15.664331", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-03T16:19:15.664611", "level": "ERROR", "message": "Failed to get local IPv6 IP: [Errno 101] Network is unreachable"}
+{"timestamp": "2025-10-03T16:19:15.856568", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-03T16:19:15.863513", "level": "WARNING", "message": "Failed to get IPv6 from https://api6.ipify.org: HTTPSConnectionPool(host='api6.ipify.org', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x768a81a72240>: Failed to establish a new connection: [Errno 101] Network is unreachable'))"}
+{"timestamp": "2025-10-03T16:19:16.052087", "level": "ERROR", "message": "Failed to get external IPv6"}
+{"timestamp": "2025-10-03T16:19:16.052354", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-03T16:19:16.052515", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-03T16:19:16.052640", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-03T16:19:16.282942", "level": "ERROR", "message": "TLS analysis failed: tuple index out of range"}
+{"timestamp": "2025-10-03T16:19:16.284372", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-03T16:19:16.641607", "level": "INFO", "message": "Connectivity check: DNS=True, TCP=True, HTTP=True"}
+{"timestamp": "2025-10-03T16:19:16.642337", "level": "INFO", "message": "Mask score calculated: 0/5"}
+{"timestamp": "2025-10-03T16:19:16.642533", "level": "WARNING", "message": "Deductions applied: Weak TLS profile: error"}
+{"timestamp": "2025-10-03T16:19:16.642702", "level": "INFO", "message": "Calculating mask score..."}
+{"timestamp": "2025-10-03T16:19:16.642912", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-03T16:19:16.643363", "level": "ERROR", "message": "Failed to get local IPv6 IP: [Errno 101] Network is unreachable"}
+{"timestamp": "2025-10-03T16:19:16.823984", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-03T16:19:16.831158", "level": "WARNING", "message": "Failed to get IPv6 from https://api6.ipify.org: HTTPSConnectionPool(host='api6.ipify.org', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x768a81a737a0>: Failed to establish a new connection: [Errno 101] Network is unreachable'))"}
+{"timestamp": "2025-10-03T16:19:17.016805", "level": "ERROR", "message": "Failed to get external IPv6"}
+{"timestamp": "2025-10-03T16:19:17.226112", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-03T16:19:17.226266", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-03T16:19:17.226356", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-03T16:19:17.415485", "level": "ERROR", "message": "TLS analysis failed: tuple index out of range"}
+{"timestamp": "2025-10-03T16:19:17.416550", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-03T16:19:17.747536", "level": "INFO", "message": "Connectivity check: DNS=True, TCP=True, HTTP=True"}
+{"timestamp": "2025-10-03T16:19:17.747975", "level": "INFO", "message": "Mask score calculated: 0/5"}
+{"timestamp": "2025-10-03T16:19:17.748137", "level": "WARNING", "message": "Deductions applied: Weak TLS profile: error"}
+{"timestamp": "2025-10-03T16:19:17.748277", "level": "INFO", "message": "Calculating mask score..."}
+{"timestamp": "2025-10-03T16:19:17.748434", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-03T16:19:17.748686", "level": "ERROR", "message": "Failed to get local IPv6 IP: [Errno 101] Network is unreachable"}
+{"timestamp": "2025-10-03T16:19:17.936664", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-03T16:19:17.943443", "level": "WARNING", "message": "Failed to get IPv6 from https://api6.ipify.org: HTTPSConnectionPool(host='api6.ipify.org', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x768a81a73b00>: Failed to establish a new connection: [Errno 101] Network is unreachable'))"}
+{"timestamp": "2025-10-03T16:19:18.130082", "level": "ERROR", "message": "Failed to get external IPv6"}
+{"timestamp": "2025-10-03T16:19:18.130226", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-03T16:19:18.130309", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-03T16:19:18.130371", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-03T16:19:18.330065", "level": "ERROR", "message": "TLS analysis failed: tuple index out of range"}
+{"timestamp": "2025-10-03T16:19:18.418193", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-03T16:19:18.724939", "level": "INFO", "message": "Connectivity check: DNS=True, TCP=True, HTTP=True"}
+{"timestamp": "2025-10-03T16:19:18.725616", "level": "INFO", "message": "Mask score calculated: 0/5"}
+{"timestamp": "2025-10-03T16:19:18.725804", "level": "WARNING", "message": "Deductions applied: Weak TLS profile: error"}
+{"timestamp": "2025-10-03T16:19:18.726013", "level": "INFO", "message": "Calculating mask score..."}
+{"timestamp": "2025-10-03T16:19:18.726192", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-03T16:19:18.726531", "level": "ERROR", "message": "Failed to get local IPv6 IP: [Errno 101] Network is unreachable"}
+{"timestamp": "2025-10-03T16:19:18.915614", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-03T16:19:19.671973", "level": "WARNING", "message": "Failed to get IPv6 from https://api6.ipify.org: HTTPSConnectionPool(host='api6.ipify.org', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x768a81a72210>: Failed to establish a new connection: [Errno 101] Network is unreachable'))"}
+{"timestamp": "2025-10-03T16:19:19.860051", "level": "ERROR", "message": "Failed to get external IPv6"}
+{"timestamp": "2025-10-03T16:19:19.860336", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-03T16:19:19.860549", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-03T16:19:19.860728", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-03T16:19:20.092609", "level": "ERROR", "message": "TLS analysis failed: tuple index out of range"}
+{"timestamp": "2025-10-03T16:19:20.094015", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-03T16:19:20.426129", "level": "INFO", "message": "Connectivity check: DNS=True, TCP=True, HTTP=True"}
+{"timestamp": "2025-10-03T16:19:20.426795", "level": "INFO", "message": "Mask score calculated: 0/5"}
+{"timestamp": "2025-10-03T16:19:20.426989", "level": "WARNING", "message": "Deductions applied: Weak TLS profile: error"}
+{"timestamp": "2025-10-03T16:20:32.174395", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-03T16:20:32.175044", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-03T16:20:32.175152", "level": "INFO", "message": "Calculating mask score..."}
+{"timestamp": "2025-10-03T16:20:32.175219", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-03T16:20:32.175374", "level": "ERROR", "message": "Failed to get local IPv6 IP: [Errno 101] Network is unreachable"}
+{"timestamp": "2025-10-03T16:20:32.533896", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-03T16:20:32.539594", "level": "WARNING", "message": "Failed to get IPv6 from https://api6.ipify.org: HTTPSConnectionPool(host='api6.ipify.org', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ae983a2c410>: Failed to establish a new connection: [Errno 101] Network is unreachable'))"}
+{"timestamp": "2025-10-03T16:20:33.155159", "level": "ERROR", "message": "Failed to get external IPv6"}
+{"timestamp": "2025-10-03T16:20:33.155466", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-03T16:20:33.155632", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-03T16:20:33.155774", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-03T16:20:33.374007", "level": "ERROR", "message": "TLS analysis failed: tuple index out of range"}
+{"timestamp": "2025-10-03T16:20:33.375825", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-03T16:20:33.940441", "level": "INFO", "message": "Connectivity check: DNS=True, TCP=True, HTTP=True"}
+{"timestamp": "2025-10-03T16:20:33.941374", "level": "INFO", "message": "Mask score calculated: 0/5"}
+{"timestamp": "2025-10-03T16:20:33.941629", "level": "WARNING", "message": "Deductions applied: Weak TLS profile: error"}
+{"timestamp": "2025-10-03T16:20:33.941860", "level": "INFO", "message": "Calculating mask score..."}
+{"timestamp": "2025-10-03T16:20:33.942072", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-03T16:20:33.942481", "level": "ERROR", "message": "Failed to get local IPv6 IP: [Errno 101] Network is unreachable"}
+{"timestamp": "2025-10-03T16:20:34.137844", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-03T16:20:34.144681", "level": "WARNING", "message": "Failed to get IPv6 from https://api6.ipify.org: HTTPSConnectionPool(host='api6.ipify.org', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ae983a2ce90>: Failed to establish a new connection: [Errno 101] Network is unreachable'))"}
+{"timestamp": "2025-10-03T16:20:34.324164", "level": "ERROR", "message": "Failed to get external IPv6"}
+{"timestamp": "2025-10-03T16:20:34.324412", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-03T16:20:34.324557", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-03T16:20:34.324681", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-03T16:20:34.527461", "level": "ERROR", "message": "TLS analysis failed: tuple index out of range"}
+{"timestamp": "2025-10-03T16:20:34.528310", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-03T16:20:34.866631", "level": "INFO", "message": "Connectivity check: DNS=True, TCP=True, HTTP=True"}
+{"timestamp": "2025-10-03T16:20:34.867273", "level": "INFO", "message": "Mask score calculated: 0/5"}
+{"timestamp": "2025-10-03T16:20:34.867491", "level": "WARNING", "message": "Deductions applied: Weak TLS profile: error"}
+{"timestamp": "2025-10-03T16:20:34.867645", "level": "INFO", "message": "Calculating mask score..."}
+{"timestamp": "2025-10-03T16:20:34.867772", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-03T16:20:34.868006", "level": "ERROR", "message": "Failed to get local IPv6 IP: [Errno 101] Network is unreachable"}
+{"timestamp": "2025-10-03T16:20:35.038315", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-03T16:20:35.045057", "level": "WARNING", "message": "Failed to get IPv6 from https://api6.ipify.org: HTTPSConnectionPool(host='api6.ipify.org', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ae983a2cec0>: Failed to establish a new connection: [Errno 101] Network is unreachable'))"}
+{"timestamp": "2025-10-03T16:20:35.222092", "level": "ERROR", "message": "Failed to get external IPv6"}
+{"timestamp": "2025-10-03T16:20:35.222359", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-03T16:20:35.222524", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-03T16:20:35.222650", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-03T16:20:35.450785", "level": "ERROR", "message": "TLS analysis failed: tuple index out of range"}
+{"timestamp": "2025-10-03T16:20:35.452265", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-03T16:20:35.795884", "level": "INFO", "message": "Connectivity check: DNS=True, TCP=True, HTTP=True"}
+{"timestamp": "2025-10-03T16:20:35.796394", "level": "INFO", "message": "Mask score calculated: 0/5"}
+{"timestamp": "2025-10-03T16:20:35.796512", "level": "WARNING", "message": "Deductions applied: Weak TLS profile: error"}
+{"timestamp": "2025-10-03T16:20:35.796621", "level": "INFO", "message": "Calculating mask score..."}
+{"timestamp": "2025-10-03T16:20:35.796713", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-03T16:20:35.796885", "level": "ERROR", "message": "Failed to get local IPv6 IP: [Errno 101] Network is unreachable"}
+{"timestamp": "2025-10-03T16:20:35.999075", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-03T16:20:36.005181", "level": "WARNING", "message": "Failed to get IPv6 from https://api6.ipify.org: HTTPSConnectionPool(host='api6.ipify.org', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ae983a2cce0>: Failed to establish a new connection: [Errno 101] Network is unreachable'))"}
+{"timestamp": "2025-10-03T16:20:36.175740", "level": "ERROR", "message": "Failed to get external IPv6"}
+{"timestamp": "2025-10-03T16:20:36.175983", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-03T16:20:36.176127", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-03T16:20:36.176248", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-03T16:20:36.405886", "level": "ERROR", "message": "TLS analysis failed: tuple index out of range"}
+{"timestamp": "2025-10-03T16:20:36.407219", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-03T16:20:36.742602", "level": "INFO", "message": "Connectivity check: DNS=True, TCP=True, HTTP=True"}
+{"timestamp": "2025-10-03T16:20:36.743131", "level": "INFO", "message": "Mask score calculated: 0/5"}
+{"timestamp": "2025-10-03T16:20:36.743254", "level": "WARNING", "message": "Deductions applied: Weak TLS profile: error"}
+{"timestamp": "2025-10-03T16:20:36.743393", "level": "INFO", "message": "Calculating mask score..."}
+{"timestamp": "2025-10-03T16:20:36.743505", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-03T16:20:36.743688", "level": "ERROR", "message": "Failed to get local IPv6 IP: [Errno 101] Network is unreachable"}
+{"timestamp": "2025-10-03T16:20:36.931820", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-03T16:20:36.937897", "level": "WARNING", "message": "Failed to get IPv6 from https://api6.ipify.org: HTTPSConnectionPool(host='api6.ipify.org', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ae983a2d5b0>: Failed to establish a new connection: [Errno 101] Network is unreachable'))"}
+{"timestamp": "2025-10-03T16:20:37.108541", "level": "ERROR", "message": "Failed to get external IPv6"}
+{"timestamp": "2025-10-03T16:20:37.108822", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-03T16:20:37.108988", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-03T16:20:37.109124", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-03T16:20:37.332485", "level": "ERROR", "message": "TLS analysis failed: tuple index out of range"}
+{"timestamp": "2025-10-03T16:20:37.333848", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-03T16:20:37.670136", "level": "INFO", "message": "Connectivity check: DNS=True, TCP=True, HTTP=True"}
+{"timestamp": "2025-10-03T16:20:37.670597", "level": "INFO", "message": "Mask score calculated: 0/5"}
+{"timestamp": "2025-10-03T16:20:37.670701", "level": "WARNING", "message": "Deductions applied: Weak TLS profile: error"}
+{"timestamp": "2025-10-03T22:43:32.568252", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-03T22:43:35.380238", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-03T22:43:35.380706", "level": "ERROR", "message": "Failed to get local IPv6 IP: [Errno 101] Network is unreachable"}
+{"timestamp": "2025-10-03T22:43:35.786929", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-03T22:43:35.799570", "level": "WARNING", "message": "Failed to get IPv6 from https://api6.ipify.org: HTTPSConnectionPool(host='api6.ipify.org', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7241f3f5a9c0>: Failed to establish a new connection: [Errno 101] Network is unreachable'))"}
+{"timestamp": "2025-10-03T22:43:37.525800", "level": "ERROR", "message": "Failed to get external IPv6"}
+{"timestamp": "2025-10-03T22:43:37.526001", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-03T22:43:37.526211", "level": "ERROR", "message": "Failed to get local IPv6 IP: [Errno 101] Network is unreachable"}
+{"timestamp": "2025-10-03T22:43:37.711058", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-03T22:43:37.717614", "level": "WARNING", "message": "Failed to get IPv6 from https://api6.ipify.org: HTTPSConnectionPool(host='api6.ipify.org', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7241f3f5af30>: Failed to establish a new connection: [Errno 101] Network is unreachable'))"}
+{"timestamp": "2025-10-03T22:43:37.949553", "level": "ERROR", "message": "Failed to get external IPv6"}
+{"timestamp": "2025-10-03T22:43:37.949803", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-03T22:43:37.949964", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-03T22:43:37.950100", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-03T22:43:38.683275", "level": "INFO", "message": "Connectivity check: DNS=True, TCP=True, HTTP=True"}
+{"timestamp": "2025-10-03T22:43:38.683650", "level": "INFO", "message": "Calculating mask score..."}
+{"timestamp": "2025-10-03T22:43:38.683806", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-03T22:43:38.684075", "level": "ERROR", "message": "Failed to get local IPv6 IP: [Errno 101] Network is unreachable"}
+{"timestamp": "2025-10-03T22:43:39.079056", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-03T22:43:39.085252", "level": "WARNING", "message": "Failed to get IPv6 from https://api6.ipify.org: HTTPSConnectionPool(host='api6.ipify.org', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7241f3b53140>: Failed to establish a new connection: [Errno 101] Network is unreachable'))"}
+{"timestamp": "2025-10-03T22:43:39.944125", "level": "ERROR", "message": "Failed to get external IPv6"}
+{"timestamp": "2025-10-03T22:43:39.944405", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-03T22:43:39.944572", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-03T22:43:39.944734", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-03T22:43:40.354999", "level": "ERROR", "message": "TLS analysis failed: tuple index out of range"}
+{"timestamp": "2025-10-03T22:43:40.356224", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-03T22:43:41.087796", "level": "INFO", "message": "Connectivity check: DNS=True, TCP=True, HTTP=True"}
+{"timestamp": "2025-10-03T22:43:41.088582", "level": "INFO", "message": "Mask score calculated: 0/5"}
+{"timestamp": "2025-10-03T22:43:41.088780", "level": "WARNING", "message": "Deductions applied: Weak TLS profile: error"}
+{"timestamp": "2025-10-04T02:30:07.717931", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-04T02:30:07.718430", "level": "INFO", "message": "Calculating mask score..."}
+{"timestamp": "2025-10-04T02:30:07.718529", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-04T02:30:07.722534", "level": "WARNING", "message": "No local IPv6 addresses found"}
+{"timestamp": "2025-10-04T02:30:08.149421", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-04T02:30:21.854671", "level": "ERROR", "message": "Failed to get external IPv6: Connection error from https://v6.ident.me"}
+{"timestamp": "2025-10-04T02:30:21.854961", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-04T02:30:21.855149", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-04T02:30:21.855339", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-04T02:30:22.268903", "level": "ERROR", "message": "TLS analysis failed: tuple index out of range"}
+{"timestamp": "2025-10-04T02:30:22.270035", "level": "ERROR", "message": "TLS analysis error: tuple index out of range"}
+{"timestamp": "2025-10-04T02:30:22.270479", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-04T02:30:29.471619", "level": "WARNING", "message": "IPv6 HTTP connectivity check failed: HTTPSConnectionPool(host='ipv6.google.com', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7dedf2d428a0>: Failed to establish a new connection: [Errno 101] Network is unreachable'))"}
+{"timestamp": "2025-10-04T02:30:29.471933", "level": "INFO", "message": "Connectivity check: IPv4-DNS=True, IPv6-DNS=True, IPv4-TCP=True, IPv6-TCP=False, IPv4-HTTP=True, IPv6-HTTP=False, Dual-Stack=False"}
+{"timestamp": "2025-10-04T02:30:30.205033", "level": "INFO", "message": "Mask score calculated: 3/5"}
+{"timestamp": "2025-10-04T02:30:30.205319", "level": "ERROR", "message": "Failed checks: TLS analysis error"}
+{"timestamp": "2025-10-04T15:55:41.823500", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-04T15:56:11.746091", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-04T15:56:11.751370", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-04T15:56:11.794988", "level": "WARNING", "message": "No local IPv6 addresses found"}
+{"timestamp": "2025-10-04T15:56:12.224305", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-04T15:56:38.099548", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-04T15:56:38.104434", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-04T15:56:38.109801", "level": "WARNING", "message": "No local IPv6 addresses found"}
+{"timestamp": "2025-10-04T15:56:38.479183", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-04T15:57:10.948702", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-04T15:57:10.953018", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-04T15:57:10.957164", "level": "WARNING", "message": "No local IPv6 addresses found"}
+{"timestamp": "2025-10-04T15:57:11.308683", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-04T15:57:54.172970", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-04T15:57:54.177633", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-04T15:57:54.180870", "level": "WARNING", "message": "No local IPv6 addresses found"}
+{"timestamp": "2025-10-04T15:57:54.543244", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-04T15:59:08.106397", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-04T15:59:08.111074", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-04T15:59:08.115080", "level": "WARNING", "message": "No local IPv6 addresses found"}
+{"timestamp": "2025-10-04T15:59:08.477408", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-04T16:00:11.115664", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-04T16:00:49.199236", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-04T16:00:49.204288", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-04T16:00:49.208005", "level": "WARNING", "message": "No local IPv6 addresses found"}
+{"timestamp": "2025-10-04T16:00:49.570963", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-04T16:03:01.259476", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-04T16:04:27.026384", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-04T16:22:28.089358", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-04T16:22:28.089819", "level": "INFO", "message": "Calculating mask score..."}
+{"timestamp": "2025-10-04T16:22:28.089906", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-04T16:22:28.093084", "level": "WARNING", "message": "No local IPv6 addresses found"}
+{"timestamp": "2025-10-04T16:22:28.456359", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-04T16:22:42.584661", "level": "ERROR", "message": "Failed to get external IPv6: Connection error from https://v6.ident.me"}
+{"timestamp": "2025-10-04T16:22:42.584918", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-04T16:22:42.585095", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-04T16:22:42.585221", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-04T16:22:43.026662", "level": "ERROR", "message": "TLS analysis failed: '>' not supported between instances of 'str' and 'int'"}
+{"timestamp": "2025-10-04T16:22:43.028231", "level": "ERROR", "message": "TLS analysis error: '>' not supported between instances of 'str' and 'int'"}
+{"timestamp": "2025-10-04T16:22:43.028896", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-04T16:22:50.128197", "level": "WARNING", "message": "IPv6 HTTP connectivity check failed: HTTPSConnectionPool(host='ipv6.google.com', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x77c447e356d0>: Failed to establish a new connection: [Errno 101] Network is unreachable'))"}
+{"timestamp": "2025-10-04T16:22:50.128484", "level": "INFO", "message": "Connectivity check: IPv4-DNS=True, IPv6-DNS=True, IPv4-TCP=True, IPv6-TCP=False, IPv4-HTTP=True, IPv6-HTTP=False, Dual-Stack=False"}
+{"timestamp": "2025-10-04T16:22:51.095734", "level": "INFO", "message": "Mask score calculated: 3/5"}
+{"timestamp": "2025-10-04T16:22:51.095946", "level": "ERROR", "message": "Failed checks: TLS analysis error"}
+{"timestamp": "2025-10-04T16:24:01.380587", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-04T16:24:06.147828", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-04T16:24:06.148275", "level": "INFO", "message": "Calculating mask score..."}
+{"timestamp": "2025-10-04T16:24:06.148373", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-04T16:24:06.152088", "level": "WARNING", "message": "No local IPv6 addresses found"}
+{"timestamp": "2025-10-04T16:24:06.513499", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-04T16:24:21.582231", "level": "ERROR", "message": "Failed to get external IPv6: Connection error from https://v6.ident.me"}
+{"timestamp": "2025-10-04T16:24:21.582528", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-04T16:24:21.582682", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-04T16:24:21.582820", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-04T16:24:22.023175", "level": "INFO", "message": "TLS analysis result: secure (Score: 5)"}
+{"timestamp": "2025-10-04T16:24:22.024924", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-04T16:24:29.104797", "level": "WARNING", "message": "IPv6 HTTP connectivity check failed: HTTPSConnectionPool(host='ipv6.google.com', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x796a589d56d0>: Failed to establish a new connection: [Errno 101] Network is unreachable'))"}
+{"timestamp": "2025-10-04T16:24:29.105133", "level": "INFO", "message": "Connectivity check: IPv4-DNS=True, IPv6-DNS=True, IPv4-TCP=True, IPv6-TCP=False, IPv4-HTTP=True, IPv6-HTTP=False, Dual-Stack=False"}
+{"timestamp": "2025-10-04T16:24:30.811018", "level": "INFO", "message": "Mask score calculated: 5/5"}
+{"timestamp": "2025-10-04T16:25:25.269041", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-04T16:27:07.641184", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-04T16:27:07.655355", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-04T16:27:07.655738", "level": "INFO", "message": "Getting comprehensive health status..."}
+{"timestamp": "2025-10-04T16:27:07.655821", "level": "INFO", "message": "Calculating mask score..."}
+{"timestamp": "2025-10-04T16:27:07.655882", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-04T16:27:07.659036", "level": "WARNING", "message": "No local IPv6 addresses found"}
+{"timestamp": "2025-10-04T16:27:08.020861", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-04T16:27:21.945529", "level": "ERROR", "message": "Failed to get external IPv6: Connection error from https://v6.ident.me"}
+{"timestamp": "2025-10-04T16:27:21.945792", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-04T16:27:21.945948", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-04T16:27:21.946077", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-04T16:27:22.383219", "level": "INFO", "message": "TLS analysis result: secure (Score: 5)"}
+{"timestamp": "2025-10-04T16:27:22.384961", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-04T16:27:29.538420", "level": "WARNING", "message": "IPv6 HTTP connectivity check failed: HTTPSConnectionPool(host='ipv6.google.com', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x73810ad56930>: Failed to establish a new connection: [Errno 101] Network is unreachable'))"}
+{"timestamp": "2025-10-04T16:27:29.538691", "level": "INFO", "message": "Connectivity check: IPv4-DNS=True, IPv6-DNS=True, IPv4-TCP=True, IPv6-TCP=False, IPv4-HTTP=True, IPv6-HTTP=False, Dual-Stack=False"}
+{"timestamp": "2025-10-04T16:27:40.241497", "level": "INFO", "message": "Mask score calculated: 5/5"}
+{"timestamp": "2025-10-04T16:27:40.241656", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-04T16:27:40.244444", "level": "WARNING", "message": "No local IPv6 addresses found"}
+{"timestamp": "2025-10-04T16:27:58.185984", "level": "ERROR", "message": "Failed to get external IPv6: Connection error from https://v6.ident.me"}
+{"timestamp": "2025-10-04T16:27:58.186259", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-04T16:27:58.186512", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-04T16:27:58.186730", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-04T16:27:58.618237", "level": "INFO", "message": "TLS analysis result: secure (Score: 5)"}
+{"timestamp": "2025-10-04T16:27:58.620733", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-04T16:28:05.072833", "level": "WARNING", "message": "IPv6 HTTP connectivity check failed: HTTPSConnectionPool(host='ipv6.google.com', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x73810ad55c10>: Failed to establish a new connection: [Errno 101] Network is unreachable'))"}
+{"timestamp": "2025-10-04T16:28:05.073168", "level": "INFO", "message": "Connectivity check: IPv4-DNS=True, IPv6-DNS=True, IPv4-TCP=True, IPv6-TCP=False, IPv4-HTTP=True, IPv6-HTTP=False, Dual-Stack=False"}
+{"timestamp": "2025-10-04T16:28:05.073474", "level": "INFO", "message": "Health status: excellent (Score: 5)"}
+{"timestamp": "2025-10-05T09:46:32.298893", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-09T12:04:25.557853", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-09T12:06:48.835060", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-09T12:09:12.909891", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-09T12:10:04.054940", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-09T12:14:35.513871", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-09T13:29:39.996329", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-09T13:30:25.023223", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-09T13:31:12.576674", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-09T14:37:58.985357", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-09T23:06:04.716800", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-09T23:48:44.985516", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-09T23:50:37.926280", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-10T00:26:51.725194", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-10T00:28:15.164043", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-10T00:30:12.045834", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-10T00:32:01.733051", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-10T00:34:06.672850", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-10T01:01:38.892040", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-11T15:07:27.668766", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-11T15:10:54.882871", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-11T15:10:54.883405", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-11T15:10:54.937312", "level": "WARNING", "message": "No local IPv6 addresses found"}
+{"timestamp": "2025-10-11T15:14:28.206716", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-11T15:15:14.858958", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-11T15:15:19.893262", "level": "INFO", "message": "Calculating mask score..."}
+{"timestamp": "2025-10-11T15:15:19.893734", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-11T15:15:19.897619", "level": "WARNING", "message": "No local IPv6 addresses found"}
+{"timestamp": "2025-10-11T15:15:20.291385", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-11T15:15:33.838049", "level": "ERROR", "message": "Failed to get external IPv6: Connection error from https://v6.ident.me"}
+{"timestamp": "2025-10-11T15:15:33.838274", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-11T15:15:33.838445", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-11T15:15:33.838566", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-11T15:15:34.056388", "level": "INFO", "message": "TLS analysis result: secure (Score: 5)"}
+{"timestamp": "2025-10-11T15:15:34.057874", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-11T15:15:40.948733", "level": "WARNING", "message": "IPv6 HTTP connectivity check failed: HTTPSConnectionPool(host='ipv6.google.com', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x73e39b4b5fd0>: Failed to establish a new connection: [Errno 101] Network is unreachable'))"}
+{"timestamp": "2025-10-11T15:15:40.949077", "level": "INFO", "message": "Connectivity check: IPv4-DNS=True, IPv6-DNS=True, IPv4-TCP=True, IPv6-TCP=False, IPv4-HTTP=True, IPv6-HTTP=False, Dual-Stack=False"}
+{"timestamp": "2025-10-11T15:15:41.617705", "level": "INFO", "message": "Mask score calculated: 5/5"}
+{"timestamp": "2025-10-11T15:18:23.405313", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-11T15:18:26.408378", "level": "INFO", "message": "Calculating mask score..."}
+{"timestamp": "2025-10-11T15:18:26.408711", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-11T15:18:26.412475", "level": "WARNING", "message": "No local IPv6 addresses found"}
+{"timestamp": "2025-10-11T15:18:26.826025", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-11T15:18:34.474258", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-11T15:18:34.478176", "level": "WARNING", "message": "No local IPv6 addresses found"}
+{"timestamp": "2025-10-11T15:18:34.886923", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-11T15:18:40.188322", "level": "ERROR", "message": "Failed to get external IPv6: Connection error from https://v6.ident.me"}
+{"timestamp": "2025-10-11T15:18:40.188582", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-11T15:18:40.188734", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-11T15:18:40.188857", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-11T15:18:40.413955", "level": "INFO", "message": "TLS analysis result: secure (Score: 5)"}
+{"timestamp": "2025-10-11T15:18:40.416492", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-11T15:18:47.189532", "level": "WARNING", "message": "IPv6 HTTP connectivity check failed: HTTPSConnectionPool(host='ipv6.google.com', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x78b7cda90170>: Failed to establish a new connection: [Errno 101] Network is unreachable'))"}
+{"timestamp": "2025-10-11T15:18:47.189830", "level": "INFO", "message": "Connectivity check: IPv4-DNS=True, IPv6-DNS=True, IPv4-TCP=True, IPv6-TCP=False, IPv4-HTTP=True, IPv6-HTTP=False, Dual-Stack=False"}
+{"timestamp": "2025-10-11T15:18:47.824563", "level": "INFO", "message": "Mask score calculated: 5/5"}
+{"timestamp": "2025-10-11T15:18:48.144970", "level": "ERROR", "message": "Failed to get external IPv6: Connection error from https://v6.ident.me"}
+{"timestamp": "2025-10-11T15:18:48.145130", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-11T15:18:48.148072", "level": "WARNING", "message": "No local IPv6 addresses found"}
+{"timestamp": "2025-10-11T15:21:57.964832", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-11T15:26:01.205326", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-11T15:26:03.760284", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-11T15:26:03.763866", "level": "WARNING", "message": "No local IPv6 addresses found"}
+{"timestamp": "2025-10-11T15:26:04.197601", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-11T15:26:17.525995", "level": "ERROR", "message": "Failed to get external IPv6: Connection error from https://v6.ident.me"}
+{"timestamp": "2025-10-11T15:26:17.526265", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-11T15:26:17.529720", "level": "WARNING", "message": "No local IPv6 addresses found"}
+{"timestamp": "2025-10-11T15:26:30.393679", "level": "ERROR", "message": "Failed to get external IPv6: Connection error from https://v6.ident.me"}
+{"timestamp": "2025-10-11T15:26:30.393963", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-11T15:26:30.394189", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-11T15:26:30.394447", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-11T15:26:37.183037", "level": "WARNING", "message": "IPv6 HTTP connectivity check failed: HTTPSConnectionPool(host='ipv6.google.com', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x74f23c18ad80>: Failed to establish a new connection: [Errno 101] Сеть недоступна'))"}
+{"timestamp": "2025-10-11T15:26:37.183370", "level": "INFO", "message": "Connectivity check: IPv4-DNS=True, IPv6-DNS=True, IPv4-TCP=True, IPv6-TCP=False, IPv4-HTTP=True, IPv6-HTTP=False, Dual-Stack=False"}
+{"timestamp": "2025-10-11T15:26:37.185639", "level": "INFO", "message": "Calculating mask score..."}
+{"timestamp": "2025-10-11T15:26:37.185952", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-11T15:26:37.189831", "level": "WARNING", "message": "No local IPv6 addresses found"}
+{"timestamp": "2025-10-11T15:26:37.606621", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-11T15:26:50.926125", "level": "ERROR", "message": "Failed to get external IPv6: Connection error from https://v6.ident.me"}
+{"timestamp": "2025-10-11T15:26:50.926426", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-11T15:26:50.926602", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-11T15:26:50.926746", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-11T15:26:51.158991", "level": "INFO", "message": "TLS analysis result: secure (Score: 5)"}
+{"timestamp": "2025-10-11T15:26:51.160736", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-11T15:32:12.410900", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-11T15:32:14.938666", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-11T15:32:14.942751", "level": "WARNING", "message": "No local IPv6 addresses found"}
+{"timestamp": "2025-10-11T15:32:15.356178", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-11T15:32:28.647663", "level": "ERROR", "message": "Failed to get external IPv6: Connection error from https://v6.ident.me"}
+{"timestamp": "2025-10-11T15:32:28.647903", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-11T15:32:28.651853", "level": "WARNING", "message": "No local IPv6 addresses found"}
+{"timestamp": "2025-10-11T15:32:41.525427", "level": "ERROR", "message": "Failed to get external IPv6: Connection error from https://v6.ident.me"}
+{"timestamp": "2025-10-11T15:32:41.525668", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-11T15:32:41.525882", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-11T15:32:41.526072", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-11T15:32:48.306402", "level": "WARNING", "message": "IPv6 HTTP connectivity check failed: HTTPSConnectionPool(host='ipv6.google.com', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x70ad1d237650>: Failed to establish a new connection: [Errno 101] Сеть недоступна'))"}
+{"timestamp": "2025-10-11T15:32:48.306691", "level": "INFO", "message": "Connectivity check: IPv4-DNS=True, IPv6-DNS=True, IPv4-TCP=True, IPv6-TCP=False, IPv4-HTTP=True, IPv6-HTTP=False, Dual-Stack=False"}
+{"timestamp": "2025-10-11T15:32:48.308661", "level": "INFO", "message": "Calculating mask score..."}
+{"timestamp": "2025-10-11T15:32:48.308939", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-11T15:32:48.312689", "level": "WARNING", "message": "No local IPv6 addresses found"}
+{"timestamp": "2025-10-11T15:32:48.684181", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-11T15:33:01.996391", "level": "ERROR", "message": "Failed to get external IPv6: Connection error from https://v6.ident.me"}
+{"timestamp": "2025-10-11T15:33:01.996564", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-11T15:33:01.996674", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-11T15:33:01.996761", "level": "INFO", "message": "Analyzing TLS fingerprint for www.google.com..."}
+{"timestamp": "2025-10-11T15:33:02.253844", "level": "INFO", "message": "TLS analysis result: secure (Score: 5)"}
+{"timestamp": "2025-10-11T15:33:02.255383", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-11T15:33:09.070617", "level": "WARNING", "message": "IPv6 HTTP connectivity check failed: HTTPSConnectionPool(host='ipv6.google.com', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x70ad1d27c470>: Failed to establish a new connection: [Errno 101] Сеть недоступна'))"}
+{"timestamp": "2025-10-11T15:33:09.070881", "level": "INFO", "message": "Connectivity check: IPv4-DNS=True, IPv6-DNS=True, IPv4-TCP=True, IPv6-TCP=False, IPv4-HTTP=True, IPv6-HTTP=False, Dual-Stack=False"}
+{"timestamp": "2025-10-11T15:33:09.731643", "level": "INFO", "message": "Mask score calculated: 5/5"}
+{"timestamp": "2025-10-11T15:33:16.083947", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-11T15:33:16.087977", "level": "WARNING", "message": "No local IPv6 addresses found"}
+{"timestamp": "2025-10-11T15:33:16.469262", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-11T15:33:29.759011", "level": "ERROR", "message": "Failed to get external IPv6: Connection error from https://v6.ident.me"}
+{"timestamp": "2025-10-11T15:33:29.759280", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-11T15:33:29.764135", "level": "WARNING", "message": "No local IPv6 addresses found"}
+{"timestamp": "2025-10-11T15:33:42.579276", "level": "ERROR", "message": "Failed to get external IPv6: Connection error from https://v6.ident.me"}
+{"timestamp": "2025-10-11T15:33:42.579562", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-11T15:33:42.579767", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-11T15:33:42.579942", "level": "INFO", "message": "Checking network connectivity..."}
+{"timestamp": "2025-10-11T16:09:39.230647", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-11T16:09:41.673729", "level": "INFO", "message": "Health Monitor initialized"}
+{"timestamp": "2025-10-11T16:09:41.677866", "level": "WARNING", "message": "No local IPv6 addresses found"}
+{"timestamp": "2025-10-11T16:09:42.078977", "level": "INFO", "message": "External IPv4 detected: 176.197.66.184 via https://api.ipify.org"}
+{"timestamp": "2025-10-11T16:09:55.391816", "level": "ERROR", "message": "Failed to get external IPv6: Connection error from https://v6.ident.me"}
+{"timestamp": "2025-10-11T16:09:55.392075", "level": "INFO", "message": "Checking for IP leak..."}
+{"timestamp": "2025-10-11T16:09:55.396412", "level": "WARNING", "message": "No local IPv6 addresses found"}
+{"timestamp": "2025-10-11T16:10:08.285767", "level": "ERROR", "message": "Failed to get external IPv6: Connection error from https://v6.ident.me"}
+{"timestamp": "2025-10-11T16:10:08.286063", "level": "INFO", "message": "IP leak check passed. IPv4 - Local: 192.168.0.130, External: 176.197.66.184"}
+{"timestamp": "2025-10-11T16:10:08.286313", "level": "INFO", "message": "IPv6 - Local: None, External: None"}
+{"timestamp": "2025-10-11T16:10:08.286531", "level": "INFO", "message": "Checking network connectivity..."}

@@ -1,0 +1,123 @@
+2025-10-04 02:30:07,722 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-04 02:30:08,228 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-04 02:30:09,122 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-04 02:30:29,475 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-04 02:30:29,477 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-04 02:30:30,201 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-04 02:30:30,204 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-04 15:56:11,756 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-04 15:56:12,227 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-04 15:56:13,058 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-04 15:56:38,109 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-04 15:56:38,482 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-04 15:56:39,189 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-04 15:57:10,957 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-04 15:57:11,311 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-04 15:57:12,415 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-04 15:57:54,180 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-04 15:57:54,545 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-04 15:57:55,223 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-04 15:59:08,114 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-04 15:59:08,480 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-04 15:59:09,223 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-04 16:00:49,207 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-04 16:00:49,573 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-04 16:00:50,257 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-04 16:22:28,092 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-04 16:22:28,459 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-04 16:22:29,753 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-04 16:22:50,130 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-04 16:22:50,133 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-04 16:22:51,091 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-04 16:22:51,095 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-04 16:24:06,151 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-04 16:24:06,516 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-04 16:24:08,290 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-04 16:24:29,107 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-04 16:24:29,109 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-04 16:24:30,806 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-04 16:24:30,810 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-04 16:27:07,658 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-04 16:27:08,023 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-04 16:27:08,734 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-04 16:27:29,541 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-04 16:27:29,543 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-04 16:27:40,237 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-04 16:27:40,241 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-04 16:27:40,244 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-04 16:27:40,246 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-04 16:27:45,927 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-11 15:10:54,887 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-11 15:15:19,897 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-11 15:15:20,440 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 15:15:21,215 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-11 15:15:40,951 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 15:15:40,954 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 15:15:41,614 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-11 15:15:41,617 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-11 15:18:26,412 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-11 15:18:26,828 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 15:18:27,515 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-11 15:18:34,478 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-11 15:18:34,889 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 15:18:35,496 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-11 15:18:47,192 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 15:18:47,193 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 15:18:47,821 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-11 15:18:47,824 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-11 15:18:48,147 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-11 15:18:48,149 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 15:26:02,964 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 15:26:02,967 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 15:26:03,753 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-11 15:26:03,758 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-11 15:26:03,763 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-11 15:26:04,200 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 15:26:04,858 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-11 15:26:17,529 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-11 15:26:17,531 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 15:26:18,164 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-11 15:26:37,189 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-11 15:26:37,608 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 15:26:38,243 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-11 15:32:14,167 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 15:32:14,169 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 15:32:14,933 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-11 15:32:14,936 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-11 15:32:14,942 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-11 15:32:15,358 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 15:32:15,987 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-11 15:32:28,651 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-11 15:32:28,654 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 15:32:29,290 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-11 15:32:48,312 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-11 15:32:48,686 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 15:32:49,336 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-11 15:33:09,073 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 15:33:09,076 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 15:33:09,727 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-11 15:33:09,731 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-11 15:33:09,733 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 15:33:09,736 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 15:33:10,371 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-11 15:33:10,375 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-11 15:33:15,442 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 15:33:15,444 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 15:33:16,079 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-11 15:33:16,083 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-11 15:33:16,087 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-11 15:33:16,472 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 15:33:17,091 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-11 15:33:29,763 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-11 15:33:29,766 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 15:33:30,350 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-11 16:09:40,993 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 16:09:40,996 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 16:09:41,668 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-11 16:09:41,671 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-11 16:09:41,677 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-11 16:09:42,081 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 16:09:42,718 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-11 16:09:55,396 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-11 16:09:55,398 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 16:09:56,030 - ipv6_manager - WARNING - Failed to get external IPv6 from all services

@@ -1,0 +1,83 @@
+2025-10-02 13:05:51,900 - STATE - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-02 13:05:51,900 - STATE - INFO - Event queued: start_requested
+2025-10-02 13:18:47,117 - STATE - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-02 13:18:47,118 - STATE - INFO - Event queued: start_requested
+2025-10-02 13:18:50,383 - STATE - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-02 13:18:50,383 - STATE - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-02 13:18:50,384 - STATE - INFO - Event queued: start_requested
+2025-10-02 13:18:50,384 - STATE - INFO - Event queued: start_requested
+2025-10-02 13:18:53,456 - STATE - INFO - Event queued: stop_requested
+2025-10-02 13:18:53,456 - STATE - INFO - Event queued: stop_requested
+2025-10-03 22:43:35,369 - STATE - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-03 22:43:41,089 - STATE - INFO - Event queued: start_requested
+2025-10-03 22:43:43,089 - STATE - INFO - Event queued: stop_requested
+2025-10-03 22:43:45,243 - STATE - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-03 22:43:45,243 - STATE - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-03 22:43:45,572 - STATE - INFO - Event queued: start_requested
+2025-10-03 22:43:45,572 - STATE - INFO - Event queued: start_requested
+2025-10-09 12:14:36,286 - STATE - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-09 13:29:40,324 - STATE - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-09 13:30:25,105 - STATE - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-09 13:31:12,658 - STATE - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-10 00:28:15,378 - STATE - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-10 00:30:12,133 - STATE - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-10 00:32:01,802 - STATE - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-10 00:34:06,743 - STATE - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-10 01:01:38,982 - STATE - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-11 15:15:14,860 - STATE - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-11 15:15:14,892 - STATE - INFO - State Machine started
+2025-10-11 15:15:14,892 - STATE - INFO - Initializing VPN client...
+2025-10-11 15:15:14,892 - STATE - INFO - Event queued: start_requested
+2025-10-11 15:15:14,893 - STATE - ERROR - Error in state entry action initializing: attempted relative import with no known parent package
+2025-10-11 15:15:14,893 - STATE - INFO - Event queued: error_occurred
+2025-10-11 15:15:15,893 - STATE - INFO - State transition: initializing -> config_fetching
+2025-10-11 15:15:15,894 - STATE - INFO - State transition: config_fetching -> error
+2025-10-11 15:15:15,895 - STATE - ERROR - VPN client in error state: None
+2025-10-11 15:15:15,895 - STATE - INFO - Retrying... Attempt 1
+2025-10-11 15:15:17,895 - STATE - INFO - Event queued: start_requested
+2025-10-11 15:15:18,895 - STATE - INFO - State transition: error -> recovering
+2025-10-11 15:15:18,896 - STATE - INFO - Attempting recovery...
+2025-10-11 15:15:18,897 - STATE - ERROR - Recovery failed: attempted relative import with no known parent package
+2025-10-11 15:15:18,897 - STATE - INFO - Event queued: recovery_failed
+2025-10-11 15:15:19,897 - STATE - INFO - State transition: recovering -> error
+2025-10-11 15:15:19,972 - STATE - ERROR - VPN client in error state: None
+2025-10-11 15:15:19,972 - STATE - INFO - Retrying... Attempt 2
+2025-10-11 15:15:23,972 - STATE - INFO - Event queued: start_requested
+2025-10-11 15:15:24,973 - STATE - INFO - State transition: error -> recovering
+2025-10-11 15:15:24,974 - STATE - INFO - Attempting recovery...
+2025-10-11 15:15:24,974 - STATE - ERROR - Recovery failed: attempted relative import with no known parent package
+2025-10-11 15:15:24,974 - STATE - INFO - Event queued: recovery_failed
+2025-10-11 15:15:25,974 - STATE - INFO - State transition: recovering -> error
+2025-10-11 15:15:25,976 - STATE - ERROR - VPN client in error state: None
+2025-10-11 15:15:25,976 - STATE - INFO - Retrying... Attempt 3
+2025-10-11 15:15:31,976 - STATE - INFO - Event queued: start_requested
+2025-10-11 15:15:32,976 - STATE - INFO - State transition: error -> recovering
+2025-10-11 15:15:32,977 - STATE - INFO - Attempting recovery...
+2025-10-11 15:15:32,978 - STATE - ERROR - Recovery failed: attempted relative import with no known parent package
+2025-10-11 15:15:32,978 - STATE - INFO - Event queued: recovery_failed
+2025-10-11 15:15:33,978 - STATE - INFO - State transition: recovering -> error
+2025-10-11 15:15:33,979 - STATE - ERROR - VPN client in error state: None
+2025-10-11 15:15:33,979 - STATE - ERROR - Max retries reached, giving up
+2025-10-11 15:18:23,406 - STATE - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-11 15:18:23,407 - STATE - INFO - State Machine started
+2025-10-11 15:18:23,407 - STATE - INFO - Event queued: start_requested
+2025-10-11 15:18:23,408 - STATE - INFO - State transition: initializing -> config_fetching
+2025-10-11 15:18:23,408 - STATE - INFO - Fetching configuration from server...
+2025-10-11 15:18:24,465 - STATE - INFO - Event queued: config_fetched
+2025-10-11 15:18:25,466 - STATE - INFO - State transition: config_fetching -> config_validating
+2025-10-11 15:18:25,467 - STATE - INFO - Validating configuration...
+2025-10-11 15:18:25,467 - STATE - ERROR - Error in state entry action config_validating: No available transport
+2025-10-11 15:18:25,467 - STATE - INFO - Event queued: error_occurred
+2025-10-11 15:18:26,467 - STATE - INFO - State transition: config_validating -> error
+2025-10-11 15:18:26,468 - STATE - ERROR - VPN client in error state: None
+2025-10-11 15:18:26,469 - STATE - INFO - Retrying... Attempt 1
+2025-10-11 15:18:28,469 - STATE - INFO - Event queued: start_requested
+2025-10-11 15:18:29,469 - STATE - INFO - State transition: error -> recovering
+2025-10-11 15:18:29,470 - STATE - INFO - Attempting recovery...
+2025-10-11 15:18:33,472 - STATE - INFO - Event queued: recovery_success
+2025-10-11 15:18:34,472 - STATE - INFO - State transition: recovering -> running
+2025-10-11 15:18:34,473 - STATE - INFO - VPN running
+2025-10-11 15:21:58,826 - STATE - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-11 15:26:01,291 - STATE - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-11 15:32:12,492 - STATE - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-11 16:09:39,321 - STATE - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3

@@ -1,0 +1,97 @@
+2025-10-02 13:05:51,899 - CLIENT - INFO - VPN Client initialized for UUID: 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-02 13:05:51,899 - CLIENT - INFO - Initializing VPN Client...
+2025-10-02 13:05:51,900 - CLIENT - INFO - No existing config, will fetch from server
+2025-10-02 13:05:51,900 - CLIENT - INFO - VPN Client initialized successfully
+2025-10-02 13:18:47,116 - CLIENT - INFO - VPN Client initialized for UUID: 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-02 13:18:47,117 - CLIENT - INFO - Initializing VPN Client...
+2025-10-02 13:18:47,117 - CLIENT - INFO - No existing config, will fetch from server
+2025-10-02 13:18:47,118 - CLIENT - INFO - VPN Client initialized successfully
+2025-10-02 13:18:50,383 - CLIENT - INFO - Initializing VPN Client...
+2025-10-02 13:18:50,384 - CLIENT - INFO - No existing config, will fetch from server
+2025-10-02 13:18:50,384 - CLIENT - INFO - VPN Client initialized successfully
+2025-10-03 22:43:35,344 - CLIENT - INFO - VPN Client initialized for UUID: 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-03 22:43:35,368 - CLIENT - INFO - Initializing VPN Client...
+2025-10-03 22:43:35,379 - CLIENT - INFO - Loaded existing config for test_client
+2025-10-03 22:43:35,379 - CLIENT - INFO - VPN Client initialized successfully
+2025-10-03 22:43:45,243 - CLIENT - INFO - Initializing VPN Client...
+2025-10-03 22:43:45,244 - CLIENT - INFO - Loaded existing config for test_client
+2025-10-03 22:43:45,244 - CLIENT - INFO - VPN Client initialized successfully
+2025-10-09 12:14:36,264 - CLIENT - INFO - VPN Client initialized for UUID: 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-09 12:14:36,286 - CLIENT - INFO - Initializing VPN Client...
+2025-10-09 12:14:36,326 - CLIENT - INFO - Loaded existing config for test-uuid-123
+2025-10-09 12:14:36,326 - CLIENT - INFO - VPN Client initialized successfully
+2025-10-09 12:14:36,674 - CLIENT - WARNING - VPN Client is not running
+2025-10-09 13:29:40,088 - CLIENT - INFO - VPN Client initialized for UUID: 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-09 13:29:40,089 - CLIENT - INFO - Initializing VPN Client...
+2025-10-09 13:29:40,324 - CLIENT - INFO - Loaded existing config for test-uuid-123
+2025-10-09 13:29:40,325 - CLIENT - INFO - VPN Client initialized successfully
+2025-10-09 13:29:40,451 - CLIENT - WARNING - VPN Client is not running
+2025-10-09 13:30:25,105 - CLIENT - INFO - VPN Client initialized for UUID: 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-09 13:30:25,105 - CLIENT - INFO - Initializing VPN Client...
+2025-10-09 13:30:25,106 - CLIENT - INFO - Loaded existing config for test-uuid-123
+2025-10-09 13:30:25,106 - CLIENT - INFO - VPN Client initialized successfully
+2025-10-09 13:30:25,209 - CLIENT - WARNING - VPN Client is not running
+2025-10-09 13:31:12,658 - CLIENT - INFO - VPN Client initialized for UUID: 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-09 13:31:12,658 - CLIENT - INFO - Initializing VPN Client...
+2025-10-09 13:31:12,659 - CLIENT - INFO - Loaded existing config for test-uuid-123
+2025-10-09 13:31:12,659 - CLIENT - INFO - VPN Client initialized successfully
+2025-10-09 13:31:12,767 - CLIENT - WARNING - VPN Client is not running
+2025-10-10 00:28:15,377 - CLIENT - INFO - VPN Client initialized for UUID: 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-10 00:28:15,377 - CLIENT - INFO - Initializing VPN Client...
+2025-10-10 00:28:15,378 - CLIENT - INFO - Loaded existing config for test-uuid-123
+2025-10-10 00:28:15,378 - CLIENT - INFO - VPN Client initialized successfully
+2025-10-10 00:30:12,133 - CLIENT - INFO - VPN Client initialized for UUID: 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-10 00:30:12,133 - CLIENT - INFO - Initializing VPN Client...
+2025-10-10 00:30:12,134 - CLIENT - INFO - Loaded existing config for test-uuid-123
+2025-10-10 00:30:12,134 - CLIENT - INFO - VPN Client initialized successfully
+2025-10-10 00:32:01,801 - CLIENT - INFO - VPN Client initialized for UUID: 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-10 00:32:01,801 - CLIENT - INFO - Initializing VPN Client...
+2025-10-10 00:32:01,802 - CLIENT - INFO - Loaded existing config for test-uuid-123
+2025-10-10 00:32:01,802 - CLIENT - INFO - VPN Client initialized successfully
+2025-10-10 00:34:06,742 - CLIENT - INFO - VPN Client initialized for UUID: 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-10 00:34:06,742 - CLIENT - INFO - Initializing VPN Client...
+2025-10-10 00:34:06,743 - CLIENT - INFO - Loaded existing config for test-uuid-123
+2025-10-10 00:34:06,743 - CLIENT - INFO - VPN Client initialized successfully
+2025-10-10 01:01:38,982 - CLIENT - INFO - VPN Client initialized for UUID: 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-10 01:01:38,982 - CLIENT - INFO - Initializing VPN Client...
+2025-10-10 01:01:38,983 - CLIENT - INFO - Loaded existing config for test-uuid-123
+2025-10-10 01:01:38,983 - CLIENT - INFO - VPN Client initialized successfully
+2025-10-11 15:15:14,860 - CLIENT - INFO - VPN Client initialized for UUID: 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-11 15:15:14,860 - CLIENT - INFO - Initializing VPN Client...
+2025-10-11 15:15:14,891 - CLIENT - INFO - Loaded existing config for 4176be2c-5368-4a7b-af50-456f4cc0ca89
+2025-10-11 15:15:14,891 - CLIENT - INFO - VPN Client initialized successfully
+2025-10-11 15:15:14,892 - CLIENT - INFO - VPN Client started successfully
+2025-10-11 15:15:14,892 - CLIENT - INFO - VPN start requested
+2025-10-11 15:15:15,894 - CLIENT - ERROR - VPN Client ERROR: None
+2025-10-11 15:15:19,898 - CLIENT - ERROR - VPN Client ERROR: None
+2025-10-11 15:15:25,975 - CLIENT - ERROR - VPN Client ERROR: None
+2025-10-11 15:15:33,978 - CLIENT - ERROR - VPN Client ERROR: None
+2025-10-11 15:18:23,406 - CLIENT - INFO - VPN Client initialized for UUID: 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-11 15:18:23,406 - CLIENT - INFO - Initializing VPN Client...
+2025-10-11 15:18:23,407 - CLIENT - INFO - Loaded existing config for 4176be2c-5368-4a7b-af50-456f4cc0ca89
+2025-10-11 15:18:23,407 - CLIENT - INFO - VPN Client initialized successfully
+2025-10-11 15:18:23,407 - CLIENT - INFO - VPN Client started successfully
+2025-10-11 15:18:23,407 - CLIENT - INFO - VPN start requested
+2025-10-11 15:18:26,468 - CLIENT - ERROR - VPN Client ERROR: None
+2025-10-11 15:18:34,472 - CLIENT - INFO - VPN Client is RUNNING
+2025-10-11 15:21:58,825 - CLIENT - INFO - VPN Client initialized for UUID: 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-11 15:21:58,826 - CLIENT - INFO - Initializing VPN Client...
+2025-10-11 15:21:58,826 - CLIENT - INFO - Loaded existing config for 4176be2c-5368-4a7b-af50-456f4cc0ca89
+2025-10-11 15:21:58,827 - CLIENT - INFO - VPN Client initialized successfully
+2025-10-11 15:22:07,825 - CLIENT - WARNING - VPN Client is not running
+2025-10-11 15:22:32,824 - CLIENT - WARNING - VPN Client is not running
+2025-10-11 15:26:01,291 - CLIENT - INFO - VPN Client initialized for UUID: 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-11 15:26:01,291 - CLIENT - INFO - Initializing VPN Client...
+2025-10-11 15:26:01,291 - CLIENT - INFO - Loaded existing config for 4176be2c-5368-4a7b-af50-456f4cc0ca89
+2025-10-11 15:26:01,292 - CLIENT - INFO - VPN Client initialized successfully
+2025-10-11 15:26:51,494 - CLIENT - WARNING - VPN Client is not running
+2025-10-11 15:32:12,492 - CLIENT - INFO - VPN Client initialized for UUID: 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-11 15:32:12,492 - CLIENT - INFO - Initializing VPN Client...
+2025-10-11 15:32:12,493 - CLIENT - INFO - Loaded existing config for 4176be2c-5368-4a7b-af50-456f4cc0ca89
+2025-10-11 15:32:12,493 - CLIENT - INFO - VPN Client initialized successfully
+2025-10-11 15:33:10,376 - CLIENT - WARNING - VPN Client is not running
+2025-10-11 16:09:39,321 - CLIENT - INFO - VPN Client initialized for UUID: 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-11 16:09:39,321 - CLIENT - INFO - Initializing VPN Client...
+2025-10-11 16:09:39,322 - CLIENT - INFO - Loaded existing config for 4176be2c-5368-4a7b-af50-456f4cc0ca89
+2025-10-11 16:09:39,322 - CLIENT - INFO - VPN Client initialized successfully
+2025-10-11 16:10:12,569 - CLIENT - WARNING - VPN Client is not running

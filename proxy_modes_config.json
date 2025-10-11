@@ -1,0 +1,23 @@
+{
+  "current_mode": "system",
+  "auto_detect_enabled": true,
+  "bypass_rules": [
+    "localhost",
+    "127.0.0.1/8",
+    "::1/128",
+    "*.local",
+    "*.localdomain"
+  ],
+  "manual_settings": {
+    "proxy_type": "http",
+    "proxy_host": "",
+    "proxy_port": 8080,
+    "proxy_username": "",
+    "proxy_password": "",
+    "proxy_exceptions": []
+  },
+  "transparent_enabled": false,
+  "split_tunnel_enabled": false,
+  "split_tunnel_apps": [],
+  "dns_leak_protection": true
+}

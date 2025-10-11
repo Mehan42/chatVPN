@@ -1,0 +1,14 @@
+[
+  {
+    "timestamp": 1759568670.0312083,
+    "from_state": "initializing",
+    "to_state": "config_fetching",
+    "client_uuid": "test-uuid-123"
+  },
+  {
+    "timestamp": 1759568670.0316246,
+    "from_state": "config_fetching",
+    "to_state": "error",
+    "client_uuid": "test-uuid-123"
+  }
+]

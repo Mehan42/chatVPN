@@ -1,0 +1,22 @@
+{
+  "servers": [
+    {
+      "id": "primary",
+      "api_url": "https://77.110.123.27:8443",
+      "connection_url": "vless://example-uuid@77.110.123.27:443",
+      "server_name": "Primary Server",
+      "ip": "77.110.123.27",
+      "dns": "1.1.1.1",
+      "priority": 1
+    }
+  ],
+  "active_server": "primary",
+  "default_profile": "default",
+  "connection_timeout": 10,
+  "reconnect_attempts": 3,
+  "log_level": "INFO",
+  "profiles_dir": "./profiles",
+  "logs_dir": "./logs",
+  "auto_switch": true,
+  "switch_threshold": 1000
+}

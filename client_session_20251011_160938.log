@@ -1,0 +1,36 @@
+2025-10-11 16:09:39,321 - vpn_client - INFO - VPN Client initialized for UUID: 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-11 16:09:39,321 - vpn_client - INFO - Initializing VPN Client...
+2025-10-11 16:09:39,321 - state_machine - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-11 16:09:39,322 - vpn_client - INFO - Loaded existing config for 4176be2c-5368-4a7b-af50-456f4cc0ca89
+2025-10-11 16:09:39,322 - vpn_client - INFO - VPN Client initialized successfully
+2025-10-11 16:09:40,990 - ipv6_manager - INFO - IPv6 config loaded from /home/uss/xvpn_client/ipv6_config.json
+2025-10-11 16:09:40,993 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 16:09:40,996 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 16:09:41,668 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-11 16:09:41,671 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-11 16:09:41,672 - proxy_modes - INFO - Proxy modes config loaded from /home/uss/xvpn_client/proxy_modes_config.json
+2025-10-11 16:09:41,677 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-11 16:09:42,081 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 16:09:42,718 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-11 16:09:42,724 - urllib3.connectionpool - WARNING - Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x76d634a29f40>: Failed to establish a new connection: [Errno 101] Сеть недоступна')': /
+2025-10-11 16:09:44,729 - urllib3.connectionpool - WARNING - Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x76d634a28f80>: Failed to establish a new connection: [Errno 101] Сеть недоступна')': /
+2025-10-11 16:09:48,734 - urllib3.connectionpool - WARNING - Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x76d634a28e60>: Failed to establish a new connection: [Errno 101] Сеть недоступна')': /
+2025-10-11 16:09:49,066 - health - WARNING - Invalid IPv6 response from https://ifconfig.co/ip: 176.197.66.184
+2025-10-11 16:09:49,368 - health - WARNING - Invalid IPv6 response from https://icanhazip.com: 176.197.66.184
+2025-10-11 16:09:49,374 - urllib3.connectionpool - WARNING - Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x76d634a2a6c0>: Failed to establish a new connection: [Errno 101] Сеть недоступна')': /
+2025-10-11 16:09:51,379 - urllib3.connectionpool - WARNING - Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x76d634a2b3e0>: Failed to establish a new connection: [Errno 101] Сеть недоступна')': /
+2025-10-11 16:09:55,385 - urllib3.connectionpool - WARNING - Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x76d634a2b470>: Failed to establish a new connection: [Errno 101] Сеть недоступна')': /
+2025-10-11 16:09:55,396 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-11 16:09:55,398 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-11 16:09:56,030 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-11 16:09:56,036 - urllib3.connectionpool - WARNING - Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x76d634a2b2c0>: Failed to establish a new connection: [Errno 101] Сеть недоступна')': /
+2025-10-11 16:09:58,041 - urllib3.connectionpool - WARNING - Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x76d634a29b80>: Failed to establish a new connection: [Errno 101] Сеть недоступна')': /
+2025-10-11 16:10:02,047 - urllib3.connectionpool - WARNING - Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x76d634a2a000>: Failed to establish a new connection: [Errno 101] Сеть недоступна')': /
+2025-10-11 16:10:02,159 - health - WARNING - Invalid IPv6 response from https://ifconfig.co/ip: 176.197.66.184
+2025-10-11 16:10:02,244 - health - WARNING - Invalid IPv6 response from https://icanhazip.com: 176.197.66.184
+2025-10-11 16:10:02,251 - urllib3.connectionpool - WARNING - Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x76d634a29790>: Failed to establish a new connection: [Errno 101] Сеть недоступна')': /
+2025-10-11 16:10:04,267 - urllib3.connectionpool - WARNING - Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x76d634a28860>: Failed to establish a new connection: [Errno 101] Сеть недоступна')': /
+2025-10-11 16:10:08,279 - urllib3.connectionpool - WARNING - Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x76d634a2a870>: Failed to establish a new connection: [Errno 101] Сеть недоступна')': /
+2025-10-11 16:10:09,017 - urllib3.connectionpool - WARNING - Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x76d6349f7fb0>: Failed to establish a new connection: [Errno 101] Сеть недоступна')': /
+2025-10-11 16:10:11,023 - urllib3.connectionpool - WARNING - Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x76d6356c3d70>: Failed to establish a new connection: [Errno 101] Сеть недоступна')': /
+2025-10-11 16:10:12,569 - vpn_client - WARNING - VPN Client is not running

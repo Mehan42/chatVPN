@@ -1,0 +1,32 @@
+[
+  {
+    "timestamp": 1760170703.40822,
+    "from_state": "initializing",
+    "to_state": "config_fetching",
+    "client_uuid": "9f95afce-2692-49b7-848f-8c58173f41a3"
+  },
+  {
+    "timestamp": 1760170705.466507,
+    "from_state": "config_fetching",
+    "to_state": "config_validating",
+    "client_uuid": "9f95afce-2692-49b7-848f-8c58173f41a3"
+  },
+  {
+    "timestamp": 1760170706.4683268,
+    "from_state": "config_validating",
+    "to_state": "error",
+    "client_uuid": "9f95afce-2692-49b7-848f-8c58173f41a3"
+  },
+  {
+    "timestamp": 1760170709.4701066,
+    "from_state": "error",
+    "to_state": "recovering",
+    "client_uuid": "9f95afce-2692-49b7-848f-8c58173f41a3"
+  },
+  {
+    "timestamp": 1760170714.4729164,
+    "from_state": "recovering",
+    "to_state": "running",
+    "client_uuid": "9f95afce-2692-49b7-848f-8c58173f41a3"
+  }
+]

@@ -1,0 +1,4 @@
+2025-10-02 13:05:41,135 - CLIENT - INFO - VPN Client initialized for UUID: test-client-uuid
+2025-10-02 13:05:41,135 - CLIENT - INFO - Initializing VPN Client...
+2025-10-02 13:05:41,136 - CLIENT - INFO - No existing config, will fetch from server
+2025-10-02 13:05:41,136 - CLIENT - INFO - VPN Client initialized successfully

@@ -1,0 +1,20 @@
+[
+  {
+    "timestamp": 1759385146.3009539,
+    "from_state": "initializing",
+    "to_state": "config_fetching",
+    "client_uuid": "interactive-test-uuid"
+  },
+  {
+    "timestamp": 1759385146.465371,
+    "from_state": "config_fetching",
+    "to_state": "error",
+    "client_uuid": "interactive-test-uuid"
+  },
+  {
+    "timestamp": 1759385146.5668008,
+    "from_state": "error",
+    "to_state": "recovering",
+    "client_uuid": "interactive-test-uuid"
+  }
+]

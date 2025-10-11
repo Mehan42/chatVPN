@@ -27,6 +27,7 @@ XVPN Client - это кроссплатформенный VPN-клиент с и
 - `internal/alerts` - Система алертов и уведомлений
 - `internal/updater` - Система обновлений
 - `internal/proxy` - Система прокси
+- `internal/tunnelverifier` - Модуль проверки туннелирования трафика (новый)
 
 ## Сборка
 

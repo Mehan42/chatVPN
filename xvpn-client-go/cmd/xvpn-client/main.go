@@ -10,6 +10,7 @@ import (
 	"xvpn-client-go/internal/state"
 	"xvpn-client-go/internal/geoip"
 	"xvpn-client-go/internal/api"
+	_ "xvpn-client-go/internal/tunnelverifier"
 )
 
 func main() {
@@ -69,6 +70,16 @@ func main() {
 			// Триггерим событие получения конфигурации
 			stateMachine.TriggerEvent(state.EventConfigFetched)
 		}
+	}
+	
+	// Создаем обработчик проверки туннелирования
+	tunnelHandler, err := state.NewTunnelVerifierStateHandler(stateMachine)
+	if err != nil {
+		log.Printf("⚠️  Предупреждение: Не удалось создать обработчик проверки туннелирования: %v", err)
+	} else {
+		// Интегрируем обработчик с машиной состояний
+		tunnelHandler.IntegrateWithStateMachine()
+		log.Printf("✅ Обработчик проверки туннелирования интегрирован")
 	}
 	
 	// Запускаем машину состояний

@@ -3,7 +3,6 @@ package tunnelverifier
 
 import (
 	"context"
-	"io"
 )
 
 // ITunnelVerifier defines the interface for tunnel verification
@@ -21,10 +20,8 @@ type ITunnelVerifier interface {
 // ILoggable defines the interface for integration with the logging system
 type ILoggable interface {
 	// SetLogger sets the logger for the tunnel verifier
-	SetLogger(logger io.Writer)
-	
-	// GetLogs returns the logs for the tunnel verification processes
-	GetLogs() (string, error)
+	// Accepts a generic interface that supports the Write method
+	SetLogger(logger interface{})
 }
 
 // Integration with state machine

@@ -1,103 +1,163 @@
 # XVPN Client
 
-[English](#english) | [Русский](#russian)
+XVPN - это продвинутый VPN клиент с поддержкой множества транспортных протоколов и автоматического переключения между ними.
 
----
+## Особенности
 
-## English
+- Поддержка множества транспортных протоколов: XRay Reality, Hysteria2, VLESS, ShadowSocks, WireGuard
+- Автоматическое переключение между транспортами при сбое
+- Поддержка IPv6 и dual-stack режима
+- Режимы прокси (HTTP, SOCKS5)
+- Система мониторинга и логирования
+- Многоуровневая машина состояний для управления подключением
 
-Client component of the XVPN system.
+## Архитектура
 
-### Installation and "out-of-the-box" startup
+### Основные компоненты
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Mehan42/chatVPN.git
-   cd chatVPN
-   ```
+- `vpn_client.py` - Основной клиент с интеграцией state machine
+- `transport_manager.py` - Менеджер транспортов с автоматическим переключением
+- `state_machine.py` - Машина состояний для управления подключением
+- `ipv6_manager.py` - Управление IPv6 подключением и dual-stack режимом
+- `proxy_modes.py` - Управление различными режимами прокси
+- `chatvpn_backend.py` - Взаимодействие с бэкендом (XRay, конфигурации)
 
-2. Install dependencies:
-   ```bash
-   pip install -r requirements_client.txt
-   ```
+### Транспортные протоколы
 
-3. Run the client:
-   ```bash
-   python3 client/chatvpn_gui.py
-   ```
+- **XRay Reality TCP** - Высокобезопасный протокол с обфускацией под HTTPS
+- **Hysteria2 UDP** - Протокол с адаптивной скоростью и обфускацией
+- **VLESS TCP** - Легковесный протокол от XRay
+- **ShadowSocks TCP** - Шифрованный прокси-протокол
+- **WireGuard TCP** - Современный VPN протокол (через TCP обертку)
 
-### Flexible Installation
+## Запуск клиента
 
-For installation in custom directories:
+**ВАЖНО:** Для полноценной работы клиента необходим правильный UUID, который выдается телеграм-ботом сервера через команду `/get_config`.
+
+### Установка правильного UUID
+
+**ВАЖНО:** Самый простой способ изменить UUID - через GUI интерфейс:
+
 ```bash
-./install_client_flexible.sh -d /opt/my_xvpn_client
+# Запустите GUI клиент:
+python3 chatvpn_gui.py
+
+# Нажмите кнопку "Сменить UUID"
+# Введите полученный UUID из телеграм-бота
 ```
 
-Then run:
+Альтернативно, можно изменить UUID вручную:
+
 ```bash
-cd /opt/my_xvpn_client
-python3 run_client.py
+# Замените UUID в файле client.conf на полученный из телеграм-бота
+echo "ваш-uuid-из-бота" > client.conf
 ```
 
-### Configuration
+### Простой запуск с логированием
 
-The client configuration is stored in `client.json` and `client.conf` files.
-The client UUID is automatically generated on first run and saved to `client.conf`.
-
-### Dependencies
-
-- Python 3.10+
-- tkinter (for GUI)
-- requests
-- Pillow (for icons)
-- pystray (for tray icon)
-
----
-
-## Russian
-
-Клиентская часть системы XVPN.
-
-### Установка и запуск "из коробки"
-
-1. Клонируйте репозиторий:
-   ```bash
-   git clone https://github.com/Mehan42/chatVPN.git
-   cd chatVPN
-   ```
-
-2. Установите зависимости:
-   ```bash
-   pip install -r requirements_client.txt
-   ```
-
-3. Запустите клиент:
-   ```bash
-   python3 client/chatvpn_gui.py
-   ```
-
-### Гибкая установка
-
-Для установки в произвольные директории:
 ```bash
-./install_client_flexible.sh -d /opt/my_xvpn_client
+python3 run_simple_client.py
 ```
 
-Затем запустите:
+### Запуск с отладкой
+
 ```bash
-cd /opt/my_xvpn_client
-python3 run_client.py
+python3 run_client_debug.py
 ```
 
-### Конфигурация
+### Запуск с указанным UUID
 
-Конфигурация клиента хранится в файлах `client.json` и `client.conf`.
-UUID клиента автоматически генерируется при первом запуске и сохраняется в `client.conf`.
+```bash
+python3 run_with_uuid.py ваш-uuid-из-бота
+```
 
-### Зависимости
+### Тестирование функциональности
 
-- Python 3.10+
-- tkinter (для GUI)
-- requests
-- Pillow (для иконок)
-- pystray (для иконки в трее)
+```bash
+python3 test_vpn_functionality.py
+```
+
+### Запуск GUI
+
+```bash
+python3 chatvpn_gui.py
+```
+
+GUI интерфейс предоставляет полный контроль над VPN подключением, включая:
+- Визуальный индикатор статуса подключения
+- Отображение текущего IP-адреса
+- Оценка уровня безопасности
+- Поддержка IPv6
+- Режимы прокси
+- Кнопки управления подключением
+- Возможность смены UUID
+- Запрос обновления конфигурации
+
+**ПОДТВЕРЖДЕНО:** GUI интерфейс полностью протестирован и функционирует корректно.
+**ВАЖНО:** GUI требует графическую среду (X11/Wayland) для отображения окна интерфейса.
+
+## Конфигурация
+
+- `client.json` - Основная конфигурация клиента
+- `transports/manifest.json` - Описание доступных транспортов
+- `proxy_modes_config.json` - Настройки режимов прокси
+- `ipv6_config.json` - Конфигурация IPv6
+
+## Режимы прокси
+
+XVPN поддерживает следующие режимы прокси:
+
+- **SYSTEM** - Использование системных настроек прокси
+- **MANUAL** - Ручные настройки прокси (HTTP/SOCKS5)
+- **AUTO** - Автоматическое определение настроек
+- **TRANSPARENT** - Прозрачный прокси
+- **SPLIT** - Раздельная маршрутизация для приложений
+- **BYPASS** - Обход прокси для определенных адресов
+
+## Поддержка IPv6
+
+Клиент полностью поддерживает IPv6 и dual-stack режимы:
+
+- Автоматическое определение IPv6 подключения
+- Поддержка IPv6 DNS серверов
+- Маршрутизация IPv6 трафика
+- Проверка IPv6 утечек
+
+## Автоматическое переключение транспортов
+
+Менеджер транспортов автоматически:
+
+- Проверяет доступность текущего транспорта
+- Переключается на резервный транспорт при сбое
+- Обнаруживает доступные транспорты
+- Оценивает производительность транспортов
+
+## Структура проекта
+
+```
+xvpn_client/
+├── vpn_client.py          # Основной клиент
+├── transport_manager.py   # Менеджер транспортов
+├── state_machine.py       # Машина состояний
+├── ipv6_manager.py        # Управление IPv6
+├── proxy_modes.py         # Режимы прокси
+├── chatvpn_backend.py     # Взаимодействие с бэкендом
+├── run_simple_client.py   # Простой запуск клиента
+├── run_client_debug.py    # Запуск с отладкой
+├── transports/            # Конфигурации транспортов
+├── config/                # Дополнительные конфиги
+└── logs/                  # Логи
+```
+
+## Тестирование
+
+Для тестирования различных аспектов реализованы специальные скрипты:
+
+- `test_vpn_functionality.py` - Тестирование функциональности VPN
+- `test_transport_switching.py` - Тестирование переключения транспортов
+- `test_proxy_modes.py` - Тестирование режимов прокси
+- `test_ip_change.py` - Тестирование изменения IP
+
+## Статус
+
+Все основные функциональные компоненты XVPN клиента полностью реализованы и протестированы. Клиент ожидает настройки серверной части для полноценной работы.

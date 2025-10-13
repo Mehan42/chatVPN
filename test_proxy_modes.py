@@ -4,7 +4,7 @@
 
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))from pathlib import Path
+from pathlib import Path
 
 # Определяем базовую директорию как директорию скрипта
 CLIENT_DIR = Path(__file__).parent if '__file__' in globals() else Path.cwd()

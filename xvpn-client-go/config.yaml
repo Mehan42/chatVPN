@@ -1,0 +1,24 @@
+# config.yaml
+gateway:
+  log_level: "info"
+
+# Параметры для шагов
+steps:
+  geoip:
+    enabled: true
+    database_path: "/etc/xvpn-client/GeoLite2-Country.mmdb"
+    # Список кодов стран для прямой маршрутизации
+    direct_route_countries: ["RU"]
+
+  tunnel:
+    enabled: true
+    remote_server: "your-vps.com:443" # Адрес вашего сервера
+    # Для TLS можно добавить SNI для маскировки
+    tls_sni: "cloudflare.com"
+
+# Настройки перехватчика
+interceptor:
+  # Перенаправлять трафик только с этих портов
+  redirect_ports: [80, 443]
+  # Исключать локальные сети
+  exclude_subnets: ["127.0.0.0/8", "192.168.0.0/16", "10.0.0.0/8"]

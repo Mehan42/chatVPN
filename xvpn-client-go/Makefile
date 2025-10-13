@@ -10,6 +10,7 @@
 
 # Имя бинарного файла
 BINARY_NAME=xvpn-client
+GATEWAY_BINARY_NAME=xvpn-gateway
 # Версия
 VERSION=$(shell git describe --tags --always 2>/dev/null || echo "v0.1.0")
 
@@ -42,42 +43,59 @@ build-linux-amd64:
 	@echo "Сборка для Linux/amd64..."
 	@mkdir -p $(BUILD_DIR)/linux/amd64
 	GOOS=linux GOARCH=amd64 go build -o $(BUILD_DIR)/linux/amd64/$(BINARY_NAME)-linux-amd64 -ldflags="-s -w -X main.version=$(VERSION)" ./cmd/xvpn-client
+	GOOS=linux GOARCH=amd64 go build -o $(BUILD_DIR)/linux/amd64/$(GATEWAY_BINARY_NAME)-linux-amd64 -ldflags="-s -w -X main.version=$(VERSION)" ./cmd/xvpn-gateway
 	@echo "Сборка для Linux/amd64 завершена"
 
 build-linux-arm64:
 	@echo "Сборка для Linux/arm64..."
 	@mkdir -p $(BUILD_DIR)/linux/arm64
 	GOOS=linux GOARCH=arm64 go build -o $(BUILD_DIR)/linux/arm64/$(BINARY_NAME)-linux-arm64 -ldflags="-s -w -X main.version=$(VERSION)" ./cmd/xvpn-client
+	GOOS=linux GOARCH=arm64 go build -o $(BUILD_DIR)/linux/arm64/$(GATEWAY_BINARY_NAME)-linux-arm64 -ldflags="-s -w -X main.version=$(VERSION)" ./cmd/xvpn-gateway
 	@echo "Сборка для Linux/arm64 завершена"
 
 build-darwin-amd64:
 	@echo "Сборка для macOS/amd64..."
 	@mkdir -p $(BUILD_DIR)/darwin/amd64
 	GOOS=darwin GOARCH=amd64 go build -o $(BUILD_DIR)/darwin/amd64/$(BINARY_NAME)-darwin-amd64 -ldflags="-s -w -X main.version=$(VERSION)" ./cmd/xvpn-client
+	GOOS=darwin GOARCH=amd64 go build -o $(BUILD_DIR)/darwin/amd64/$(GATEWAY_BINARY_NAME)-darwin-amd64 -ldflags="-s -w -X main.version=$(VERSION)" ./cmd/xvpn-gateway
 	@echo "Сборка для macOS/amd64 завершена"
 
 build-darwin-arm64:
 	@echo "Сборка для macOS/arm64..."
 	@mkdir -p $(BUILD_DIR)/darwin/arm64
 	GOOS=darwin GOARCH=arm64 go build -o $(BUILD_DIR)/darwin/arm64/$(BINARY_NAME)-darwin-arm64 -ldflags="-s -w -X main.version=$(VERSION)" ./cmd/xvpn-client
+	GOOS=darwin GOARCH=arm64 go build -o $(BUILD_DIR)/darwin/arm64/$(GATEWAY_BINARY_NAME)-darwin-arm64 -ldflags="-s -w -X main.version=$(VERSION)" ./cmd/xvpn-gateway
 	@echo "Сборка для macOS/arm64 завершена"
 
 build-windows-amd64:
 	@echo "Сборка для Windows/amd64..."
 	@mkdir -p $(BUILD_DIR)/windows/amd64
 	GOOS=windows GOARCH=amd64 go build -o $(BUILD_DIR)/windows/amd64/$(BINARY_NAME)-windows-amd64.exe -ldflags="-s -w -X main.version=$(VERSION)" ./cmd/xvpn-client
+	GOOS=windows GOARCH=amd64 go build -o $(BUILD_DIR)/windows/amd64/$(GATEWAY_BINARY_NAME)-windows-amd64.exe -ldflags="-s -w -X main.version=$(VERSION)" ./cmd/xvpn-gateway
 	@echo "Сборка для Windows/amd64 завершена"
 
 build-windows-386:
 	@echo "Сборка для Windows/386..."
 	@mkdir -p $(BUILD_DIR)/windows/386
 	GOOS=windows GOARCH=386 go build -o $(BUILD_DIR)/windows/386/$(BINARY_NAME)-windows-386.exe -ldflags="-s -w -X main.version=$(VERSION)" ./cmd/xvpn-client
+	GOOS=windows GOARCH=386 go build -o $(BUILD_DIR)/windows/386/$(GATEWAY_BINARY_NAME)-windows-386.exe -ldflags="-s -w -X main.version=$(VERSION)" ./cmd/xvpn-gateway
 	@echo "Сборка для Windows/386 завершена"
 
 # Сборка для текущей платформы
 build:
 	@echo "Сборка для текущей платформы..."
 	go build -o $(BINARY_NAME) -ldflags="-s -w -X main.version=$(VERSION)" ./cmd/xvpn-client
+	go build -o $(GATEWAY_BINARY_NAME) -ldflags="-s -w -X main.version=$(VERSION)" ./cmd/xvpn-gateway
+
+# Сборка только основного клиента
+build-client:
+	@echo "Сборка основного клиента..."
+	go build -o $(BINARY_NAME) -ldflags="-s -w -X main.version=$(VERSION)" ./cmd/xvpn-client
+
+# Сборка только Gateway модуля
+build-gateway:
+	@echo "Сборка Gateway модуля..."
+	go build -o $(GATEWAY_BINARY_NAME) -ldflags="-s -w -X main.version=$(VERSION)" ./cmd/xvpn-gateway
 
 # Установка зависимостей
 deps:
@@ -169,15 +187,21 @@ package: build-all
 	
 	# Linux
 	cd $(BUILD_DIR)/linux/amd64 && tar -czf ../../$(DIST_DIR)/$(BINARY_NAME)-linux-amd64.tar.gz $(BINARY_NAME)-linux-amd64
+	cd $(BUILD_DIR)/linux/amd64 && tar -czf ../../$(DIST_DIR)/$(GATEWAY_BINARY_NAME)-linux-amd64.tar.gz $(GATEWAY_BINARY_NAME)-linux-amd64
 	cd $(BUILD_DIR)/linux/arm64 && tar -czf ../../$(DIST_DIR)/$(BINARY_NAME)-linux-arm64.tar.gz $(BINARY_NAME)-linux-arm64
+	cd $(BUILD_DIR)/linux/arm64 && tar -czf ../../$(DIST_DIR)/$(GATEWAY_BINARY_NAME)-linux-arm64.tar.gz $(GATEWAY_BINARY_NAME)-linux-arm64
 	
 	# macOS
 	cd $(BUILD_DIR)/darwin/amd64 && tar -czf ../../$(DIST_DIR)/$(BINARY_NAME)-darwin-amd64.tar.gz $(BINARY_NAME)-darwin-amd64
+	cd $(BUILD_DIR)/darwin/amd64 && tar -czf ../../$(DIST_DIR)/$(GATEWAY_BINARY_NAME)-darwin-amd64.tar.gz $(GATEWAY_BINARY_NAME)-darwin-amd64
 	cd $(BUILD_DIR)/darwin/arm64 && tar -czf ../../$(DIST_DIR)/$(BINARY_NAME)-darwin-arm64.tar.gz $(BINARY_NAME)-darwin-arm64
+	cd $(BUILD_DIR)/darwin/arm64 && tar -czf ../../$(DIST_DIR)/$(GATEWAY_BINARY_NAME)-darwin-arm64.tar.gz $(GATEWAY_BINARY_NAME)-darwin-arm64
 	
 	# Windows
 	cd $(BUILD_DIR)/windows/amd64 && zip ../../$(DIST_DIR)/$(BINARY_NAME)-windows-amd64.zip $(BINARY_NAME)-windows-amd64.exe
+	cd $(BUILD_DIR)/windows/amd64 && zip ../../$(DIST_DIR)/$(GATEWAY_BINARY_NAME)-windows-amd64.zip $(GATEWAY_BINARY_NAME)-windows-amd64.exe
 	cd $(BUILD_DIR)/windows/386 && zip ../../$(DIST_DIR)/$(BINARY_NAME)-windows-386.zip $(BINARY_NAME)-windows-386.exe
+	cd $(BUILD_DIR)/windows/386 && zip ../../$(DIST_DIR)/$(GATEWAY_BINARY_NAME)-windows-386.zip $(GATEWAY_BINARY_NAME)-windows-386.exe
 	
 	@echo "Архивы созданы в $(DIST_DIR)/"
 
@@ -239,7 +263,9 @@ help:
 	@echo "======================"
 	@echo ""
 	@echo "Основные команды:"
-	@echo "  make build          - Сборка для текущей платформы"
+	@echo "  make build          - Сборка клиента и Gateway модуля для текущей платформы"
+	@echo "  make build-client   - Сборка только основного клиента"
+	@echo "  make build-gateway  - Сборка только Gateway модуля"
 	@echo "  make build-all      - Сборка для всех платформ"
 	@echo "  make build-linux    - Сборка для Linux"
 	@echo "  make build-macos    - Сборка для macOS"
@@ -263,7 +289,7 @@ help:
 	@echo "Управление:"
 	@echo "  make clean          - Очистка"
 	@echo "  make install        - Установка"
-	@echo "  make package        - Создание архивов"
+	@echo "  make package        - Создание архивов (включая Gateway модуль)"
 	@echo "  make setup          - Настройка окружения разработки"
 	@echo "  make deploy         - Полное развертывание"
 	@echo "  make deploy-client  - Развертывание клиента"

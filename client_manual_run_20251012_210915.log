@@ -1,0 +1,110 @@
+2025-10-12 21:09:16,063 - vpn_client - INFO - VPN Client initialized for UUID: 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-12 21:09:16,063 - vpn_client - INFO - Initializing VPN Client...
+2025-10-12 21:09:16,063 - state_machine - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-12 21:09:16,064 - vpn_client - INFO - Loaded existing config for 4176be2c-5368-4a7b-af50-456f4cc0ca89
+2025-10-12 21:09:16,064 - vpn_client - INFO - VPN Client initialized successfully
+2025-10-12 21:09:16,064 - ipv6_manager - INFO - IPv6 config loaded from /home/uss/xvpn_client/ipv6_config.json
+2025-10-12 21:09:16,066 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-12 21:09:16,067 - health - DEBUG - Trying to get IPv4 from https://api.ipify.org
+2025-10-12 21:09:16,068 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.ipify.org:443
+2025-10-12 21:09:16,440 - urllib3.connectionpool - DEBUG - https://api.ipify.org:443 "GET / HTTP/1.1" 200 None
+2025-10-12 21:09:16,441 - health - DEBUG - Cache saved for key: 862a92a3cb4b62419658df9227b9c0f6
+2025-10-12 21:09:16,443 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-12 21:09:16,444 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api6.ipify.org:443
+2025-10-12 21:09:16,450 - ipv6_manager - DEBUG - Failed to get IPv6 from https://api6.ipify.org: HTTPSConnectionPool(host='api6.ipify.org', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ff49b467800>: Failed to establish a new connection: [Errno 101] Network is unreachable'))
+2025-10-12 21:09:16,450 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): ifconfig.co:443
+2025-10-12 21:09:17,351 - urllib3.connectionpool - DEBUG - https://ifconfig.co:443 "GET /ip HTTP/1.1" 200 None
+2025-10-12 21:09:17,353 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): icanhazip.com:443
+2025-10-12 21:09:17,655 - urllib3.connectionpool - DEBUG - https://icanhazip.com:443 "GET / HTTP/1.1" 200 15
+2025-10-12 21:09:17,659 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): v6.ident.me:443
+2025-10-12 21:09:17,670 - ipv6_manager - DEBUG - Failed to get IPv6 from https://v6.ident.me: HTTPSConnectionPool(host='v6.ident.me', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ff49b4a0680>: Failed to establish a new connection: [Errno 101] Network is unreachable'))
+2025-10-12 21:09:17,670 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-12 21:09:17,671 - health - DEBUG - Trying to get IPv6 from https://api6.ipify.org
+2025-10-12 21:09:17,672 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api6.ipify.org:443
+2025-10-12 21:09:17,677 - urllib3.util.retry - DEBUG - Incremented Retry for (url='/'): Retry(total=2, connect=None, read=None, redirect=None, status=None)
+2025-10-12 21:09:17,677 - urllib3.connectionpool - WARNING - Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ff49b4a0410>: Failed to establish a new connection: [Errno 101] Network is unreachable')': /
+2025-10-12 21:09:17,677 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (2): api6.ipify.org:443
+2025-10-12 21:09:17,682 - urllib3.util.retry - DEBUG - Incremented Retry for (url='/'): Retry(total=1, connect=None, read=None, redirect=None, status=None)
+2025-10-12 21:09:19,682 - urllib3.connectionpool - WARNING - Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ff49b4a00e0>: Failed to establish a new connection: [Errno 101] Network is unreachable')': /
+2025-10-12 21:09:19,683 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (3): api6.ipify.org:443
+2025-10-12 21:09:19,688 - urllib3.util.retry - DEBUG - Incremented Retry for (url='/'): Retry(total=0, connect=None, read=None, redirect=None, status=None)
+2025-10-12 21:09:23,688 - urllib3.connectionpool - WARNING - Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ff49b4a0b30>: Failed to establish a new connection: [Errno 101] Network is unreachable')': /
+2025-10-12 21:09:23,689 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (4): api6.ipify.org:443
+2025-10-12 21:09:23,694 - health - DEBUG - Connection error getting IPv6 from https://api6.ipify.org
+2025-10-12 21:09:23,694 - health - DEBUG - Trying to get IPv6 from https://ifconfig.co/ip
+2025-10-12 21:09:23,696 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): ifconfig.co:443
+2025-10-12 21:09:24,107 - urllib3.connectionpool - DEBUG - https://ifconfig.co:443 "GET /ip HTTP/1.1" 200 None
+2025-10-12 21:09:24,108 - health - WARNING - Invalid IPv6 response from https://ifconfig.co/ip: 176.197.66.184
+2025-10-12 21:09:24,108 - health - DEBUG - Trying to get IPv6 from https://icanhazip.com
+2025-10-12 21:09:24,109 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): icanhazip.com:443
+2025-10-12 21:09:24,403 - urllib3.connectionpool - DEBUG - https://icanhazip.com:443 "GET / HTTP/1.1" 200 15
+2025-10-12 21:09:24,404 - health - WARNING - Invalid IPv6 response from https://icanhazip.com: 176.197.66.184
+2025-10-12 21:09:24,404 - health - DEBUG - Trying to get IPv6 from https://v6.ident.me
+2025-10-12 21:09:24,405 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): v6.ident.me:443
+2025-10-12 21:09:24,411 - urllib3.util.retry - DEBUG - Incremented Retry for (url='/'): Retry(total=2, connect=None, read=None, redirect=None, status=None)
+2025-10-12 21:09:24,411 - urllib3.connectionpool - WARNING - Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ff49b4a0da0>: Failed to establish a new connection: [Errno 101] Network is unreachable')': /
+2025-10-12 21:09:24,411 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (2): v6.ident.me:443
+2025-10-12 21:09:24,417 - urllib3.util.retry - DEBUG - Incremented Retry for (url='/'): Retry(total=1, connect=None, read=None, redirect=None, status=None)
+2025-10-12 21:09:26,418 - urllib3.connectionpool - WARNING - Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ff49b4a2210>: Failed to establish a new connection: [Errno 101] Network is unreachable')': /
+2025-10-12 21:09:26,418 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (3): v6.ident.me:443
+2025-10-12 21:09:26,423 - urllib3.util.retry - DEBUG - Incremented Retry for (url='/'): Retry(total=0, connect=None, read=None, redirect=None, status=None)
+2025-10-12 21:09:30,424 - urllib3.connectionpool - WARNING - Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ff49b4a25a0>: Failed to establish a new connection: [Errno 101] Network is unreachable')': /
+2025-10-12 21:09:30,424 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (4): v6.ident.me:443
+2025-10-12 21:09:30,430 - health - DEBUG - Connection error getting IPv6 from https://v6.ident.me
+2025-10-12 21:09:30,781 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): www.google.com:443
+2025-10-12 21:09:31,309 - urllib3.connectionpool - DEBUG - https://www.google.com:443 "GET / HTTP/1.1" 200 None
+2025-10-12 21:09:31,474 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): ipv6.google.com:443
+2025-10-12 21:09:31,488 - urllib3.util.retry - DEBUG - Incremented Retry for (url='/'): Retry(total=2, connect=None, read=None, redirect=None, status=None)
+2025-10-12 21:09:31,497 - urllib3.connectionpool - WARNING - Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ff49b4a2b10>: Failed to establish a new connection: [Errno 101] Network is unreachable')': /
+2025-10-12 21:09:31,497 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (2): ipv6.google.com:443
+2025-10-12 21:09:31,503 - urllib3.util.retry - DEBUG - Incremented Retry for (url='/'): Retry(total=1, connect=None, read=None, redirect=None, status=None)
+2025-10-12 21:09:33,503 - urllib3.connectionpool - WARNING - Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ff49b4a25d0>: Failed to establish a new connection: [Errno 101] Network is unreachable')': /
+2025-10-12 21:09:33,504 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (3): ipv6.google.com:443
+2025-10-12 21:09:33,518 - urllib3.util.retry - DEBUG - Incremented Retry for (url='/'): Retry(total=0, connect=None, read=None, redirect=None, status=None)
+2025-10-12 21:09:37,518 - urllib3.connectionpool - WARNING - Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ff49b4a0d70>: Failed to establish a new connection: [Errno 101] Network is unreachable')': /
+2025-10-12 21:09:37,519 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (4): ipv6.google.com:443
+2025-10-12 21:09:37,527 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-12 21:09:37,529 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-12 21:09:37,530 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api6.ipify.org:443
+2025-10-12 21:09:37,544 - ipv6_manager - DEBUG - Failed to get IPv6 from https://api6.ipify.org: HTTPSConnectionPool(host='api6.ipify.org', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ff49b4a0c50>: Failed to establish a new connection: [Errno 101] Network is unreachable'))
+2025-10-12 21:09:37,545 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): ifconfig.co:443
+2025-10-12 21:09:37,953 - urllib3.connectionpool - DEBUG - https://ifconfig.co:443 "GET /ip HTTP/1.1" 200 None
+2025-10-12 21:09:37,954 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): icanhazip.com:443
+2025-10-12 21:09:38,254 - urllib3.connectionpool - DEBUG - https://icanhazip.com:443 "GET / HTTP/1.1" 200 15
+2025-10-12 21:09:38,257 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): v6.ident.me:443
+2025-10-12 21:09:38,262 - ipv6_manager - DEBUG - Failed to get IPv6 from https://v6.ident.me: HTTPSConnectionPool(host='v6.ident.me', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ff49b4a0320>: Failed to establish a new connection: [Errno 101] Network is unreachable'))
+2025-10-12 21:09:38,262 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-12 21:09:38,265 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-12 21:09:38,269 - ipv6_manager - INFO - Found 0 local IPv6 addresses
+2025-10-12 21:09:38,269 - health - DEBUG - Trying to get IPv4 from https://api.ipify.org
+2025-10-12 21:09:38,270 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.ipify.org:443
+2025-10-12 21:09:38,681 - urllib3.connectionpool - DEBUG - https://api.ipify.org:443 "GET / HTTP/1.1" 200 None
+2025-10-12 21:09:38,682 - health - DEBUG - Cache saved for key: 862a92a3cb4b62419658df9227b9c0f6
+2025-10-12 21:09:38,684 - ipv6_manager - INFO - IPv6 enabled in kernel
+2025-10-12 21:09:38,685 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api6.ipify.org:443
+2025-10-12 21:09:38,691 - ipv6_manager - DEBUG - Failed to get IPv6 from https://api6.ipify.org: HTTPSConnectionPool(host='api6.ipify.org', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ff49b4a30e0>: Failed to establish a new connection: [Errno 101] Network is unreachable'))
+2025-10-12 21:09:38,693 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): ifconfig.co:443
+2025-10-12 21:09:39,108 - urllib3.connectionpool - DEBUG - https://ifconfig.co:443 "GET /ip HTTP/1.1" 200 None
+2025-10-12 21:09:39,109 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): icanhazip.com:443
+2025-10-12 21:09:39,390 - urllib3.connectionpool - DEBUG - https://icanhazip.com:443 "GET / HTTP/1.1" 200 15
+2025-10-12 21:09:39,394 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): v6.ident.me:443
+2025-10-12 21:09:39,404 - ipv6_manager - DEBUG - Failed to get IPv6 from https://v6.ident.me: HTTPSConnectionPool(host='v6.ident.me', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ff49b4a35f0>: Failed to establish a new connection: [Errno 101] Network is unreachable'))
+2025-10-12 21:09:39,404 - ipv6_manager - WARNING - Failed to get external IPv6 from all services
+2025-10-12 21:09:39,404 - health - DEBUG - Trying to get IPv6 from https://api6.ipify.org
+2025-10-12 21:09:39,405 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api6.ipify.org:443
+2025-10-12 21:09:39,413 - urllib3.util.retry - DEBUG - Incremented Retry for (url='/'): Retry(total=2, connect=None, read=None, redirect=None, status=None)
+2025-10-12 21:09:39,413 - urllib3.connectionpool - WARNING - Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ff49b4a3560>: Failed to establish a new connection: [Errno 101] Network is unreachable')': /
+2025-10-12 21:09:39,414 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (2): api6.ipify.org:443
+2025-10-12 21:09:39,424 - urllib3.util.retry - DEBUG - Incremented Retry for (url='/'): Retry(total=1, connect=None, read=None, redirect=None, status=None)
+2025-10-12 21:09:41,425 - urllib3.connectionpool - WARNING - Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ff49b4a27b0>: Failed to establish a new connection: [Errno 101] Network is unreachable')': /
+2025-10-12 21:09:41,425 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (3): api6.ipify.org:443
+2025-10-12 21:09:41,431 - urllib3.util.retry - DEBUG - Incremented Retry for (url='/'): Retry(total=0, connect=None, read=None, redirect=None, status=None)
+2025-10-12 21:09:45,431 - urllib3.connectionpool - WARNING - Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ff49b4a2150>: Failed to establish a new connection: [Errno 101] Network is unreachable')': /
+2025-10-12 21:09:45,431 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (4): api6.ipify.org:443
+2025-10-12 21:09:45,437 - health - DEBUG - Connection error getting IPv6 from https://api6.ipify.org
+2025-10-12 21:09:45,437 - health - DEBUG - Trying to get IPv6 from https://ifconfig.co/ip
+2025-10-12 21:09:45,438 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): ifconfig.co:443
+2025-10-12 21:09:45,835 - urllib3.connectionpool - DEBUG - https://ifconfig.co:443 "GET /ip HTTP/1.1" 200 None
+2025-10-12 21:09:45,836 - health - WARNING - Invalid IPv6 response from https://ifconfig.co/ip: 176.197.66.184
+2025-10-12 21:09:45,836 - health - DEBUG - Trying to get IPv6 from https://icanhazip.com
+2025-10-12 21:09:45,837 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): icanhazip.com:443

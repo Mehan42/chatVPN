@@ -1,0 +1,29 @@
+2025/10/12 13:54:00 ✅ Конфигурация успешно получена с сервера
+2025/10/12 13:54:00 Конфигурация обновлена, транспортов: 2
+2025/10/12 13:54:00 Event queued: config_fetched
+2025/10/12 13:54:00 ✅ Обработчик проверки туннелирования интегрирован
+2025/10/12 13:54:00 State Machine started
+2025/10/12 13:54:00 Initializing VPN client...
+2025/10/12 13:54:00 Event queued: start_requested
+2025/10/12 13:54:00 🚀 XVPN клиент запущен
+2025/10/12 13:54:00 🆔 UUID клиента: 4176be2c-5368-4a7b-af50-456f4cc0ca89
+2025/10/12 13:54:00 🌐 Сервер API: https://uss.hopto.org:8443
+2025/10/12 13:54:00 No transition found for initializing -> config_fetched
+2025/10/12 13:54:00 State transition: initializing -> config_fetching
+2025/10/12 13:54:00 Fetching configuration from server...
+2025/10/12 13:54:00 Event queued: config_fetched
+2025/10/12 13:54:00 State transition: config_fetching -> config_validating
+2025/10/12 13:54:00 Validating configuration...
+2025/10/12 13:54:00 Event queued: config_validated
+2025/10/12 13:54:00 State transition: config_validating -> idle
+2025/10/12 13:54:00 VPN client idle
+2025/10/12 13:54:00 Event queued: start_requested
+2025/10/12 13:54:00 State transition: idle -> starting
+2025/10/12 13:54:00 Starting VPN...
+2025/10/12 13:54:00 Event queued: start_success
+2025/10/12 13:54:00 State transition: starting -> running
+2025/10/12 13:54:00 VPN running
+2025/10/12 13:54:30 Health score is good (5)
+2025/10/12 13:54:43 🛑 Получен сигнал завершения
+2025/10/12 13:54:43 State Machine stopped
+2025/10/12 13:54:43 ✅ XVPN клиент остановлен

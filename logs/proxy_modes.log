@@ -1,0 +1,86 @@
+2025-10-12 20:41:24,964 - proxy_modes - INFO - System proxy settings reset
+2025-10-12 20:41:24,964 - proxy_modes - INFO - System proxy disabled
+2025-10-12 20:41:24,964 - proxy_modes - INFO - Disabled system proxy mode
+2025-10-12 20:41:24,964 - proxy_modes - INFO - Setting proxy mode to: manual
+2025-10-12 20:41:24,965 - proxy_modes - ERROR - Manual proxy settings not configured
+2025-10-12 20:41:24,965 - proxy_modes - ERROR - Failed to switch to manual mode
+2025-10-12 20:41:24,965 - proxy_modes - INFO - System proxy settings reset
+2025-10-12 20:41:24,965 - proxy_modes - INFO - System proxy disabled
+2025-10-12 20:41:24,965 - proxy_modes - INFO - Disabled manual proxy mode
+2025-10-12 20:41:24,965 - proxy_modes - INFO - Setting proxy mode to: system
+2025-10-12 20:41:24,965 - proxy_modes - WARNING - No system proxy settings found
+2025-10-12 20:41:24,965 - proxy_modes - ERROR - Failed to switch to system mode
+2025-10-12 20:41:24,965 - proxy_modes - INFO - System proxy settings reset
+2025-10-12 20:41:24,965 - proxy_modes - INFO - System proxy disabled
+2025-10-12 20:41:24,965 - proxy_modes - INFO - Disabled system proxy mode
+2025-10-12 20:41:24,965 - proxy_modes - INFO - Setting proxy mode to: bypass
+2025-10-12 20:41:24,965 - proxy_modes - INFO - Bypass rules cleaned up
+2025-10-12 20:41:24,965 - proxy_modes - INFO - Bypass rule applied: localhost
+2025-10-12 20:41:24,965 - proxy_modes - INFO - Bypass rule applied: 127.0.0.1/8
+2025-10-12 20:41:24,965 - proxy_modes - INFO - Bypass rule applied: ::1/128
+2025-10-12 20:41:24,965 - proxy_modes - INFO - Bypass rule applied: *.local
+2025-10-12 20:41:24,965 - proxy_modes - INFO - Bypass rule applied: *.localdomain
+2025-10-12 20:41:24,966 - proxy_modes - INFO - Bypass mode enabled with 5 rules
+2025-10-12 20:41:24,966 - proxy_modes - INFO - Proxy modes config saved to /home/uss/xvpn_client/proxy_modes_config.json
+2025-10-12 20:41:24,966 - proxy_modes - INFO - Successfully switched to bypass mode
+2025-10-12 20:41:24,966 - proxy_modes - INFO - Bypass rules cleaned up
+2025-10-12 20:41:24,966 - proxy_modes - INFO - Bypass mode disabled
+2025-10-12 20:41:24,966 - proxy_modes - INFO - Disabled bypass proxy mode
+2025-10-12 20:41:24,966 - proxy_modes - INFO - Setting proxy mode to: bypass
+2025-10-12 20:41:24,966 - proxy_modes - INFO - Bypass rules cleaned up
+2025-10-12 20:41:24,966 - proxy_modes - INFO - Bypass rule applied: localhost
+2025-10-12 20:41:24,966 - proxy_modes - INFO - Bypass rule applied: 127.0.0.1/8
+2025-10-12 20:41:24,966 - proxy_modes - INFO - Bypass rule applied: ::1/128
+2025-10-12 20:41:24,966 - proxy_modes - INFO - Bypass rule applied: *.local
+2025-10-12 20:41:24,966 - proxy_modes - INFO - Bypass rule applied: *.localdomain
+2025-10-12 20:41:24,966 - proxy_modes - INFO - Bypass mode enabled with 5 rules
+2025-10-12 20:41:24,990 - proxy_modes - INFO - Proxy modes config saved to /home/uss/xvpn_client/proxy_modes_config.json
+2025-10-12 20:41:24,990 - proxy_modes - INFO - Successfully switched to bypass mode
+2025-10-12 20:41:24,990 - proxy_modes - INFO - Bypass rules cleaned up
+2025-10-12 20:41:24,990 - proxy_modes - INFO - Bypass mode disabled
+2025-10-12 20:41:24,991 - proxy_modes - INFO - Disabled bypass proxy mode
+2025-10-12 20:41:24,991 - proxy_modes - INFO - Setting proxy mode to: bypass
+2025-10-12 20:41:24,991 - proxy_modes - INFO - Bypass rules cleaned up
+2025-10-12 20:41:24,991 - proxy_modes - INFO - Bypass rule applied: localhost
+2025-10-12 20:41:24,991 - proxy_modes - INFO - Bypass rule applied: 127.0.0.1/8
+2025-10-12 20:41:24,991 - proxy_modes - INFO - Bypass rule applied: ::1/128
+2025-10-12 20:41:24,991 - proxy_modes - INFO - Bypass rule applied: *.local
+2025-10-12 20:41:24,991 - proxy_modes - INFO - Bypass rule applied: *.localdomain
+2025-10-12 20:41:24,991 - proxy_modes - INFO - Bypass mode enabled with 5 rules
+2025-10-12 20:41:25,012 - proxy_modes - INFO - Proxy modes config saved to /home/uss/xvpn_client/proxy_modes_config.json
+2025-10-12 20:41:25,012 - proxy_modes - INFO - Successfully switched to bypass mode
+2025-10-12 20:42:43,251 - proxy_modes - INFO - Bypass rules cleaned up
+2025-10-12 20:42:43,251 - proxy_modes - INFO - Bypass mode disabled
+2025-10-12 20:42:43,251 - proxy_modes - INFO - Disabled bypass proxy mode
+2025-10-12 20:42:43,251 - proxy_modes - INFO - Setting proxy mode to: manual
+2025-10-12 20:42:43,251 - proxy_modes - INFO - Proxy settings applied: socks5://127.0.0.1:1080
+2025-10-12 20:42:43,251 - proxy_modes - INFO - Manual proxy enabled: 127.0.0.1:1080
+2025-10-12 20:42:43,252 - proxy_modes - INFO - Proxy modes config saved to /home/uss/xvpn_client/proxy_modes_config.json
+2025-10-12 20:42:43,252 - proxy_modes - INFO - Successfully switched to manual mode
+2025-10-12 20:42:43,262 - proxy_modes - INFO - Proxy modes config loaded from /home/uss/xvpn_client/proxy_modes_config.json
+2025-10-12 20:42:43,262 - proxy_modes - INFO - System proxy settings reset
+2025-10-12 20:42:43,262 - proxy_modes - INFO - System proxy settings reset
+2025-10-12 20:42:43,262 - proxy_modes - INFO - System proxy disabled
+2025-10-12 20:42:43,262 - proxy_modes - INFO - System proxy disabled
+2025-10-12 20:42:43,263 - proxy_modes - INFO - Disabled manual proxy mode
+2025-10-12 20:42:43,263 - proxy_modes - INFO - Disabled manual proxy mode
+2025-10-12 20:42:43,263 - proxy_modes - INFO - Setting proxy mode to: bypass
+2025-10-12 20:42:43,263 - proxy_modes - INFO - Setting proxy mode to: bypass
+2025-10-12 20:42:43,263 - proxy_modes - INFO - Bypass rules cleaned up
+2025-10-12 20:42:43,263 - proxy_modes - INFO - Bypass rules cleaned up
+2025-10-12 20:42:43,263 - proxy_modes - INFO - Bypass rule applied: localhost
+2025-10-12 20:42:43,263 - proxy_modes - INFO - Bypass rule applied: localhost
+2025-10-12 20:42:43,263 - proxy_modes - INFO - Bypass rule applied: 127.0.0.1/8
+2025-10-12 20:42:43,263 - proxy_modes - INFO - Bypass rule applied: 127.0.0.1/8
+2025-10-12 20:42:43,263 - proxy_modes - INFO - Bypass rule applied: ::1/128
+2025-10-12 20:42:43,263 - proxy_modes - INFO - Bypass rule applied: ::1/128
+2025-10-12 20:42:43,263 - proxy_modes - INFO - Bypass rule applied: *.local
+2025-10-12 20:42:43,263 - proxy_modes - INFO - Bypass rule applied: *.local
+2025-10-12 20:42:43,263 - proxy_modes - INFO - Bypass rule applied: *.localdomain
+2025-10-12 20:42:43,263 - proxy_modes - INFO - Bypass rule applied: *.localdomain
+2025-10-12 20:42:43,263 - proxy_modes - INFO - Bypass mode enabled with 5 rules
+2025-10-12 20:42:43,263 - proxy_modes - INFO - Bypass mode enabled with 5 rules
+2025-10-12 20:42:43,263 - proxy_modes - INFO - Proxy modes config saved to /home/uss/xvpn_client/proxy_modes_config.json
+2025-10-12 20:42:43,263 - proxy_modes - INFO - Proxy modes config saved to /home/uss/xvpn_client/proxy_modes_config.json
+2025-10-12 20:42:43,263 - proxy_modes - INFO - Successfully switched to bypass mode
+2025-10-12 20:42:43,263 - proxy_modes - INFO - Successfully switched to bypass mode

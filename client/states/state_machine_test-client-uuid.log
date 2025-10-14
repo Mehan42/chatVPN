@@ -1,0 +1,2 @@
+2025-10-02 13:05:41,136 - STATE - INFO - State Machine initialized for client test-client-uuid
+2025-10-02 13:05:41,136 - STATE - INFO - Event queued: start_requested

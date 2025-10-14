@@ -58,16 +58,16 @@ func (n *NetworkConditionSimulator) SetBandwidth(kbPerSecond int) {
 func (n *NetworkConditionSimulator) TestSlowNetwork(tv *TunnelVerifier) error {
 	n.SetDelay(2 * time.Second) // 2 second delay
 	n.SetBandwidth(512)         // 512 KB/s bandwidth
-	
+
 	tv.enhancedLogger.Info("Testing tunnel verifier under slow network conditions", map[string]interface{}{
 		"delay":     n.delay.Seconds(),
 		"bandwidth": n.bandwidth,
 	})
-	
+
 	// Test the tunnel verifier with slow network
-	ctx, cancel := context.WithTimeout(context.Background(), n.timeout)
+	_, cancel := context.WithTimeout(context.Background(), n.timeout)
 	defer cancel()
-	
+
 	// Perform verification under these conditions
 	result, err := tv.IsTunnelingValid()
 	if err != nil {
@@ -76,27 +76,27 @@ func (n *NetworkConditionSimulator) TestSlowNetwork(tv *TunnelVerifier) error {
 		})
 		return err
 	}
-	
+
 	tv.enhancedLogger.Info("Slow network test completed", map[string]interface{}{
 		"result": result,
 	})
-	
+
 	return nil
 }
 
 // TestHighLatency simulates high latency conditions
 func (n *NetworkConditionSimulator) TestHighLatency(tv *TunnelVerifier) error {
-	n.SetDelay(5 * time.Second) // 5 second delay
+	n.SetDelay(5 * time.Second)    // 5 second delay
 	n.SetTimeout(60 * time.Second) // Increase timeout for high latency
-	
+
 	tv.enhancedLogger.Info("Testing tunnel verifier under high latency conditions", map[string]interface{}{
 		"delay": n.delay.Seconds(),
 	})
-	
+
 	// Test the tunnel verifier with high latency
-	ctx, cancel := context.WithTimeout(context.Background(), n.timeout)
+	_, cancel := context.WithTimeout(context.Background(), n.timeout)
 	defer cancel()
-	
+
 	result, err := tv.IsTunnelingValid()
 	if err != nil {
 		tv.enhancedLogger.Warn("Error during high latency test", map[string]interface{}{
@@ -104,27 +104,27 @@ func (n *NetworkConditionSimulator) TestHighLatency(tv *TunnelVerifier) error {
 		})
 		return err
 	}
-	
+
 	tv.enhancedLogger.Info("High latency test completed", map[string]interface{}{
 		"result": result,
 	})
-	
+
 	return nil
 }
 
 // TestUnstableConnection simulates an unstable connection with packet loss
 func (n *NetworkConditionSimulator) TestUnstableConnection(tv *TunnelVerifier) error {
-	n.SetPacketLossRate(0.1) // 10% packet loss
+	n.SetPacketLossRate(0.1)    // 10% packet loss
 	n.SetDelay(1 * time.Second) // Additional delay
-	
+
 	tv.enhancedLogger.Info("Testing tunnel verifier under unstable connection conditions", map[string]interface{}{
 		"packet_loss_rate": fmt.Sprintf("%.2f%%", n.packetLossRate*100),
 	})
-	
+
 	// Test the tunnel verifier with unstable connection
-	ctx, cancel := context.WithTimeout(context.Background(), n.timeout)
+	_, cancel := context.WithTimeout(context.Background(), n.timeout)
 	defer cancel()
-	
+
 	result, err := tv.IsTunnelingValid()
 	if err != nil {
 		tv.enhancedLogger.Warn("Error during unstable connection test", map[string]interface{}{
@@ -132,34 +132,34 @@ func (n *NetworkConditionSimulator) TestUnstableConnection(tv *TunnelVerifier) e
 		})
 		return err
 	}
-	
+
 	tv.enhancedLogger.Info("Unstable connection test completed", map[string]interface{}{
 		"result": result,
 	})
-	
+
 	return nil
 }
 
 // TestWithDNSBlocking simulates conditions where certain DNS queries are blocked
 func (n *NetworkConditionSimulator) TestWithDNSBlocking(tv *TunnelVerifier) error {
 	tv.enhancedLogger.Info("Testing tunnel verifier under DNS blocking conditions", nil)
-	
+
 	// Create a custom dialer that simulates DNS blocking for certain domains
-	oldConfig := tv.config
+	oldConfig := *tv.config
 	newConfig := *tv.config
-	
+
 	// Update the endpoints to include potentially blocked domains
 	testEndpoints := append(newConfig.VerificationEndpoints, "blocked-domain-test.com", "censored-site.org")
 	newConfig.VerificationEndpoints = testEndpoints
-	
+
 	// Temporarily update the config
 	tv.config = &newConfig
-	
+
 	// We'll restore the config after the test
 	defer func() {
 		tv.config = &oldConfig
 	}()
-	
+
 	result, err := tv.IsTunnelingValid()
 	if err != nil {
 		tv.enhancedLogger.Info("Expected error during DNS blocking test", map[string]interface{}{
@@ -171,16 +171,16 @@ func (n *NetworkConditionSimulator) TestWithDNSBlocking(tv *TunnelVerifier) erro
 			"result": result,
 		})
 	}
-	
+
 	return nil
 }
 
 // TestCompleteVerificationCycle runs a complete verification cycle under various conditions
 func (n *NetworkConditionSimulator) TestCompleteVerificationCycle(tv *TunnelVerifier) error {
 	tv.enhancedLogger.Info("Starting complete verification cycle test", nil)
-	
+
 	startTime := time.Now()
-	
+
 	// Test normal conditions first
 	tv.enhancedLogger.Info("Testing under normal conditions", nil)
 	normalResult, err := tv.IsTunnelingValid()
@@ -190,7 +190,7 @@ func (n *NetworkConditionSimulator) TestCompleteVerificationCycle(tv *TunnelVeri
 		})
 		// Continue testing even if there's an error
 	}
-	
+
 	// Test slow network
 	err = n.TestSlowNetwork(tv)
 	if err != nil {
@@ -198,7 +198,7 @@ func (n *NetworkConditionSimulator) TestCompleteVerificationCycle(tv *TunnelVeri
 			"error": err.Error(),
 		})
 	}
-	
+
 	// Test high latency
 	err = n.TestHighLatency(tv)
 	if err != nil {
@@ -206,7 +206,7 @@ func (n *NetworkConditionSimulator) TestCompleteVerificationCycle(tv *TunnelVeri
 			"error": err.Error(),
 		})
 	}
-	
+
 	// Test unstable connection
 	err = n.TestUnstableConnection(tv)
 	if err != nil {
@@ -214,7 +214,7 @@ func (n *NetworkConditionSimulator) TestCompleteVerificationCycle(tv *TunnelVeri
 			"error": err.Error(),
 		})
 	}
-	
+
 	// Test with DNS blocking
 	err = n.TestWithDNSBlocking(tv)
 	if err != nil {
@@ -222,15 +222,15 @@ func (n *NetworkConditionSimulator) TestCompleteVerificationCycle(tv *TunnelVeri
 			"error": err.Error(),
 		})
 	}
-	
+
 	duration := time.Since(startTime)
-	
+
 	tv.enhancedLogger.Info("Complete verification cycle test finished", map[string]interface{}{
 		"normal_result": normalResult,
 		"duration":      duration.Seconds(),
 		"tests_run":     5, // normal + 4 condition tests
 	})
-	
+
 	return nil
 }
 
@@ -240,13 +240,13 @@ func (n *NetworkConditionSimulator) CheckConnectivity() (bool, error) {
 	client := &http.Client{
 		Timeout: 10 * time.Second,
 	}
-	
+
 	resp, err := client.Get("https://httpbin.org/ip")
 	if err != nil {
 		return false, fmt.Errorf("connectivity check failed: %w", err)
 	}
 	defer resp.Body.Close()
-	
+
 	return resp.StatusCode == http.StatusOK, nil
 }
 
@@ -257,14 +257,14 @@ func (n *NetworkConditionSimulator) CheckDNSResolution() (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf("DNS resolution check failed: %w", err)
 	}
-	
+
 	return true, nil
 }
 
 // TestNetworkConditions performs a comprehensive network condition test
 func (n *NetworkConditionSimulator) TestNetworkConditions(tv *TunnelVerifier) error {
 	tv.enhancedLogger.Info("Starting comprehensive network conditions test", nil)
-	
+
 	// Check basic connectivity first
 	hasConnectivity, err := n.CheckConnectivity()
 	if err != nil {
@@ -276,7 +276,7 @@ func (n *NetworkConditionSimulator) TestNetworkConditions(tv *TunnelVerifier) er
 			"status": hasConnectivity,
 		})
 	}
-	
+
 	// Check DNS resolution
 	hasDNS, err := n.CheckDNSResolution()
 	if err != nil {
@@ -288,7 +288,7 @@ func (n *NetworkConditionSimulator) TestNetworkConditions(tv *TunnelVerifier) er
 			"status": hasDNS,
 		})
 	}
-	
+
 	// Run complete verification cycle
 	err = n.TestCompleteVerificationCycle(tv)
 	if err != nil {
@@ -297,7 +297,7 @@ func (n *NetworkConditionSimulator) TestNetworkConditions(tv *TunnelVerifier) er
 		})
 		return err
 	}
-	
+
 	tv.enhancedLogger.Info("Comprehensive network conditions test completed successfully", nil)
 	return nil
 }

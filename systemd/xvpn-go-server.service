@@ -1,0 +1,40 @@
+[Unit]
+Description=XVPN Go Server (API + Gateway + Bot)
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=xvpn
+Group=xvpn
+WorkingDirectory=/opt/xvpn/go-server
+ExecStart=/opt/xvpn/go-server/xvpn-server-go
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+RestartSec=5
+Environment=XVPN_CONFIG_FILE=/opt/xvpn/config/server.json
+Environment=XVPN_DATABASE_PATH=/opt/xvpn/data/xvpn.db
+Environment=TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+Environment=TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+Environment=XVPN_TLS_CERT=/opt/xvpn/tls/server.crt
+Environment=XVPN_TLS_KEY=/opt/xvpn/tls/server.key
+
+# Security settings
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ReadWritePaths=/opt/xvpn/data /opt/xvpn/logs /opt/xvpn/config
+ProtectHome=yes
+PrivateDevices=yes
+
+# Resource limits
+MemoryLimit=512M
+CPUQuota=50%
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=xvpn-go-server
+
+[Install]
+WantedBy=multi-user.target

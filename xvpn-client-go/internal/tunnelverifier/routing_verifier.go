@@ -2,8 +2,8 @@
 package tunnelverifier
 
 import (
-	"context"
 	"fmt"
+	"io"
 	"log"
 	"net"
 	"net/http"
@@ -27,7 +27,7 @@ func NewRoutingVerifier(logger *log.Logger) *RoutingVerifier {
 	client := &http.Client{
 		Timeout: 15 * time.Second,
 	}
-	
+
 	return &RoutingVerifier{
 		logger:         logger,
 		enhancedLogger: NewLogger(Info, false), // Default to Info level
@@ -47,16 +47,16 @@ func (rv *RoutingVerifier) SetLogger(logger *Logger) {
 // VerifyNonRUTrafficRouting verifies that non-RU traffic is routed through VPN
 func (rv *RoutingVerifier) VerifyNonRUTrafficRouting() (bool, error) {
 	rv.enhancedLogger.Info("Verifying non-RU traffic routing", nil)
-	
+
 	startTime := time.Now()
-	
+
 	// Test each non-RU endpoint to ensure it goes through the VPN tunnel
 	for i, endpoint := range rv.nonRUEndpoints {
 		rv.enhancedLogger.Debug("Testing non-RU endpoint routing", map[string]interface{}{
 			"endpoint": endpoint,
 			"index":    i,
 		})
-		
+
 		isRouted, err := rv.testEndpointRouting(endpoint, false) // false = expect to be routed through VPN
 		if err != nil {
 			rv.enhancedLogger.Warn("Error testing routing", map[string]interface{}{
@@ -65,17 +65,17 @@ func (rv *RoutingVerifier) VerifyNonRUTrafficRouting() (bool, error) {
 			})
 			continue
 		}
-		
+
 		statusStr := "routed"
 		if !isRouted {
 			statusStr = "not routed"
 		}
-		
+
 		rv.enhancedLogger.Debug("Endpoint routing status", map[string]interface{}{
 			"endpoint": endpoint,
 			"status":   statusStr,
 		})
-		
+
 		if !isRouted {
 			rv.enhancedLogger.Warn("Endpoint is not routed through VPN when it should be", map[string]interface{}{
 				"endpoint": endpoint,
@@ -83,9 +83,9 @@ func (rv *RoutingVerifier) VerifyNonRUTrafficRouting() (bool, error) {
 			return false, nil
 		}
 	}
-	
+
 	duration := time.Since(startTime)
-	
+
 	rv.enhancedLogger.Info("Non-RU traffic routing verification completed", map[string]interface{}{
 		"result":   "all non-RU traffic correctly routed",
 		"duration": duration.Seconds(),
@@ -96,7 +96,7 @@ func (rv *RoutingVerifier) VerifyNonRUTrafficRouting() (bool, error) {
 // VerifyRUTrafficBypass verifies that RU traffic bypasses VPN
 func (rv *RoutingVerifier) VerifyRUTrafficBypass() (bool, error) {
 	rv.logger.Println("Verifying RU traffic bypass...")
-	
+
 	// Test each RU endpoint to ensure it bypasses the VPN tunnel
 	for _, endpoint := range rv.ruEndpoints {
 		isBypassed, err := rv.testEndpointRouting(endpoint, true) // true = expect to bypass VPN
@@ -104,15 +104,15 @@ func (rv *RoutingVerifier) VerifyRUTrafficBypass() (bool, error) {
 			rv.logger.Printf("Error testing bypass for %s: %v", endpoint, err)
 			continue
 		}
-		
+
 		if !isBypassed {
 			rv.logger.Printf("Endpoint %s is NOT bypassing VPN when it should", endpoint)
 			return false, nil
 		}
-		
+
 		rv.logger.Printf("Endpoint %s is correctly bypassing VPN", endpoint)
 	}
-	
+
 	rv.logger.Println("All RU traffic is correctly bypassing VPN")
 	return true, nil
 }
@@ -121,7 +121,7 @@ func (rv *RoutingVerifier) VerifyRUTrafficBypass() (bool, error) {
 func (rv *RoutingVerifier) testEndpointRouting(endpoint string, expectBypass bool) (bool, error) {
 	// Check if the endpoint is an IP address or a domain
 	isIP := net.ParseIP(endpoint) != nil
-	
+
 	if isIP {
 		// For IP addresses, we'll make an HTTP request to httpbin.org with that IP
 		// to check if our request appears to come from that IP (which would indicate routing)
@@ -140,19 +140,19 @@ func (rv *RoutingVerifier) testIPRouting(ip string, expectBypass bool) (bool, er
 		return false, fmt.Errorf("failed to make request to check IP: %w", err)
 	}
 	defer resp.Body.Close()
-	
+
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return false, fmt.Errorf("failed to read response: %w", err)
 	}
-	
+
 	bodyStr := string(body)
 	rv.logger.Printf("IP check response: %s", bodyStr)
-	
+
 	// In a real implementation, we would compare the returned IP with the VPN exit IP
 	// For this implementation, we'll just verify we can make the request
 	// which indicates traffic is being routed
-	
+
 	if strings.Contains(bodyStr, "origin") {
 		if expectBypass {
 			// If we expect bypass but are routed, this could indicate a problem
@@ -161,7 +161,7 @@ func (rv *RoutingVerifier) testIPRouting(ip string, expectBypass bool) (bool, er
 		}
 		return true, nil
 	}
-	
+
 	return false, nil
 }
 
@@ -170,20 +170,20 @@ func (rv *RoutingVerifier) testDomainRouting(domain string, expectBypass bool) (
 	// In a real implementation, we would use special techniques to determine
 	// if the DNS resolution and connection are going through the VPN or not
 	// This might involve using special test domains that log which IP the request came from
-	
+
 	// For this simplified implementation, we'll just make a request to the domain
 	// and assume that if it works, routing is correct
-	
+
 	url := "https://" + domain
 	if strings.HasPrefix(domain, "http") {
 		url = domain
 	}
-	
+
 	// Add a path to avoid issues with some domains
 	if !strings.Contains(url, "/") {
 		url += "/"
 	}
-	
+
 	resp, err := rv.httpClient.Get(url)
 	if err != nil {
 		// Try with HTTP if HTTPS fails
@@ -197,11 +197,11 @@ func (rv *RoutingVerifier) testDomainRouting(domain string, expectBypass bool) (
 		}
 	}
 	defer resp.Body.Close()
-	
+
 	// If we successfully connected, we'll consider routing appropriate to the VPN status
 	// In a real implementation, we would determine if the connection went through VPN
 	rv.logger.Printf("Successfully connected to %s (status: %d)", domain, resp.StatusCode)
-	
+
 	return true, nil
 }
 
@@ -219,15 +219,15 @@ func (rv *RoutingVerifier) SetRUEndpoints(endpoints []string) {
 // using geo-IP databases and traceroute-like functionality
 func (rv *RoutingVerifier) AdvancedVerifyRouting() (bool, error) {
 	rv.logger.Println("Starting advanced routing verification...")
-	
+
 	// This would involve more sophisticated checks like:
 	// 1. Using traceroute to determine path
 	// 2. Checking geo-IP of connection endpoints
 	// 3. Using special services that report the origin of requests
-	
+
 	// For each non-RU endpoint, we'd perform a check to see if the connection
 	// goes through expected VPN servers
-	
+
 	// Placeholder for advanced verification logic
 	rv.logger.Println("Advanced routing verification completed")
 	return true, nil

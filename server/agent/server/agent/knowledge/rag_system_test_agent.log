@@ -1,0 +1,600 @@
+2025-10-02 20:36:58,599 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:36:58,601 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:36:58,601 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:36:58,789 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: vpn_protocols
+2025-10-02 20:36:58,789 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: vpn_protocols
+2025-10-02 20:36:58,955 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: xray_features
+2025-10-02 20:36:58,955 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: xray_features
+2025-10-02 20:36:59,111 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: security_features
+2025-10-02 20:36:59,111 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: security_features
+2025-10-02 20:36:59,114 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:36:59,114 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:36:59,114 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:36:59,477 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: xvpn_overview
+2025-10-02 20:36:59,477 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: xvpn_overview
+2025-10-02 20:36:59,477 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: xvpn_overview
+2025-10-02 20:36:59,622 - enhanced_rag_system - INFO - Query 'Как работает XVPN?' returned 0 chunks in 0.00s
+2025-10-02 20:36:59,622 - enhanced_rag_system - INFO - Query 'Как работает XVPN?' returned 0 chunks in 0.00s
+2025-10-02 20:36:59,622 - enhanced_rag_system - INFO - Query 'Как работает XVPN?' returned 0 chunks in 0.00s
+2025-10-02 20:37:00,350 - enhanced_rag_system - INFO - Query 'Что такое Xray?' returned 0 chunks in 0.00s
+2025-10-02 20:37:00,350 - enhanced_rag_system - INFO - Query 'Что такое Xray?' returned 0 chunks in 0.00s
+2025-10-02 20:37:00,350 - enhanced_rag_system - INFO - Query 'Что такое Xray?' returned 0 chunks in 0.00s
+2025-10-02 20:37:01,086 - enhanced_rag_system - INFO - Query 'Поддерживается ли IPv6?' returned 2 chunks in 0.00s
+2025-10-02 20:37:01,086 - enhanced_rag_system - INFO - Query 'Поддерживается ли IPv6?' returned 2 chunks in 0.00s
+2025-10-02 20:37:01,086 - enhanced_rag_system - INFO - Query 'Поддерживается ли IPv6?' returned 2 chunks in 0.00s
+2025-10-02 20:37:01,088 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:01,088 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:01,088 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:01,476 - enhanced_rag_system - INFO - Query 'Какие протоколы безопасности используются?' returned 1 chunks in 0.00s
+2025-10-02 20:37:01,476 - enhanced_rag_system - INFO - Query 'Какие протоколы безопасности используются?' returned 1 chunks in 0.00s
+2025-10-02 20:37:01,476 - enhanced_rag_system - INFO - Query 'Какие протоколы безопасности используются?' returned 1 chunks in 0.00s
+2025-10-02 20:37:01,478 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:01,478 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:01,478 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:01,901 - enhanced_rag_system - INFO - Query 'Что такое state machine?' returned 1 chunks in 0.00s
+2025-10-02 20:37:01,901 - enhanced_rag_system - INFO - Query 'Что такое state machine?' returned 1 chunks in 0.00s
+2025-10-02 20:37:01,901 - enhanced_rag_system - INFO - Query 'Что такое state machine?' returned 1 chunks in 0.00s
+2025-10-02 20:37:01,903 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:01,903 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:01,903 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:01,905 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:37:01,905 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:37:01,905 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:37:01,905 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:37:02,306 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: encryption
+2025-10-02 20:37:02,306 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: encryption
+2025-10-02 20:37:02,306 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: encryption
+2025-10-02 20:37:02,306 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: encryption
+2025-10-02 20:37:02,683 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: performance
+2025-10-02 20:37:02,683 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: performance
+2025-10-02 20:37:02,683 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: performance
+2025-10-02 20:37:02,683 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: performance
+2025-10-02 20:37:02,938 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: protocols
+2025-10-02 20:37:02,938 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: protocols
+2025-10-02 20:37:02,938 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: protocols
+2025-10-02 20:37:02,938 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: protocols
+2025-10-02 20:37:03,451 - enhanced_rag_system - INFO - Query 'безопасное шифрование' returned 2 chunks in 0.00s
+2025-10-02 20:37:03,451 - enhanced_rag_system - INFO - Query 'безопасное шифрование' returned 2 chunks in 0.00s
+2025-10-02 20:37:03,451 - enhanced_rag_system - INFO - Query 'безопасное шифрование' returned 2 chunks in 0.00s
+2025-10-02 20:37:03,451 - enhanced_rag_system - INFO - Query 'безопасное шифрование' returned 2 chunks in 0.00s
+2025-10-02 20:37:03,453 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:37:03,453 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:37:03,453 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:37:03,453 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:37:03,453 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:37:03,873 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: test_source
+2025-10-02 20:37:03,873 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: test_source
+2025-10-02 20:37:03,873 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: test_source
+2025-10-02 20:37:03,873 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: test_source
+2025-10-02 20:37:03,873 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: test_source
+2025-10-02 20:37:04,037 - enhanced_rag_system - INFO - Query 'тестовый' returned 1 chunks in 0.00s
+2025-10-02 20:37:04,037 - enhanced_rag_system - INFO - Query 'тестовый' returned 1 chunks in 0.00s
+2025-10-02 20:37:04,037 - enhanced_rag_system - INFO - Query 'тестовый' returned 1 chunks in 0.00s
+2025-10-02 20:37:04,037 - enhanced_rag_system - INFO - Query 'тестовый' returned 1 chunks in 0.00s
+2025-10-02 20:37:04,037 - enhanced_rag_system - INFO - Query 'тестовый' returned 1 chunks in 0.00s
+2025-10-02 20:37:04,043 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:37:04,043 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:37:04,043 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:37:04,043 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:37:04,043 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:37:04,043 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:37:04,236 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: performance
+2025-10-02 20:37:04,236 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: performance
+2025-10-02 20:37:04,236 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: performance
+2025-10-02 20:37:04,236 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: performance
+2025-10-02 20:37:04,236 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: performance
+2025-10-02 20:37:04,236 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: performance
+2025-10-02 20:37:04,403 - enhanced_rag_system - INFO - Query 'производительность системы' returned 3 chunks in 0.00s
+2025-10-02 20:37:04,403 - enhanced_rag_system - INFO - Query 'производительность системы' returned 3 chunks in 0.00s
+2025-10-02 20:37:04,403 - enhanced_rag_system - INFO - Query 'производительность системы' returned 3 chunks in 0.00s
+2025-10-02 20:37:04,403 - enhanced_rag_system - INFO - Query 'производительность системы' returned 3 chunks in 0.00s
+2025-10-02 20:37:04,403 - enhanced_rag_system - INFO - Query 'производительность системы' returned 3 chunks in 0.00s
+2025-10-02 20:37:04,403 - enhanced_rag_system - INFO - Query 'производительность системы' returned 3 chunks in 0.00s
+2025-10-02 20:37:04,405 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:04,405 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:04,405 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:04,405 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:04,405 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:04,405 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:04,701 - enhanced_rag_system - INFO - Query 'метрики ответа' returned 1 chunks in 0.00s
+2025-10-02 20:37:04,701 - enhanced_rag_system - INFO - Query 'метрики ответа' returned 1 chunks in 0.00s
+2025-10-02 20:37:04,701 - enhanced_rag_system - INFO - Query 'метрики ответа' returned 1 chunks in 0.00s
+2025-10-02 20:37:04,701 - enhanced_rag_system - INFO - Query 'метрики ответа' returned 1 chunks in 0.00s
+2025-10-02 20:37:04,701 - enhanced_rag_system - INFO - Query 'метрики ответа' returned 1 chunks in 0.00s
+2025-10-02 20:37:04,701 - enhanced_rag_system - INFO - Query 'метрики ответа' returned 1 chunks in 0.00s
+2025-10-02 20:37:04,703 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:04,703 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:04,703 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:04,703 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:04,703 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:04,703 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:05,401 - enhanced_rag_system - INFO - Query 'быстрый поиск' returned 1 chunks in 0.00s
+2025-10-02 20:37:05,401 - enhanced_rag_system - INFO - Query 'быстрый поиск' returned 1 chunks in 0.00s
+2025-10-02 20:37:05,401 - enhanced_rag_system - INFO - Query 'быстрый поиск' returned 1 chunks in 0.00s
+2025-10-02 20:37:05,401 - enhanced_rag_system - INFO - Query 'быстрый поиск' returned 1 chunks in 0.00s
+2025-10-02 20:37:05,401 - enhanced_rag_system - INFO - Query 'быстрый поиск' returned 1 chunks in 0.00s
+2025-10-02 20:37:05,401 - enhanced_rag_system - INFO - Query 'быстрый поиск' returned 1 chunks in 0.00s
+2025-10-02 20:37:05,403 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:05,403 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:05,403 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:05,403 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:05,403 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:05,403 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:05,405 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:37:05,405 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:37:05,405 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:37:05,405 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:37:05,405 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:37:05,405 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:37:05,405 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:37:05,714 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: caching
+2025-10-02 20:37:05,714 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: caching
+2025-10-02 20:37:05,714 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: caching
+2025-10-02 20:37:05,714 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: caching
+2025-10-02 20:37:05,714 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: caching
+2025-10-02 20:37:05,714 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: caching
+2025-10-02 20:37:05,714 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: caching
+2025-10-02 20:37:05,956 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 4 chunks in 0.00s
+2025-10-02 20:37:05,956 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 4 chunks in 0.00s
+2025-10-02 20:37:05,956 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 4 chunks in 0.00s
+2025-10-02 20:37:05,956 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 4 chunks in 0.00s
+2025-10-02 20:37:05,956 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 4 chunks in 0.00s
+2025-10-02 20:37:05,956 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 4 chunks in 0.00s
+2025-10-02 20:37:05,956 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 4 chunks in 0.00s
+2025-10-02 20:37:05,958 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:05,958 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:05,958 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:05,958 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:05,958 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:05,958 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:05,958 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:06,112 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 4 chunks in 0.00s
+2025-10-02 20:37:06,112 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 4 chunks in 0.00s
+2025-10-02 20:37:06,112 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 4 chunks in 0.00s
+2025-10-02 20:37:06,112 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 4 chunks in 0.00s
+2025-10-02 20:37:06,112 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 4 chunks in 0.00s
+2025-10-02 20:37:06,112 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 4 chunks in 0.00s
+2025-10-02 20:37:06,112 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 4 chunks in 0.00s
+2025-10-02 20:37:06,114 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:06,114 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:06,114 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:06,114 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:06,114 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:06,114 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:06,114 - enhanced_rag_system - ERROR - Error caching query context: Object of type datetime is not JSON serializable
+2025-10-02 20:37:06,116 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:37:06,116 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:37:06,116 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:37:06,116 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:37:06,116 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:37:06,116 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:37:06,116 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:37:06,116 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 20:37:06,298 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: integrity_test
+2025-10-02 20:37:06,298 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: integrity_test
+2025-10-02 20:37:06,298 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: integrity_test
+2025-10-02 20:37:06,298 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: integrity_test
+2025-10-02 20:37:06,298 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: integrity_test
+2025-10-02 20:37:06,298 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: integrity_test
+2025-10-02 20:37:06,298 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: integrity_test
+2025-10-02 20:37:06,298 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: integrity_test
+2025-10-02 20:37:06,500 - enhanced_rag_system - INFO - Query 'целостность' returned 0 chunks in 0.00s
+2025-10-02 20:37:06,500 - enhanced_rag_system - INFO - Query 'целостность' returned 0 chunks in 0.00s
+2025-10-02 20:37:06,500 - enhanced_rag_system - INFO - Query 'целостность' returned 0 chunks in 0.00s
+2025-10-02 20:37:06,500 - enhanced_rag_system - INFO - Query 'целостность' returned 0 chunks in 0.00s
+2025-10-02 20:37:06,500 - enhanced_rag_system - INFO - Query 'целостность' returned 0 chunks in 0.00s
+2025-10-02 20:37:06,500 - enhanced_rag_system - INFO - Query 'целостность' returned 0 chunks in 0.00s
+2025-10-02 20:37:06,500 - enhanced_rag_system - INFO - Query 'целостность' returned 0 chunks in 0.00s
+2025-10-02 20:37:06,500 - enhanced_rag_system - INFO - Query 'целостность' returned 0 chunks in 0.00s
+2025-10-02 21:04:22,718 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:22,719 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:22,719 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:23,126 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: vpn_protocols
+2025-10-02 21:04:23,126 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: vpn_protocols
+2025-10-02 21:04:23,744 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: xray_features
+2025-10-02 21:04:23,744 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: xray_features
+2025-10-02 21:04:24,439 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: security_features
+2025-10-02 21:04:24,439 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: security_features
+2025-10-02 21:04:24,444 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:24,444 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:24,444 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:25,166 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: xvpn_overview
+2025-10-02 21:04:25,166 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: xvpn_overview
+2025-10-02 21:04:25,166 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: xvpn_overview
+2025-10-02 21:04:25,748 - enhanced_rag_system - INFO - Query 'Как работает XVPN?' returned 0 chunks in 0.00s
+2025-10-02 21:04:25,748 - enhanced_rag_system - INFO - Query 'Как работает XVPN?' returned 0 chunks in 0.00s
+2025-10-02 21:04:25,748 - enhanced_rag_system - INFO - Query 'Как работает XVPN?' returned 0 chunks in 0.00s
+2025-10-02 21:04:26,038 - enhanced_rag_system - INFO - Query 'Что такое Xray?' returned 0 chunks in 0.00s
+2025-10-02 21:04:26,038 - enhanced_rag_system - INFO - Query 'Что такое Xray?' returned 0 chunks in 0.00s
+2025-10-02 21:04:26,038 - enhanced_rag_system - INFO - Query 'Что такое Xray?' returned 0 chunks in 0.00s
+2025-10-02 21:04:26,503 - enhanced_rag_system - INFO - Query 'Поддерживается ли IPv6?' returned 4 chunks in 0.00s
+2025-10-02 21:04:26,503 - enhanced_rag_system - INFO - Query 'Поддерживается ли IPv6?' returned 4 chunks in 0.00s
+2025-10-02 21:04:26,503 - enhanced_rag_system - INFO - Query 'Поддерживается ли IPv6?' returned 4 chunks in 0.00s
+2025-10-02 21:04:26,505 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:26,505 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:26,505 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:26,737 - enhanced_rag_system - INFO - Query 'Какие протоколы безопасности используются?' returned 4 chunks in 0.00s
+2025-10-02 21:04:26,737 - enhanced_rag_system - INFO - Query 'Какие протоколы безопасности используются?' returned 4 chunks in 0.00s
+2025-10-02 21:04:26,737 - enhanced_rag_system - INFO - Query 'Какие протоколы безопасности используются?' returned 4 chunks in 0.00s
+2025-10-02 21:04:26,738 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:26,738 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:26,738 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:26,914 - enhanced_rag_system - INFO - Query 'Что такое state machine?' returned 2 chunks in 0.00s
+2025-10-02 21:04:26,914 - enhanced_rag_system - INFO - Query 'Что такое state machine?' returned 2 chunks in 0.00s
+2025-10-02 21:04:26,914 - enhanced_rag_system - INFO - Query 'Что такое state machine?' returned 2 chunks in 0.00s
+2025-10-02 21:04:26,916 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:26,916 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:26,916 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:26,918 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:26,918 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:26,918 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:26,918 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:27,028 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: encryption
+2025-10-02 21:04:27,028 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: encryption
+2025-10-02 21:04:27,028 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: encryption
+2025-10-02 21:04:27,028 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: encryption
+2025-10-02 21:04:27,113 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: performance
+2025-10-02 21:04:27,113 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: performance
+2025-10-02 21:04:27,113 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: performance
+2025-10-02 21:04:27,113 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: performance
+2025-10-02 21:04:27,283 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: protocols
+2025-10-02 21:04:27,283 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: protocols
+2025-10-02 21:04:27,283 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: protocols
+2025-10-02 21:04:27,283 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: protocols
+2025-10-02 21:04:27,402 - enhanced_rag_system - INFO - Query 'безопасное шифрование' returned 4 chunks in 0.00s
+2025-10-02 21:04:27,402 - enhanced_rag_system - INFO - Query 'безопасное шифрование' returned 4 chunks in 0.00s
+2025-10-02 21:04:27,402 - enhanced_rag_system - INFO - Query 'безопасное шифрование' returned 4 chunks in 0.00s
+2025-10-02 21:04:27,402 - enhanced_rag_system - INFO - Query 'безопасное шифрование' returned 4 chunks in 0.00s
+2025-10-02 21:04:27,513 - enhanced_rag_system - INFO - Query 'быстрый протокол' returned 5 chunks in 0.00s
+2025-10-02 21:04:27,513 - enhanced_rag_system - INFO - Query 'быстрый протокол' returned 5 chunks in 0.00s
+2025-10-02 21:04:27,513 - enhanced_rag_system - INFO - Query 'быстрый протокол' returned 5 chunks in 0.00s
+2025-10-02 21:04:27,513 - enhanced_rag_system - INFO - Query 'быстрый протокол' returned 5 chunks in 0.00s
+2025-10-02 21:04:27,635 - enhanced_rag_system - INFO - Query 'сравнение VPN' returned 5 chunks in 0.00s
+2025-10-02 21:04:27,635 - enhanced_rag_system - INFO - Query 'сравнение VPN' returned 5 chunks in 0.00s
+2025-10-02 21:04:27,635 - enhanced_rag_system - INFO - Query 'сравнение VPN' returned 5 chunks in 0.00s
+2025-10-02 21:04:27,635 - enhanced_rag_system - INFO - Query 'сравнение VPN' returned 5 chunks in 0.00s
+2025-10-02 21:04:27,642 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:27,642 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:27,642 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:27,642 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:27,642 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:27,790 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: test_source
+2025-10-02 21:04:27,790 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: test_source
+2025-10-02 21:04:27,790 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: test_source
+2025-10-02 21:04:27,790 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: test_source
+2025-10-02 21:04:27,790 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: test_source
+2025-10-02 21:04:27,879 - enhanced_rag_system - INFO - Query 'тестовый' returned 1 chunks in 0.00s
+2025-10-02 21:04:27,879 - enhanced_rag_system - INFO - Query 'тестовый' returned 1 chunks in 0.00s
+2025-10-02 21:04:27,879 - enhanced_rag_system - INFO - Query 'тестовый' returned 1 chunks in 0.00s
+2025-10-02 21:04:27,879 - enhanced_rag_system - INFO - Query 'тестовый' returned 1 chunks in 0.00s
+2025-10-02 21:04:27,879 - enhanced_rag_system - INFO - Query 'тестовый' returned 1 chunks in 0.00s
+2025-10-02 21:04:28,078 - enhanced_rag_system - INFO - Successfully updated chunk 64f89756ac2c20d85534456ced916bd6
+2025-10-02 21:04:28,078 - enhanced_rag_system - INFO - Successfully updated chunk 64f89756ac2c20d85534456ced916bd6
+2025-10-02 21:04:28,078 - enhanced_rag_system - INFO - Successfully updated chunk 64f89756ac2c20d85534456ced916bd6
+2025-10-02 21:04:28,078 - enhanced_rag_system - INFO - Successfully updated chunk 64f89756ac2c20d85534456ced916bd6
+2025-10-02 21:04:28,078 - enhanced_rag_system - INFO - Successfully updated chunk 64f89756ac2c20d85534456ced916bd6
+2025-10-02 21:04:28,182 - enhanced_rag_system - INFO - Successfully deleted 2 chunks from source: test_source
+2025-10-02 21:04:28,182 - enhanced_rag_system - INFO - Successfully deleted 2 chunks from source: test_source
+2025-10-02 21:04:28,182 - enhanced_rag_system - INFO - Successfully deleted 2 chunks from source: test_source
+2025-10-02 21:04:28,182 - enhanced_rag_system - INFO - Successfully deleted 2 chunks from source: test_source
+2025-10-02 21:04:28,182 - enhanced_rag_system - INFO - Successfully deleted 2 chunks from source: test_source
+2025-10-02 21:04:28,184 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:28,184 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:28,184 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:28,184 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:28,184 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:28,184 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:28,348 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: performance
+2025-10-02 21:04:28,348 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: performance
+2025-10-02 21:04:28,348 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: performance
+2025-10-02 21:04:28,348 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: performance
+2025-10-02 21:04:28,348 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: performance
+2025-10-02 21:04:28,348 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: performance
+2025-10-02 21:04:28,478 - enhanced_rag_system - INFO - Query 'производительность системы' returned 7 chunks in 0.00s
+2025-10-02 21:04:28,478 - enhanced_rag_system - INFO - Query 'производительность системы' returned 7 chunks in 0.00s
+2025-10-02 21:04:28,478 - enhanced_rag_system - INFO - Query 'производительность системы' returned 7 chunks in 0.00s
+2025-10-02 21:04:28,478 - enhanced_rag_system - INFO - Query 'производительность системы' returned 7 chunks in 0.00s
+2025-10-02 21:04:28,478 - enhanced_rag_system - INFO - Query 'производительность системы' returned 7 chunks in 0.00s
+2025-10-02 21:04:28,478 - enhanced_rag_system - INFO - Query 'производительность системы' returned 7 chunks in 0.00s
+2025-10-02 21:04:28,480 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:28,480 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:28,480 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:28,480 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:28,480 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:28,480 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:28,822 - enhanced_rag_system - INFO - Query 'метрики ответа' returned 2 chunks in 0.00s
+2025-10-02 21:04:28,822 - enhanced_rag_system - INFO - Query 'метрики ответа' returned 2 chunks in 0.00s
+2025-10-02 21:04:28,822 - enhanced_rag_system - INFO - Query 'метрики ответа' returned 2 chunks in 0.00s
+2025-10-02 21:04:28,822 - enhanced_rag_system - INFO - Query 'метрики ответа' returned 2 chunks in 0.00s
+2025-10-02 21:04:28,822 - enhanced_rag_system - INFO - Query 'метрики ответа' returned 2 chunks in 0.00s
+2025-10-02 21:04:28,822 - enhanced_rag_system - INFO - Query 'метрики ответа' returned 2 chunks in 0.00s
+2025-10-02 21:04:28,824 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:28,824 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:28,824 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:28,824 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:28,824 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:28,824 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:28,966 - enhanced_rag_system - INFO - Query 'быстрый поиск' returned 2 chunks in 0.00s
+2025-10-02 21:04:28,966 - enhanced_rag_system - INFO - Query 'быстрый поиск' returned 2 chunks in 0.00s
+2025-10-02 21:04:28,966 - enhanced_rag_system - INFO - Query 'быстрый поиск' returned 2 chunks in 0.00s
+2025-10-02 21:04:28,966 - enhanced_rag_system - INFO - Query 'быстрый поиск' returned 2 chunks in 0.00s
+2025-10-02 21:04:28,966 - enhanced_rag_system - INFO - Query 'быстрый поиск' returned 2 chunks in 0.00s
+2025-10-02 21:04:28,966 - enhanced_rag_system - INFO - Query 'быстрый поиск' returned 2 chunks in 0.00s
+2025-10-02 21:04:28,968 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:28,968 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:28,968 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:28,968 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:28,968 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:28,968 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:28,971 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:28,971 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:28,971 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:28,971 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:28,971 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:28,971 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:28,971 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:29,121 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: caching
+2025-10-02 21:04:29,121 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: caching
+2025-10-02 21:04:29,121 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: caching
+2025-10-02 21:04:29,121 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: caching
+2025-10-02 21:04:29,121 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: caching
+2025-10-02 21:04:29,121 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: caching
+2025-10-02 21:04:29,121 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: caching
+2025-10-02 21:04:29,266 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 8 chunks in 0.00s
+2025-10-02 21:04:29,266 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 8 chunks in 0.00s
+2025-10-02 21:04:29,266 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 8 chunks in 0.00s
+2025-10-02 21:04:29,266 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 8 chunks in 0.00s
+2025-10-02 21:04:29,266 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 8 chunks in 0.00s
+2025-10-02 21:04:29,266 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 8 chunks in 0.00s
+2025-10-02 21:04:29,266 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 8 chunks in 0.00s
+2025-10-02 21:04:29,268 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:29,268 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:29,268 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:29,268 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:29,268 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:29,268 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:29,268 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:29,366 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 8 chunks in 0.00s
+2025-10-02 21:04:29,366 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 8 chunks in 0.00s
+2025-10-02 21:04:29,366 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 8 chunks in 0.00s
+2025-10-02 21:04:29,366 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 8 chunks in 0.00s
+2025-10-02 21:04:29,366 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 8 chunks in 0.00s
+2025-10-02 21:04:29,366 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 8 chunks in 0.00s
+2025-10-02 21:04:29,366 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 8 chunks in 0.00s
+2025-10-02 21:04:29,368 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:29,368 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:29,368 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:29,368 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:29,368 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:29,368 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:29,368 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:29,370 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:29,370 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:29,370 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:29,370 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:29,370 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:29,370 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:29,370 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:29,370 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:29,583 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: integrity_test
+2025-10-02 21:04:29,583 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: integrity_test
+2025-10-02 21:04:29,583 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: integrity_test
+2025-10-02 21:04:29,583 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: integrity_test
+2025-10-02 21:04:29,583 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: integrity_test
+2025-10-02 21:04:29,583 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: integrity_test
+2025-10-02 21:04:29,583 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: integrity_test
+2025-10-02 21:04:29,583 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: integrity_test
+2025-10-02 21:04:29,721 - enhanced_rag_system - INFO - Query 'целостность' returned 0 chunks in 0.00s
+2025-10-02 21:04:29,721 - enhanced_rag_system - INFO - Query 'целостность' returned 0 chunks in 0.00s
+2025-10-02 21:04:29,721 - enhanced_rag_system - INFO - Query 'целостность' returned 0 chunks in 0.00s
+2025-10-02 21:04:29,721 - enhanced_rag_system - INFO - Query 'целостность' returned 0 chunks in 0.00s
+2025-10-02 21:04:29,721 - enhanced_rag_system - INFO - Query 'целостность' returned 0 chunks in 0.00s
+2025-10-02 21:04:29,721 - enhanced_rag_system - INFO - Query 'целостность' returned 0 chunks in 0.00s
+2025-10-02 21:04:29,721 - enhanced_rag_system - INFO - Query 'целостность' returned 0 chunks in 0.00s
+2025-10-02 21:04:29,721 - enhanced_rag_system - INFO - Query 'целостность' returned 0 chunks in 0.00s
+2025-10-02 21:04:43,472 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:43,473 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:43,473 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:43,661 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: vpn_protocols
+2025-10-02 21:04:43,661 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: vpn_protocols
+2025-10-02 21:04:44,135 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: xray_features
+2025-10-02 21:04:44,135 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: xray_features
+2025-10-02 21:04:44,942 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: security_features
+2025-10-02 21:04:44,942 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: security_features
+2025-10-02 21:04:44,944 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:44,944 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:44,944 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:45,053 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: xvpn_overview
+2025-10-02 21:04:45,053 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: xvpn_overview
+2025-10-02 21:04:45,053 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: xvpn_overview
+2025-10-02 21:04:45,131 - enhanced_rag_system - INFO - Query 'Как работает XVPN?' returned 0 chunks in 0.00s
+2025-10-02 21:04:45,131 - enhanced_rag_system - INFO - Query 'Как работает XVPN?' returned 0 chunks in 0.00s
+2025-10-02 21:04:45,131 - enhanced_rag_system - INFO - Query 'Как работает XVPN?' returned 0 chunks in 0.00s
+2025-10-02 21:04:45,264 - enhanced_rag_system - INFO - Query 'Что такое Xray?' returned 0 chunks in 0.00s
+2025-10-02 21:04:45,264 - enhanced_rag_system - INFO - Query 'Что такое Xray?' returned 0 chunks in 0.00s
+2025-10-02 21:04:45,264 - enhanced_rag_system - INFO - Query 'Что такое Xray?' returned 0 chunks in 0.00s
+2025-10-02 21:04:45,397 - enhanced_rag_system - INFO - Query 'Поддерживается ли IPv6?' returned 6 chunks in 0.00s
+2025-10-02 21:04:45,397 - enhanced_rag_system - INFO - Query 'Поддерживается ли IPv6?' returned 6 chunks in 0.00s
+2025-10-02 21:04:45,397 - enhanced_rag_system - INFO - Query 'Поддерживается ли IPv6?' returned 6 chunks in 0.00s
+2025-10-02 21:04:45,402 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:45,402 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:45,402 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:45,464 - enhanced_rag_system - INFO - Query 'Какие протоколы безопасности используются?' returned 7 chunks in 0.00s
+2025-10-02 21:04:45,464 - enhanced_rag_system - INFO - Query 'Какие протоколы безопасности используются?' returned 7 chunks in 0.00s
+2025-10-02 21:04:45,464 - enhanced_rag_system - INFO - Query 'Какие протоколы безопасности используются?' returned 7 chunks in 0.00s
+2025-10-02 21:04:45,465 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:45,465 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:45,465 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:45,563 - enhanced_rag_system - INFO - Query 'Что такое state machine?' returned 3 chunks in 0.00s
+2025-10-02 21:04:45,563 - enhanced_rag_system - INFO - Query 'Что такое state machine?' returned 3 chunks in 0.00s
+2025-10-02 21:04:45,563 - enhanced_rag_system - INFO - Query 'Что такое state machine?' returned 3 chunks in 0.00s
+2025-10-02 21:04:45,565 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:45,565 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:45,565 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:45,566 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:45,566 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:45,566 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:45,566 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:45,629 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: encryption
+2025-10-02 21:04:45,629 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: encryption
+2025-10-02 21:04:45,629 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: encryption
+2025-10-02 21:04:45,629 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: encryption
+2025-10-02 21:04:45,685 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: performance
+2025-10-02 21:04:45,685 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: performance
+2025-10-02 21:04:45,685 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: performance
+2025-10-02 21:04:45,685 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: performance
+2025-10-02 21:04:45,740 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: protocols
+2025-10-02 21:04:45,740 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: protocols
+2025-10-02 21:04:45,740 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: protocols
+2025-10-02 21:04:45,740 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: protocols
+2025-10-02 21:04:45,796 - enhanced_rag_system - INFO - Query 'безопасное шифрование' returned 5 chunks in 0.00s
+2025-10-02 21:04:45,796 - enhanced_rag_system - INFO - Query 'безопасное шифрование' returned 5 chunks in 0.00s
+2025-10-02 21:04:45,796 - enhanced_rag_system - INFO - Query 'безопасное шифрование' returned 5 chunks in 0.00s
+2025-10-02 21:04:45,796 - enhanced_rag_system - INFO - Query 'безопасное шифрование' returned 5 chunks in 0.00s
+2025-10-02 21:04:45,874 - enhanced_rag_system - INFO - Query 'быстрый протокол' returned 5 chunks in 0.00s
+2025-10-02 21:04:45,874 - enhanced_rag_system - INFO - Query 'быстрый протокол' returned 5 chunks in 0.00s
+2025-10-02 21:04:45,874 - enhanced_rag_system - INFO - Query 'быстрый протокол' returned 5 chunks in 0.00s
+2025-10-02 21:04:45,874 - enhanced_rag_system - INFO - Query 'быстрый протокол' returned 5 chunks in 0.00s
+2025-10-02 21:04:45,929 - enhanced_rag_system - INFO - Query 'сравнение VPN' returned 5 chunks in 0.00s
+2025-10-02 21:04:45,929 - enhanced_rag_system - INFO - Query 'сравнение VPN' returned 5 chunks in 0.00s
+2025-10-02 21:04:45,929 - enhanced_rag_system - INFO - Query 'сравнение VPN' returned 5 chunks in 0.00s
+2025-10-02 21:04:45,929 - enhanced_rag_system - INFO - Query 'сравнение VPN' returned 5 chunks in 0.00s
+2025-10-02 21:04:45,931 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:45,931 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:45,931 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:45,931 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:45,931 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:45,984 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: test_source
+2025-10-02 21:04:45,984 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: test_source
+2025-10-02 21:04:45,984 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: test_source
+2025-10-02 21:04:45,984 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: test_source
+2025-10-02 21:04:45,984 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: test_source
+2025-10-02 21:04:46,040 - enhanced_rag_system - INFO - Query 'тестовый' returned 1 chunks in 0.00s
+2025-10-02 21:04:46,040 - enhanced_rag_system - INFO - Query 'тестовый' returned 1 chunks in 0.00s
+2025-10-02 21:04:46,040 - enhanced_rag_system - INFO - Query 'тестовый' returned 1 chunks in 0.00s
+2025-10-02 21:04:46,040 - enhanced_rag_system - INFO - Query 'тестовый' returned 1 chunks in 0.00s
+2025-10-02 21:04:46,040 - enhanced_rag_system - INFO - Query 'тестовый' returned 1 chunks in 0.00s
+2025-10-02 21:04:46,184 - enhanced_rag_system - INFO - Successfully updated chunk dbfbeb95083b0606f5370c16b043c783
+2025-10-02 21:04:46,184 - enhanced_rag_system - INFO - Successfully updated chunk dbfbeb95083b0606f5370c16b043c783
+2025-10-02 21:04:46,184 - enhanced_rag_system - INFO - Successfully updated chunk dbfbeb95083b0606f5370c16b043c783
+2025-10-02 21:04:46,184 - enhanced_rag_system - INFO - Successfully updated chunk dbfbeb95083b0606f5370c16b043c783
+2025-10-02 21:04:46,184 - enhanced_rag_system - INFO - Successfully updated chunk dbfbeb95083b0606f5370c16b043c783
+2025-10-02 21:04:46,340 - enhanced_rag_system - INFO - Successfully deleted 1 chunks from source: test_source
+2025-10-02 21:04:46,340 - enhanced_rag_system - INFO - Successfully deleted 1 chunks from source: test_source
+2025-10-02 21:04:46,340 - enhanced_rag_system - INFO - Successfully deleted 1 chunks from source: test_source
+2025-10-02 21:04:46,340 - enhanced_rag_system - INFO - Successfully deleted 1 chunks from source: test_source
+2025-10-02 21:04:46,340 - enhanced_rag_system - INFO - Successfully deleted 1 chunks from source: test_source
+2025-10-02 21:04:46,343 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:46,343 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:46,343 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:46,343 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:46,343 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:46,343 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:46,395 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: performance
+2025-10-02 21:04:46,395 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: performance
+2025-10-02 21:04:46,395 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: performance
+2025-10-02 21:04:46,395 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: performance
+2025-10-02 21:04:46,395 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: performance
+2025-10-02 21:04:46,395 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: performance
+2025-10-02 21:04:46,451 - enhanced_rag_system - INFO - Query 'производительность системы' returned 10 chunks in 0.00s
+2025-10-02 21:04:46,451 - enhanced_rag_system - INFO - Query 'производительность системы' returned 10 chunks in 0.00s
+2025-10-02 21:04:46,451 - enhanced_rag_system - INFO - Query 'производительность системы' returned 10 chunks in 0.00s
+2025-10-02 21:04:46,451 - enhanced_rag_system - INFO - Query 'производительность системы' returned 10 chunks in 0.00s
+2025-10-02 21:04:46,451 - enhanced_rag_system - INFO - Query 'производительность системы' returned 10 chunks in 0.00s
+2025-10-02 21:04:46,451 - enhanced_rag_system - INFO - Query 'производительность системы' returned 10 chunks in 0.00s
+2025-10-02 21:04:46,453 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,453 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,453 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,453 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,453 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,453 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,517 - enhanced_rag_system - INFO - Query 'метрики ответа' returned 3 chunks in 0.00s
+2025-10-02 21:04:46,517 - enhanced_rag_system - INFO - Query 'метрики ответа' returned 3 chunks in 0.00s
+2025-10-02 21:04:46,517 - enhanced_rag_system - INFO - Query 'метрики ответа' returned 3 chunks in 0.00s
+2025-10-02 21:04:46,517 - enhanced_rag_system - INFO - Query 'метрики ответа' returned 3 chunks in 0.00s
+2025-10-02 21:04:46,517 - enhanced_rag_system - INFO - Query 'метрики ответа' returned 3 chunks in 0.00s
+2025-10-02 21:04:46,517 - enhanced_rag_system - INFO - Query 'метрики ответа' returned 3 chunks in 0.00s
+2025-10-02 21:04:46,520 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,520 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,520 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,520 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,520 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,520 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,584 - enhanced_rag_system - INFO - Query 'быстрый поиск' returned 3 chunks in 0.00s
+2025-10-02 21:04:46,584 - enhanced_rag_system - INFO - Query 'быстрый поиск' returned 3 chunks in 0.00s
+2025-10-02 21:04:46,584 - enhanced_rag_system - INFO - Query 'быстрый поиск' returned 3 chunks in 0.00s
+2025-10-02 21:04:46,584 - enhanced_rag_system - INFO - Query 'быстрый поиск' returned 3 chunks in 0.00s
+2025-10-02 21:04:46,584 - enhanced_rag_system - INFO - Query 'быстрый поиск' returned 3 chunks in 0.00s
+2025-10-02 21:04:46,584 - enhanced_rag_system - INFO - Query 'быстрый поиск' returned 3 chunks in 0.00s
+2025-10-02 21:04:46,586 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,586 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,586 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,586 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,586 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,586 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,589 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:46,589 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:46,589 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:46,589 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:46,589 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:46,589 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:46,589 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:46,695 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: caching
+2025-10-02 21:04:46,695 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: caching
+2025-10-02 21:04:46,695 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: caching
+2025-10-02 21:04:46,695 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: caching
+2025-10-02 21:04:46,695 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: caching
+2025-10-02 21:04:46,695 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: caching
+2025-10-02 21:04:46,695 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: caching
+2025-10-02 21:04:46,784 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 10 chunks in 0.00s
+2025-10-02 21:04:46,784 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 10 chunks in 0.00s
+2025-10-02 21:04:46,784 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 10 chunks in 0.00s
+2025-10-02 21:04:46,784 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 10 chunks in 0.00s
+2025-10-02 21:04:46,784 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 10 chunks in 0.00s
+2025-10-02 21:04:46,784 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 10 chunks in 0.00s
+2025-10-02 21:04:46,784 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 10 chunks in 0.00s
+2025-10-02 21:04:46,786 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,786 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,786 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,786 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,786 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,786 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,786 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,884 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 10 chunks in 0.00s
+2025-10-02 21:04:46,884 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 10 chunks in 0.00s
+2025-10-02 21:04:46,884 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 10 chunks in 0.00s
+2025-10-02 21:04:46,884 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 10 chunks in 0.00s
+2025-10-02 21:04:46,884 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 10 chunks in 0.00s
+2025-10-02 21:04:46,884 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 10 chunks in 0.00s
+2025-10-02 21:04:46,884 - enhanced_rag_system - INFO - Query 'производительность кеширования' returned 10 chunks in 0.00s
+2025-10-02 21:04:46,888 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,888 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,888 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,888 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,888 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,888 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,888 - enhanced_rag_system - ERROR - Error caching query context: 'dict' object has no attribute 'to_dict'
+2025-10-02 21:04:46,891 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:46,891 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:46,891 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:46,891 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:46,891 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:46,891 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:46,891 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:46,891 - enhanced_rag_system - INFO - Enhanced RAG System initialized for agent test_agent
+2025-10-02 21:04:47,002 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: integrity_test
+2025-10-02 21:04:47,002 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: integrity_test
+2025-10-02 21:04:47,002 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: integrity_test
+2025-10-02 21:04:47,002 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: integrity_test
+2025-10-02 21:04:47,002 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: integrity_test
+2025-10-02 21:04:47,002 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: integrity_test
+2025-10-02 21:04:47,002 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: integrity_test
+2025-10-02 21:04:47,002 - enhanced_rag_system - INFO - Successfully added 1 chunks from source: integrity_test
+2025-10-02 21:04:47,061 - enhanced_rag_system - INFO - Query 'целостность' returned 0 chunks in 0.00s
+2025-10-02 21:04:47,061 - enhanced_rag_system - INFO - Query 'целостность' returned 0 chunks in 0.00s
+2025-10-02 21:04:47,061 - enhanced_rag_system - INFO - Query 'целостность' returned 0 chunks in 0.00s
+2025-10-02 21:04:47,061 - enhanced_rag_system - INFO - Query 'целостность' returned 0 chunks in 0.00s
+2025-10-02 21:04:47,061 - enhanced_rag_system - INFO - Query 'целостность' returned 0 chunks in 0.00s
+2025-10-02 21:04:47,061 - enhanced_rag_system - INFO - Query 'целостность' returned 0 chunks in 0.00s
+2025-10-02 21:04:47,061 - enhanced_rag_system - INFO - Query 'целостность' returned 0 chunks in 0.00s
+2025-10-02 21:04:47,061 - enhanced_rag_system - INFO - Query 'целостность' returned 0 chunks in 0.00s

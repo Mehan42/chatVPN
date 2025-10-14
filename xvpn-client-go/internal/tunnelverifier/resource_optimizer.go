@@ -2,7 +2,6 @@
 package tunnelverifier
 
 import (
-	"context"
 	"sync"
 	"time"
 )
@@ -14,7 +13,7 @@ type ResourceOptimizer struct {
 	isActive     bool
 	mu           sync.RWMutex
 	lastActivity time.Time
-	
+
 	// Resource limits
 	cpuLimit       float64 // CPU usage limit as percentage
 	memoryLimit    int64   // Memory usage limit in bytes
@@ -25,15 +24,15 @@ type ResourceOptimizer struct {
 // ResourceOptimizerConfig holds configuration for resource optimization
 type ResourceOptimizerConfig struct {
 	// Resource limits
-	MaxMemoryUsage    int64         // Maximum memory usage in bytes
-	MaxNetworkUsage   int64         // Maximum network usage per check period
-	MaxCPUPercentage  float64       // Maximum CPU percentage
+	MaxMemoryUsage    int64   // Maximum memory usage in bytes
+	MaxNetworkUsage   int64   // Maximum network usage per check period
+	MaxCPUPercentage  float64 // Maximum CPU percentage
 	OptimizationLevel OptimizationLevel
-	
+
 	// Check intervals
-	SlowCheckInterval  time.Duration // For less frequent checks when resources are tight
-	FastCheckInterval  time.Duration // For more frequent checks when resources are available
-	AdaptiveInterval   bool          // Whether to adjust intervals based on resource usage
+	SlowCheckInterval time.Duration // For less frequent checks when resources are tight
+	FastCheckInterval time.Duration // For more frequent checks when resources are available
+	AdaptiveInterval  bool          // Whether to adjust intervals based on resource usage
 }
 
 // OptimizationLevel defines different levels of optimization
@@ -67,12 +66,12 @@ func NewResourceOptimizer(tv *TunnelVerifier) *ResourceOptimizer {
 func (ro *ResourceOptimizer) SetConfig(config *ResourceOptimizerConfig) {
 	ro.mu.Lock()
 	defer ro.mu.Unlock()
-	
+
 	ro.config = config
 	ro.verifier.enhancedLogger.Info("Resource optimization config updated", map[string]interface{}{
-		"max_memory_mb":    config.MaxMemoryUsage / (1024 * 1024),
-		"max_network_mb":   config.MaxNetworkUsage / (1024 * 1024),
-		"max_cpu_percent":  config.MaxCPUPercentage,
+		"max_memory_mb":      config.MaxMemoryUsage / (1024 * 1024),
+		"max_network_mb":     config.MaxNetworkUsage / (1024 * 1024),
+		"max_cpu_percent":    config.MaxCPUPercentage,
 		"optimization_level": config.OptimizationLevel,
 	})
 }
@@ -81,16 +80,16 @@ func (ro *ResourceOptimizer) SetConfig(config *ResourceOptimizerConfig) {
 func (ro *ResourceOptimizer) Activate() {
 	ro.mu.Lock()
 	defer ro.mu.Unlock()
-	
+
 	if ro.isActive {
 		return
 	}
-	
+
 	ro.isActive = true
 	ro.lastActivity = time.Now()
-	
+
 	ro.verifier.enhancedLogger.Info("Resource optimization activated", nil)
-	
+
 	// Start optimization monitoring in a background goroutine
 	go ro.monitorResources()
 }
@@ -99,7 +98,7 @@ func (ro *ResourceOptimizer) Activate() {
 func (ro *ResourceOptimizer) Deactivate() {
 	ro.mu.Lock()
 	defer ro.mu.Unlock()
-	
+
 	ro.isActive = false
 	ro.verifier.enhancedLogger.Info("Resource optimization deactivated", nil)
 }
@@ -108,7 +107,7 @@ func (ro *ResourceOptimizer) Deactivate() {
 func (ro *ResourceOptimizer) monitorResources() {
 	ticker := time.NewTicker(30 * time.Second) // Check every 30 seconds
 	defer ticker.Stop()
-	
+
 	for range ticker.C {
 		ro.mu.RLock()
 		if !ro.isActive {
@@ -117,10 +116,10 @@ func (ro *ResourceOptimizer) monitorResources() {
 		}
 		config := ro.config
 		ro.mu.RUnlock()
-		
+
 		// Check current resource usage
 		resourceUsage := ro.getCurrentResourceUsage()
-		
+
 		// Apply optimizations based on resource usage and level
 		ro.applyOptimizations(resourceUsage, config)
 	}
@@ -131,8 +130,8 @@ func (ro *ResourceOptimizer) getCurrentResourceUsage() map[string]interface{} {
 	// In a real implementation, we would get actual resource usage
 	// For this implementation, we'll return placeholder values and focus on logic
 	return map[string]interface{}{
-		"memory_usage": ro.getApproximateMemoryUsage(),
-		"network_usage": ro.getApproximateNetworkUsage(),
+		"memory_usage":                 ro.getApproximateMemoryUsage(),
+		"network_usage":                ro.getApproximateNetworkUsage(),
 		"time_since_last_verification": time.Since(ro.lastActivity).Seconds(),
 	}
 }
@@ -155,19 +154,19 @@ func (ro *ResourceOptimizer) getApproximateNetworkUsage() int64 {
 func (ro *ResourceOptimizer) applyOptimizations(resourceUsage map[string]interface{}, config *ResourceOptimizerConfig) {
 	memoryUsage := resourceUsage["memory_usage"].(int64)
 	networkUsage := resourceUsage["network_usage"].(int64)
-	
+
 	// Check if memory usage is high
-	highMemory := memoryUsage > int64(float64(config.MaxMemoryUsage)*0.8) // 80% of limit
+	highMemory := memoryUsage > int64(float64(config.MaxMemoryUsage)*0.8)    // 80% of limit
 	highNetwork := networkUsage > int64(float64(config.MaxNetworkUsage)*0.8) // 80% of limit
-	
+
 	ro.verifier.enhancedLogger.Debug("Resource usage check", map[string]interface{}{
-		"memory_usage_bytes": memoryUsage,
+		"memory_usage_bytes":  memoryUsage,
 		"network_usage_bytes": networkUsage,
-		"high_memory": highMemory,
-		"high_network": highNetwork,
-		"optimization_level": config.OptimizationLevel,
+		"high_memory":         highMemory,
+		"high_network":        highNetwork,
+		"optimization_level":  config.OptimizationLevel,
 	})
-	
+
 	// Apply optimizations based on usage and level
 	switch {
 	case highMemory && highNetwork:
@@ -184,18 +183,18 @@ func (ro *ResourceOptimizer) applyAggressiveOptimizations(level OptimizationLeve
 	if level < OptimizationLevelAggressive {
 		return
 	}
-	
+
 	ro.verifier.enhancedLogger.Info("Applying aggressive resource optimizations", nil)
-	
+
 	// Adjust config to reduce resource usage
 	newConfig := *ro.verifier.config
 	newConfig.CheckInterval = ro.config.SlowCheckInterval
 	newConfig.CheckIPLeak = false
 	newConfig.CheckDNSLeak = false
 	newConfig.VerifyRouting = false
-	
+
 	ro.verifier.config = &newConfig
-	
+
 	ro.verifier.enhancedLogger.Info("Aggressive optimizations applied", map[string]interface{}{
 		"new_check_interval": newConfig.CheckInterval.Seconds(),
 		"ip_leak_check":      newConfig.CheckIPLeak,
@@ -209,9 +208,9 @@ func (ro *ResourceOptimizer) applyModerateOptimizations(level OptimizationLevel)
 	if level < OptimizationLevelMedium {
 		return
 	}
-	
+
 	ro.verifier.enhancedLogger.Info("Applying moderate resource optimizations", nil)
-	
+
 	// Adjust config to moderately reduce resource usage
 	newConfig := *ro.verifier.config
 	newConfig.CheckInterval = ro.config.SlowCheckInterval
@@ -219,9 +218,9 @@ func (ro *ResourceOptimizer) applyModerateOptimizations(level OptimizationLevel)
 		newConfig.CheckIPLeak = false
 		newConfig.CheckDNSLeak = false
 	}
-	
+
 	ro.verifier.config = &newConfig
-	
+
 	ro.verifier.enhancedLogger.Info("Moderate optimizations applied", map[string]interface{}{
 		"new_check_interval": newConfig.CheckInterval.Seconds(),
 	})
@@ -232,10 +231,10 @@ func (ro *ResourceOptimizer) applyLightOptimizations(level OptimizationLevel) {
 	if level < OptimizationLevelLight {
 		return
 	}
-	
+
 	// For light optimization, we might just log or make minor adjustments
 	ro.verifier.enhancedLogger.Debug("Light resource optimizations applied", nil)
-	
+
 	// Adjust interval slightly if adaptive is enabled
 	if ro.config.AdaptiveInterval {
 		newConfig := *ro.verifier.config
@@ -251,14 +250,14 @@ func (ro *ResourceOptimizer) applyLightOptimizations(level OptimizationLevel) {
 func (ro *ResourceOptimizer) GetOptimizationStats() map[string]interface{} {
 	ro.mu.RLock()
 	defer ro.mu.RUnlock()
-	
+
 	return map[string]interface{}{
-		"is_active": ro.isActive,
+		"is_active":     ro.isActive,
 		"last_activity": ro.lastActivity.Format(time.RFC3339),
 		"config": map[string]interface{}{
-			"max_memory_mb":    ro.config.MaxMemoryUsage / (1024 * 1024),
-			"max_network_mb":   ro.config.MaxNetworkUsage / (1024 * 1024),
-			"max_cpu_percent":  ro.config.MaxCPUPercentage,
+			"max_memory_mb":      ro.config.MaxMemoryUsage / (1024 * 1024),
+			"max_network_mb":     ro.config.MaxNetworkUsage / (1024 * 1024),
+			"max_cpu_percent":    ro.config.MaxCPUPercentage,
 			"optimization_level": ro.config.OptimizationLevel,
 		},
 	}
@@ -266,10 +265,10 @@ func (ro *ResourceOptimizer) GetOptimizationStats() map[string]interface{} {
 
 // EcoModeManager manages eco mode settings
 type EcoModeManager struct {
-	verifier     *TunnelVerifier
-	isActive     bool
+	verifier       *TunnelVerifier
+	isActive       bool
 	originalConfig *Config
-	mu           sync.RWMutex
+	mu             sync.RWMutex
 }
 
 // NewEcoModeManager creates a new eco mode manager
@@ -283,30 +282,30 @@ func NewEcoModeManager(tv *TunnelVerifier) *EcoModeManager {
 func (em *EcoModeManager) ActivateEcoMode() {
 	em.mu.Lock()
 	defer em.mu.Unlock()
-	
+
 	if em.isActive {
 		return
 	}
-	
+
 	// Save original config
 	configCopy := *em.verifier.config
 	em.originalConfig = &configCopy
-	
+
 	// Apply eco mode settings
 	ecoConfig := *em.verifier.config
-	ecoConfig.CheckInterval = 120 * time.Second // Less frequent checks
-	ecoConfig.Timeout = 90 * time.Second        // Longer timeouts
-	ecoConfig.CheckIPLeak = false               // Disable IP leak checks
-	ecoConfig.CheckDNSLeak = false              // Disable DNS leak checks
-	ecoConfig.VerifyRouting = false             // Disable routing verification
+	ecoConfig.CheckInterval = 120 * time.Second        // Less frequent checks
+	ecoConfig.Timeout = 90 * time.Second               // Longer timeouts
+	ecoConfig.CheckIPLeak = false                      // Disable IP leak checks
+	ecoConfig.CheckDNSLeak = false                     // Disable DNS leak checks
+	ecoConfig.VerifyRouting = false                    // Disable routing verification
 	ecoConfig.EnableComprehensiveLeakDetection = false // Disable comprehensive detection
-	
+
 	em.verifier.config = &ecoConfig
 	em.isActive = true
-	
+
 	em.verifier.enhancedLogger.Info("Eco mode activated", map[string]interface{}{
 		"new_check_interval": ecoConfig.CheckInterval.Seconds(),
-		"checks_disabled": []string{"IP leak", "DNS leak", "routing"},
+		"checks_disabled":    []string{"IP leak", "DNS leak", "routing"},
 	})
 }
 
@@ -314,14 +313,14 @@ func (em *EcoModeManager) ActivateEcoMode() {
 func (em *EcoModeManager) DeactivateEcoMode() {
 	em.mu.Lock()
 	defer em.mu.Unlock()
-	
+
 	if !em.isActive || em.originalConfig == nil {
 		return
 	}
-	
+
 	em.verifier.config = em.originalConfig
 	em.isActive = false
-	
+
 	em.verifier.enhancedLogger.Info("Eco mode deactivated, original settings restored", nil)
 }
 

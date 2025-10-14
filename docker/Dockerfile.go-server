@@ -1,0 +1,57 @@
+# Build stage
+FROM golang:1.21-alpine AS builder
+
+# Install build dependencies
+RUN apk add --no-cache git ca-certificates tzdata
+
+# Set working directory
+WORKDIR /app
+
+# Copy go mod files
+COPY xvpn-server-go/go.mod xvpn-server-go/go.sum ./
+
+# Download dependencies
+RUN go mod download
+
+# Copy source code
+COPY xvpn-server-go/ .
+
+# Build the application
+RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -o xvpn-server-go ./cmd/server
+
+# Final stage
+FROM alpine:latest
+
+# Install runtime dependencies
+RUN apk --no-cache add ca-certificates tzdata sqlite && \
+    addgroup -g 1001 -S xvpn && \
+    adduser -u 1001 -S xvpn -G xvpn
+
+# Create directories
+RUN mkdir -p /opt/xvpn/data /opt/xvpn/logs /opt/xvpn/config /opt/xvpn/tls
+
+# Set working directory
+WORKDIR /opt/xvpn
+
+# Copy binary from builder
+COPY --from=builder /app/xvpn-server-go .
+
+# Set ownership
+RUN chown -R xvpn:xvpn /opt/xvpn
+
+# Switch to non-root user
+USER xvpn
+
+# Expose port
+EXPOSE 8443
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:8443/health || exit 1
+
+# Environment variables
+ENV XVPN_CONFIG_FILE=/opt/xvpn/config/server.json
+ENV XVPN_DATABASE_PATH=/opt/xvpn/data/xvpn.db
+
+# Run the application
+CMD ["./xvpn-server-go"]

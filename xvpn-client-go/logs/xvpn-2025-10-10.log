@@ -1,0 +1,4 @@
+{"timestamp":"2025-10-10T20:27:06.13954535+07:00","level":"INFO","message":"Система логирования инициализирована","component":"TestApp","file":"main.go","line":19,"function":"main"}
+{"timestamp":"2025-10-10T20:27:06.139886352+07:00","level":"DEBUG","message":"Отладочное сообщение","component":"TestApp","file":"main.go","line":20,"function":"main"}
+{"timestamp":"2025-10-10T20:27:06.139933114+07:00","level":"WARN","message":"Предупреждение","component":"TestApp","file":"main.go","line":21,"function":"main"}
+{"timestamp":"2025-10-10T20:27:06.139978494+07:00","level":"ERROR","message":"Сообщение об ошибке","component":"TestApp","file":"main.go","line":22,"function":"main"}

@@ -1,0 +1,17 @@
+2025-10-02 13:05:51,900 - STATE - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-02 13:05:51,900 - STATE - INFO - Event queued: start_requested
+2025-10-02 13:18:47,117 - STATE - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-02 13:18:47,118 - STATE - INFO - Event queued: start_requested
+2025-10-02 13:18:50,383 - STATE - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-02 13:18:50,383 - STATE - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-02 13:18:50,384 - STATE - INFO - Event queued: start_requested
+2025-10-02 13:18:50,384 - STATE - INFO - Event queued: start_requested
+2025-10-02 13:18:53,456 - STATE - INFO - Event queued: stop_requested
+2025-10-02 13:18:53,456 - STATE - INFO - Event queued: stop_requested
+2025-10-03 22:43:35,369 - STATE - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-03 22:43:41,089 - STATE - INFO - Event queued: start_requested
+2025-10-03 22:43:43,089 - STATE - INFO - Event queued: stop_requested
+2025-10-03 22:43:45,243 - STATE - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-03 22:43:45,243 - STATE - INFO - State Machine initialized for client 9f95afce-2692-49b7-848f-8c58173f41a3
+2025-10-03 22:43:45,572 - STATE - INFO - Event queued: start_requested
+2025-10-03 22:43:45,572 - STATE - INFO - Event queued: start_requested

@@ -3,7 +3,7 @@ version: '3.8'
 services:
   xvpn-go-server:
     build:
-      context: ..
+      context: .
       dockerfile: docker/Dockerfile.go-server
     container_name: xvpn-go-server
     restart: unless-stopped
@@ -65,7 +65,7 @@ services:
     networks:
       - xvpn-network
     volumes:
-      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/prometheus/go-server.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus-data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'

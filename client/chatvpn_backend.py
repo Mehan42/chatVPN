@@ -10,9 +10,6 @@ import time
 CONFIG_PATH = os.path.expanduser("~/chatvpn/client/client.json")
 CONF_UUID_PATH = os.path.expanduser("~/chatvpn/client/client.conf")
 
-BOT_TOKEN = "6706425774:AAGxv3dDmz2TJsHtNVPb0PN2s07kTSr1_qc"
-CHAT_ID = "5385524517"
-
 XRAY_BIN = "/usr/bin/xray"   # путь к бинарю xray
 XRAY_PROC = None
 

@@ -16,8 +16,6 @@ CLIENT_DIR = Path(__file__).parent if '__file__' in globals() else Path.cwd()
 CONFIG_PATH = CLIENT_DIR / 'client.json'
 CONF_UUID_PATH = CLIENT_DIR / 'client.conf'
 
-BOT_TOKEN = "6706425774:AAGxv3dDmz2TJsHtNVPb0PN2s07kTSr1_qc"
-CHAT_ID = "5385524517"
 
 XRAY_BIN = "/usr/bin/xray"   # путь к бинарю xray
 XRAY_PROC = None
